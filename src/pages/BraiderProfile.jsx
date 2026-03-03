@@ -456,7 +456,6 @@ export default function BraiderProfile() {
                     <i className="fas fa-save"></i>
                     {isSubmitting ? 'Saving...' : 'Save Profile'}
                   </button>
-                  </button>
                   <Button 
                     variant="secondary"
                     size="lg"
