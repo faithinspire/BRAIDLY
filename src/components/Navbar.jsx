@@ -1,4 +1,6 @@
 import { Link, useNavigate } from 'react-router-dom'
+import { useEffect } from 'react'
+import gsap from 'gsap'
 import { useAuth } from '../auth/AuthContext'
 import './Navbar.css'
 import '../../css/navbar-bold.css'
@@ -6,6 +8,16 @@ import '../../css/navbar-bold.css'
 export default function Navbar() {
   const { user, logout } = useAuth()
   const navigate = useNavigate()
+
+  useEffect(() => {
+    // GSAP animation for logo
+    gsap.from('.navbar-brand-text', {
+      opacity: 0,
+      y: -30,
+      duration: 1.2,
+      ease: 'power4.out'
+    })
+  }, [])
 
   const handleLogout = () => {
     logout()

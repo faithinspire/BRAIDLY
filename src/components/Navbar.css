@@ -16,12 +16,21 @@
 .navbar-brand {
   display: flex;
   align-items: center;
+  text-decoration: none;
 }
 
-.navbar-logo {
-  height: 50px;
-  width: auto;
-  background: transparent !important;
+.navbar-brand-text {
+  font-size: 1.8rem;
+  font-weight: 900;
+  color: #7e22ce;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  transition: all 0.3s ease;
+}
+
+.navbar-brand:hover .navbar-brand-text {
+  color: #6b21a8;
+  transform: scale(1.05);
 }
 
 .navbar-menu {

@@ -85,12 +85,30 @@ export default function BraiderProfile() {
     try {
       const { error } = await supabase
         .from('braider_profiles')
-        .update(validatedData)
+        .update({
+          business_name: validatedData.business_name,
+          bio: validatedData.bio,
+          phone: validatedData.phone,
+          city: validatedData.city,
+          state: validatedData.state,
+          zip_code: validatedData.zip_code,
+          address: validatedData.address,
+          base_price: validatedData.base_price,
+          travel_radius: validatedData.travel_radius,
+          mobile_service: validatedData.mobile_service,
+          salon_service: validatedData.salon_service,
+          salon_name: validatedData.salon_name,
+          salon_address: validatedData.salon_address
+        })
         .eq('user_id', user.id)
 
-      if (error) throw error
+      if (error) {
+        alert('Failed to save profile')
+        console.error(error)
+        throw error
+      }
 
-      setSuccessMessage('✅ Profile updated successfully!')
+      setSuccessMessage('✅ Profile saved successfully!')
       setTimeout(() => setSuccessMessage(''), 3000)
       loadBraiderProfile()
     } catch (error) {
@@ -107,24 +125,32 @@ export default function BraiderProfile() {
       setUploadProgress(0)
       setUploadError('')
 
-      const result = await uploadAvatar(user.id, file, (progress) => {
-        setUploadProgress(progress)
-      })
+      const filePath = `${user.id}/avatar.png`
 
-      if (result.success) {
-        const { error } = await supabase
-          .from('braider_profiles')
-          .update({ avatar_url: result.url })
-          .eq('user_id', user.id)
+      const { error: uploadError } = await supabase.storage
+        .from('avatars')
+        .upload(filePath, file, { upsert: true })
 
-        if (error) throw error
-
-        setValues(prev => ({ ...prev, avatar_url: result.url }))
-        setSuccessMessage('✅ Avatar uploaded successfully!')
-        setTimeout(() => setSuccessMessage(''), 3000)
-      } else {
-        throw new Error(result.error)
+      if (uploadError) {
+        throw uploadError
       }
+
+      const { data } = supabase.storage
+        .from('avatars')
+        .getPublicUrl(filePath)
+
+      const { error: updateError } = await supabase
+        .from('braider_profiles')
+        .update({ avatar_url: data.publicUrl })
+        .eq('user_id', user.id)
+
+      if (updateError) {
+        throw updateError
+      }
+
+      setValues(prev => ({ ...prev, avatar_url: data.publicUrl }))
+      setSuccessMessage('✅ Avatar uploaded successfully!')
+      setTimeout(() => setSuccessMessage(''), 3000)
     } catch (error) {
       console.error('Upload error:', error)
       setUploadError(`❌ Failed to save avatar: ${error.message}`)
@@ -398,17 +424,31 @@ export default function BraiderProfile() {
 
                 {/* Action Buttons */}
                 <div style={{ display: 'flex', gap: '1rem', marginTop: '2rem' }}>
-                  <Button 
-                    variant="primary"
-                    size="lg"
-                    fullWidth
-                    loading={isSubmitting}
-                    disabled={isSubmitting}
+                  <button 
                     type="submit"
-                    icon="fas fa-save"
+                    disabled={isSubmitting}
+                    style={{
+                      flex: 1,
+                      padding: '0.75rem 2rem',
+                      height: '48px',
+                      background: 'linear-gradient(135deg, #7e22ce 0%, #6b21a8 100%)',
+                      color: 'white',
+                      border: 'none',
+                      borderRadius: '8px',
+                      fontWeight: 'bold',
+                      fontSize: '1rem',
+                      cursor: isSubmitting ? 'not-allowed' : 'pointer',
+                      opacity: isSubmitting ? 0.6 : 1,
+                      transition: 'all 0.3s ease',
+                      display: 'flex',
+                      alignItems: 'center',
+                      justifyContent: 'center',
+                      gap: '0.5rem'
+                    }}
                   >
-                    Save Profile
-                  </Button>
+                    <i className="fas fa-save"></i>
+                    {isSubmitting ? 'Saving...' : 'Save Profile'}
+                  </button>
                   <Button 
                     variant="secondary"
                     size="lg"
