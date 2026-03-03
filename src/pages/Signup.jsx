@@ -109,12 +109,7 @@ export default function Signup() {
       <div className="auth-container">
         <div className="auth-card">
           <div className="auth-logo">
-            <img 
-              src="/icons/icon-192.png" 
-              alt="Braidly Logo" 
-              className="auth-logo-img"
-            />
-            <h1>Braidly</h1>
+            <h1>BRAIDLY</h1>
             <p>Create your account and get started</p>
           </div>
 

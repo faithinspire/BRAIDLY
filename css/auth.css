@@ -175,20 +175,14 @@ body {
     animation: fadeInScale 1s ease-out;
 }
 
-.auth-logo-img {
-    width: 64px;
-    height: 64px;
-    margin: 0 auto 1rem;
-    display: block;
-    animation: float 3s ease-in-out infinite;
-}
-
 .auth-logo h1 {
-    font-size: 2.5rem;
-    font-weight: 700;
+    font-size: 3rem;
+    font-weight: 900;
     color: #7e22ce;
     margin: 0 0 0.5rem 0;
-    text-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    text-shadow: 0 2px 8px rgba(126, 34, 206, 0.3);
+    letter-spacing: 2px;
+    animation: slideDown 0.8s ease-out;
 }
 
 .auth-logo p {
@@ -206,6 +200,17 @@ body {
     to {
         opacity: 1;
         transform: scale(1);
+    }
+}
+
+@keyframes slideDown {
+    from {
+        opacity: 0;
+        transform: translateY(-20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
     }
 }
 

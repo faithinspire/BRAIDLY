@@ -5,16 +5,13 @@ export default function AnimatedBackground({ opacity = 0.15, speed = 5000 }) {
   const [currentImageIndex, setCurrentImageIndex] = useState(0)
 
   const braiderImages = [
-    '/assets/images/gemini-3-pro-image-preview-2k_b_Hero_Background_Imag.png',
-    '/assets/images/gemini-3-pro-image-preview-2k_b_Braider_Working_Imag.png',
-    '/assets/images/gemini-3-pro-image-preview-2k_b_Professional_headsho.png',
-    '/assets/images/gemini-3-pro-image-preview-2k_b_Professional_portrai.png',
-    '/assets/images/gpt-image-1.5-high-fidelity_a_Hero_Background_Imag.png',
-    '/assets/images/gpt-image-1.5-high-fidelity_a_Braider_Working_Imag.png',
-    '/assets/images/b_Professional_photo_o.png',
-    '/assets/images/b_Long_box_braids_with.png',
-    '/assets/images/a_Long_box_braids_with.jpeg',
-    '/assets/images/a_Knotless_braids_hair.jpeg'
+    '/backgrounds/bg1.jpg',
+    '/backgrounds/bg2.jpg',
+    '/backgrounds/bg3.jpg',
+    '/backgrounds/bg4.jpg',
+    '/backgrounds/bg5.jpg',
+    '/backgrounds/bg6.jpg',
+    '/backgrounds/bg7.jpg'
   ]
 
   useEffect(() => {
@@ -34,7 +31,7 @@ export default function AnimatedBackground({ opacity = 0.15, speed = 5000 }) {
           <img
             key={index}
             src={image}
-            alt={`Braider ${index + 1}`}
+            alt={`Braider background ${index + 1}`}
             className={`animated-bg-image ${index === currentImageIndex ? 'active' : ''}`}
             loading="lazy"
           />

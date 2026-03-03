@@ -16,15 +16,7 @@ export default function Navbar() {
     <nav className="navbar">
       <div className="container navbar-content">
         <Link to="/" className="navbar-brand">
-          <img 
-            src="/assets/images/braidly-logo.png" 
-            alt="Braidly Logo" 
-            className="navbar-logo"
-            onError={(e) => {
-              e.target.src = '/assets/images/braidly-logo.svg'
-            }}
-          />
-          <span className="navbar-brand-text">Braidly</span>
+          <span className="navbar-brand-text">BRAIDLY</span>
         </Link>
 
         <div className="navbar-menu">
