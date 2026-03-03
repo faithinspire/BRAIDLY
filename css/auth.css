@@ -178,7 +178,7 @@ body {
 .auth-logo h1 {
     font-size: 3.5rem;
     font-weight: 1000;
-    color: #ffffff;
+    color: #ffffff !important;
     margin: 0 0 0.5rem 0;
     text-shadow: 0 3px 10px rgba(0, 0, 0, 0.5);
     letter-spacing: 0.3em;
@@ -187,6 +187,9 @@ body {
     -moz-osx-font-smoothing: grayscale;
     text-rendering: optimizeLegibility;
     filter: none;
+    display: block !important;
+    visibility: visible !important;
+    opacity: 1 !important;
 }
 
 .auth-logo p {

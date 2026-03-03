@@ -3,7 +3,6 @@ import { useEffect } from 'react'
 import gsap from 'gsap'
 import { useAuth } from '../auth/AuthContext'
 import './Navbar.css'
-import '../../css/navbar-bold.css'
 
 export default function Navbar() {
   const { user, logout } = useAuth()

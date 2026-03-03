@@ -102,7 +102,7 @@ export default function Login() {
       <div className="auth-container">
         <div className="auth-card">
           <div className="auth-logo">
-            <h1 style={{ color: '#ffffff', textShadow: '0 2px 8px rgba(0,0,0,0.3)' }}>BRAIDLY</h1>
+            <h1>BRAIDLY</h1>
             <p>Welcome back! Login to your account</p>
           </div>
 
