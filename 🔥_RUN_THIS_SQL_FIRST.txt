@@ -1,0 +1,129 @@
+╔════════════════════════════════════════════════════════════════════════════╗
+║                  🔥 RUN THIS SQL FIRST - CRITICAL 🔥                       ║
+║                                                                            ║
+║  This is the ONLY SQL file you need to run. It fixes EVERYTHING.          ║
+╚════════════════════════════════════════════════════════════════════════════╝
+
+⚠️  IMPORTANT: Follow these steps EXACTLY
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+STEP 1: OPEN SUPABASE SQL EDITOR
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+1. Go to: https://app.supabase.com
+2. Select your project
+3. Click: "SQL Editor" (left sidebar)
+4. Click: "New Query" button
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+STEP 2: COPY THE SQL
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+1. Open file: 🔥_FINAL_TESTED_FIX.sql
+2. Select ALL (Ctrl+A or Cmd+A)
+3. Copy (Ctrl+C or Cmd+C)
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+STEP 3: PASTE INTO SQL EDITOR
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+1. Click in the SQL editor text area
+2. Paste (Ctrl+V or Cmd+V)
+3. You should see the entire SQL script
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+STEP 4: RUN THE SQL
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+1. Click the "Run" button (or Ctrl+Enter)
+2. Wait for execution to complete
+3. You should see messages at the bottom:
+
+   ✅ FINAL TESTED FIX APPLIED
+   Admin User: admin@braidly.com (admin role)
+   Tables Created: 4
+   RLS Enabled: 4
+   Storage Buckets: 3
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+STEP 5: VERIFY SUCCESS
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+Check these in Supabase:
+
+1. Tables (left sidebar → Database → Tables)
+   ✅ profiles
+   ✅ braider_profiles
+   ✅ portfolio_images
+   ✅ gallery_images
+
+2. Storage (left sidebar → Storage)
+   ✅ public (bucket)
+   ✅ images (bucket)
+   ✅ avatars (bucket)
+
+3. Auth Users (left sidebar → Authentication → Users)
+   ✅ admin@braidly.com (should exist)
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+STEP 6: TEST LOGIN
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+1. Go to your app login page
+2. Email: admin@braidly.com
+3. Password: Admin123456
+4. Click "Login"
+5. Should redirect to Admin Dashboard
+
+If this works, the SQL was applied successfully! ✅
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+⚠️  IF YOU GET AN ERROR:
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+Error: "column does not exist"
+→ This is normal if you had old schema. The script drops everything first.
+
+Error: "permission denied"
+→ Make sure you're logged in as project owner/admin
+
+Error: "syntax error"
+→ Make sure you copied the ENTIRE file, not just part of it
+
+Error: "already exists"
+→ This is normal. The script uses "IF NOT EXISTS" and "ON CONFLICT"
+
+If you still have issues:
+1. Try running the script again
+2. Check Supabase logs for details
+3. Make sure you're in the right project
+4. Try in an incognito/private browser window
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+✅ THAT'S IT!
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+Once the SQL runs successfully:
+
+1. All tables are created
+2. All RLS policies are configured
+3. All storage buckets are set up
+4. Admin user is created
+5. Auto-triggers are active
+6. App is ready to use!
+
+Next: Follow the testing steps in 🚀_DEPLOYMENT_GUIDE.md
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+Questions? See: 🚀_DEPLOYMENT_GUIDE.md (Troubleshooting section)
+
+Status: ✅ READY TO DEPLOY

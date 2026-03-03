@@ -1,0 +1,223 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Payment - Braidly</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
+    <link rel="stylesheet" href="css/payment.css">
+</head>
+<body>
+    <div class="container py-5">
+        <div class="row justify-content-center">
+            <div class="col-lg-8">
+                <!-- Back Button -->
+                <a href="booking.html" class="btn btn-link mb-3">
+                    <i class="fas fa-arrow-left me-2"></i>Back to Booking
+                </a>
+
+                <div class="payment-container">
+                    <div class="text-center mb-4">
+                        <i class="fas fa-lock text-success fs-1 mb-3"></i>
+                        <h2>Secure Payment</h2>
+                        <p class="text-muted">Your payment is protected by escrow</p>
+                    </div>
+
+                    <!-- Booking Summary -->
+                    <div class="card mb-4">
+                        <div class="card-header">
+                            <h5 class="mb-0"><i class="fas fa-receipt me-2"></i>Booking Summary</h5>
+                        </div>
+                        <div class="card-body">
+                            <div class="d-flex align-items-center mb-3">
+                                <img src="assets/images/gemini-3-pro-image-preview-2k_b_Professional_headsho.png" alt="Braider" class="braider-thumb">
+                                <div class="ms-3">
+                                    <h6 class="mb-0">Braid's Beauty</h6>
+                                    <small class="text-muted">Atlanta, GA</small>
+                                </div>
+                            </div>
+                            <hr>
+                            <div class="summary-row">
+                                <span>Service:</span>
+                                <strong>Box Braids</strong>
+                            </div>
+                            <div class="summary-row">
+                                <span>Date:</span>
+                                <strong>April 15, 2024</strong>
+                            </div>
+                            <div class="summary-row">
+                                <span>Time:</span>
+                                <strong>10:00 AM</strong>
+                            </div>
+                            <div class="summary-row">
+                                <span>Duration:</span>
+                                <strong>4-5 hours</strong>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Payment Method -->
+                    <div class="card mb-4">
+                        <div class="card-header">
+                            <h5 class="mb-0"><i class="fas fa-credit-card me-2"></i>Payment Method</h5>
+                        </div>
+                        <div class="card-body">
+                            <!-- Payment Options -->
+                            <div class="payment-options mb-4">
+                                <div class="payment-option active">
+                                    <input type="radio" name="paymentMethod" id="card" checked>
+                                    <label for="card">
+                                        <i class="fas fa-credit-card"></i>
+                                        <span>Credit/Debit Card</span>
+                                    </label>
+                                </div>
+                                <div class="payment-option">
+                                    <input type="radio" name="paymentMethod" id="applepay">
+                                    <label for="applepay">
+                                        <i class="fab fa-apple-pay"></i>
+                                        <span>Apple Pay</span>
+                                    </label>
+                                </div>
+                                <div class="payment-option">
+                                    <input type="radio" name="paymentMethod" id="googlepay">
+                                    <label for="googlepay">
+                                        <i class="fab fa-google-pay"></i>
+                                        <span>Google Pay</span>
+                                    </label>
+                                </div>
+                            </div>
+
+                            <!-- Card Form -->
+                            <form id="cardForm">
+                                <div class="mb-3">
+                                    <label for="cardNumber" class="form-label">Card Number</label>
+                                    <div class="input-group">
+                                        <input type="text" class="form-control" id="cardNumber" placeholder="1234 5678 9012 3456" maxlength="19">
+                                        <span class="input-group-text">
+                                            <i class="fab fa-cc-visa"></i>
+                                        </span>
+                                    </div>
+                                </div>
+
+                                <div class="mb-3">
+                                    <label for="cardName" class="form-label">Cardholder Name</label>
+                                    <input type="text" class="form-control" id="cardName" placeholder="John Doe">
+                                </div>
+
+                                <div class="row">
+                                    <div class="col-md-6 mb-3">
+                                        <label for="expiry" class="form-label">Expiry Date</label>
+                                        <input type="text" class="form-control" id="expiry" placeholder="MM/YY" maxlength="5">
+                                    </div>
+                                    <div class="col-md-6 mb-3">
+                                        <label for="cvv" class="form-label">CVV</label>
+                                        <input type="text" class="form-control" id="cvv" placeholder="123" maxlength="4">
+                                    </div>
+                                </div>
+
+                                <div class="form-check mb-3">
+                                    <input type="checkbox" class="form-check-input" id="saveCard">
+                                    <label class="form-check-label" for="saveCard">
+                                        Save card for future bookings
+                                    </label>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+
+                    <!-- Price Breakdown -->
+                    <div class="card mb-4">
+                        <div class="card-header">
+                            <h5 class="mb-0"><i class="fas fa-calculator me-2"></i>Price Breakdown</h5>
+                        </div>
+                        <div class="card-body">
+                            <div class="price-row">
+                                <span>Service Cost</span>
+                                <span>$150.00</span>
+                            </div>
+                            <div class="price-row text-muted small">
+                                <span>Platform Fee</span>
+                                <span>Included</span>
+                            </div>
+                            <div class="price-row text-muted small">
+                                <span>Taxes</span>
+                                <span>$0.00</span>
+                            </div>
+                            <hr>
+                            <div class="price-row total">
+                                <span>Total Amount</span>
+                                <strong>$150.00</strong>
+                            </div>
+
+                            <div class="alert alert-info mt-3 mb-0">
+                                <i class="fas fa-shield-alt me-2"></i>
+                                <small>
+                                    <strong>Escrow Protection:</strong> Your payment will be held securely 
+                                    and only released to the braider after service completion.
+                                </small>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Terms -->
+                    <div class="form-check mb-4">
+                        <input type="checkbox" class="form-check-input" id="agreeTerms" required>
+                        <label class="form-check-label" for="agreeTerms">
+                            I agree to the <a href="#">Terms of Service</a>, <a href="#">Cancellation Policy</a>, 
+                            and authorize Braidly to hold funds in escrow
+                        </label>
+                    </div>
+
+                    <!-- Submit Button -->
+                    <button type="button" class="btn btn-primary btn-lg w-100 mb-3" id="confirmPaymentBtn">
+                        <i class="fas fa-lock me-2"></i>Confirm & Pay $150.00
+                    </button>
+
+                    <!-- Security Badges -->
+                    <div class="security-badges text-center">
+                        <small class="text-muted d-block mb-2">Secured by</small>
+                        <div class="d-flex justify-content-center gap-3">
+                            <i class="fab fa-cc-stripe fs-3"></i>
+                            <i class="fas fa-shield-alt fs-3"></i>
+                            <i class="fas fa-lock fs-3"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Success Modal -->
+    <div class="modal fade" id="successModal" tabindex="-1" data-bs-backdrop="static">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-body text-center p-5">
+                    <div class="success-icon mb-4">
+                        <i class="fas fa-check-circle text-success"></i>
+                    </div>
+                    <h3>Booking Confirmed!</h3>
+                    <p class="text-muted mb-4">Your payment has been secured in escrow</p>
+                    
+                    <div class="booking-details mb-4">
+                        <p><strong>Booking ID:</strong> #BR-2024-1234</p>
+                        <p><strong>Date:</strong> April 15, 2024 at 10:00 AM</p>
+                    </div>
+
+                    <button type="button" class="btn btn-primary btn-lg w-100 mb-2" onclick="window.location.href='customer-dashboard.html'">
+                        View My Bookings
+                    </button>
+                    <button type="button" class="btn btn-outline-secondary w-100" onclick="window.location.href='index.html'">
+                        Back to Home
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="js/main.js"></script>
+    <script src="js/logout.js"></script>
+    <script src="js/payment.js"></script>
+</body>
+</html>

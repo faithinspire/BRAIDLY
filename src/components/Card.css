@@ -1,0 +1,82 @@
+/* Card Component Styles */
+
+.card {
+  background: rgba(255, 255, 255, 0.95);
+  border-radius: 1rem;
+  padding: 1.5rem;
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+  transition: all 200ms ease-in-out;
+  border: 1px solid rgba(255, 255, 255, 0.2);
+}
+
+.card-hoverable:hover {
+  box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+  transform: translateY(-4px);
+}
+
+.card-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  margin-bottom: 1rem;
+  padding-bottom: 1rem;
+  border-bottom: 2px solid #f3f4f6;
+  gap: 1rem;
+}
+
+.card-header-content {
+  display: flex;
+  align-items: flex-start;
+  gap: 1rem;
+  flex: 1;
+}
+
+.card-icon {
+  font-size: 1.5rem;
+  color: #9333ea;
+  margin-top: 0.25rem;
+}
+
+.card-title {
+  font-size: 1.25rem;
+  font-weight: 700;
+  color: #111827;
+  margin: 0;
+}
+
+.card-subtitle {
+  font-size: 0.875rem;
+  color: #6b7280;
+  margin: 0.25rem 0 0 0;
+}
+
+.card-header-action {
+  display: flex;
+  gap: 0.5rem;
+}
+
+.card-body {
+  margin-bottom: 1rem;
+}
+
+.card-footer {
+  display: flex;
+  gap: 1rem;
+  padding-top: 1rem;
+  border-top: 1px solid #f3f4f6;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .card {
+    padding: 1rem;
+  }
+
+  .card-header {
+    flex-direction: column;
+  }
+
+  .card-header-action {
+    width: 100%;
+  }
+}

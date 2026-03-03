@@ -1,0 +1,123 @@
+⚡ FIX DATABASE ERROR - IMMEDIATE ACTION
+═══════════════════════════════════════════════════════════════════════════════
+
+🔴 PROBLEM:
+───────────────────────────────────────────────────────────────────────────────
+"Database error saving new user" when trying to signup
+Schema has issues preventing user creation
+
+
+🟢 SOLUTION (15 minutes):
+───────────────────────────────────────────────────────────────────────────────
+
+STEP 1: DELETE OLD SCHEMA (2 min)
+─────────────────────────────────
+1. Go to: Supabase Dashboard > SQL Editor > New Query
+2. Run this SQL:
+
+   DROP TABLE IF EXISTS public.notifications CASCADE;
+   DROP TABLE IF EXISTS public.verification_documents CASCADE;
+   DROP TABLE IF EXISTS public.reviews CASCADE;
+   DROP TABLE IF EXISTS public.payments CASCADE;
+   DROP TABLE IF EXISTS public.bookings CASCADE;
+   DROP TABLE IF EXISTS public.gallery_images CASCADE;
+   DROP TABLE IF EXISTS public.portfolio_images CASCADE;
+   DROP TABLE IF EXISTS public.services CASCADE;
+   DROP TABLE IF EXISTS public.braider_profiles CASCADE;
+   DROP TABLE IF EXISTS public.profiles CASCADE;
+   DROP TYPE IF EXISTS user_role CASCADE;
+   DROP TYPE IF EXISTS verification_status CASCADE;
+   DROP TYPE IF EXISTS booking_status CASCADE;
+   DROP TYPE IF EXISTS payment_status CASCADE;
+
+3. Click: Run
+4. Expected: "Query executed successfully"
+
+
+STEP 2: RUN FRESH SCHEMA (3 min)
+────────────────────────────────
+1. Go to: Supabase Dashboard > SQL Editor > New Query
+2. Copy: supabase/schema-fresh-complete.sql
+3. Paste: Into SQL Editor
+4. Click: Run
+5. Expected: "Query executed successfully"
+
+
+STEP 3: VERIFY SCHEMA (2 min)
+─────────────────────────────
+1. Go to: Supabase Dashboard > SQL Editor > New Query
+2. Run:
+
+   SELECT table_name FROM information_schema.tables 
+   WHERE table_schema = 'public' 
+   ORDER BY table_name;
+
+3. Should show 10 tables:
+   ✓ bookings
+   ✓ braider_profiles
+   ✓ gallery_images
+   ✓ notifications
+   ✓ payments
+   ✓ portfolio_images
+   ✓ profiles
+   ✓ reviews
+   ✓ services
+   ✓ verification_documents
+
+
+STEP 4: TEST SIGNUP (3 min)
+───────────────────────────
+1. Go to: http://localhost:3002/signup
+2. Fill:
+   - Full Name: Test User
+   - Email: test@example.com
+   - Phone: 1234567890
+   - Role: Customer
+   - Password: TestPassword123
+3. Click: Create Account
+4. Expected: ✅ Account created
+
+
+STEP 5: TEST LOGIN (2 min)
+──────────────────────────
+1. Go to: http://localhost:3002/login
+2. Enter:
+   - Email: test@example.com
+   - Password: TestPassword123
+3. Click: Login
+4. Expected: ✅ Logged in
+
+
+STEP 6: COMMIT CHANGES (3 min)
+──────────────────────────────
+1. Terminal: git add .
+2. Terminal: git commit -m "Fix database schema: complete rewrite"
+3. Terminal: git push origin main
+4. Expected: Changes pushed
+
+
+═══════════════════════════════════════════════════════════════════════════════
+
+✅ SUCCESS CRITERIA
+───────────────────────────────────────────────────────────────────────────────
+
+✓ Old schema deleted
+✓ New schema created
+✓ All 10 tables exist
+✓ Signup works
+✓ Login works
+✓ No database errors
+
+
+═══════════════════════════════════════════════════════════════════════════════
+
+📚 DOCUMENTATION
+───────────────────────────────────────────────────────────────────────────────
+
+Read: 🔥_DATABASE_ERROR_FIX.md (comprehensive guide)
+
+
+═══════════════════════════════════════════════════════════════════════════════
+
+🚀 READY! Start with STEP 1 above.
+═══════════════════════════════════════════════════════════════════════════════

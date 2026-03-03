@@ -1,0 +1,212 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Welcome to Braidly - Demo Access</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
+    <style>
+        body {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-family: 'Inter', sans-serif;
+        }
+        .welcome-container {
+            max-width: 900px;
+            background: white;
+            border-radius: 20px;
+            padding: 3rem;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+        }
+        .logo {
+            font-size: 3rem;
+            color: #667eea;
+            margin-bottom: 1rem;
+        }
+        .credential-card {
+            background: #f8f9fa;
+            border-left: 4px solid #667eea;
+            padding: 1.5rem;
+            border-radius: 8px;
+            margin-bottom: 1rem;
+            transition: all 0.3s ease;
+        }
+        .credential-card:hover {
+            transform: translateX(5px);
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+        }
+        .credential-card.customer { border-left-color: #667eea; }
+        .credential-card.braider { border-left-color: #48bb78; }
+        .credential-card.admin { border-left-color: #f56565; }
+        .copy-btn {
+            font-size: 0.85rem;
+            padding: 0.25rem 0.75rem;
+        }
+        .feature-badge {
+            display: inline-block;
+            padding: 0.25rem 0.75rem;
+            background: #e0e7ff;
+            color: #667eea;
+            border-radius: 20px;
+            font-size: 0.85rem;
+            margin: 0.25rem;
+        }
+    </style>
+</head>
+<body>
+    <div class="welcome-container">
+        <div class="text-center mb-4">
+            <div class="logo">
+                <img src="assets/images/braidly-logo.svg" alt="Braidly" style="height: 80px; width: auto;">
+            </div>
+            <h1 class="mb-2">Welcome to Braidly</h1>
+            <p class="text-muted">Professional Braiding Services Platform - Demo Version</p>
+        </div>
+
+        <div class="alert alert-info">
+            <i class="fas fa-info-circle me-2"></i>
+            <strong>Demo Mode:</strong> Use the credentials below to explore different user roles. All data is stored locally in your browser.
+        </div>
+
+        <h4 class="mb-3"><i class="fas fa-key me-2"></i>Demo Login Credentials</h4>
+
+        <!-- Customer Account -->
+        <div class="credential-card customer">
+            <div class="d-flex justify-content-between align-items-start mb-2">
+                <div>
+                    <h5 class="mb-1"><i class="fas fa-user me-2"></i>Customer Account</h5>
+                    <p class="text-muted mb-2">Browse and book braiding services</p>
+                </div>
+                <button class="btn btn-sm btn-primary copy-btn" onclick="copyCredentials('customer@braidly.com', 'Customer123!')">
+                    <i class="fas fa-copy me-1"></i>Copy
+                </button>
+            </div>
+            <div class="mb-2">
+                <strong>Email:</strong> <code>customer@braidly.com</code><br>
+                <strong>Password:</strong> <code>Customer123!</code>
+            </div>
+            <div>
+                <span class="feature-badge">Search Braiders</span>
+                <span class="feature-badge">Book Appointments</span>
+                <span class="feature-badge">Secure Payments</span>
+                <span class="feature-badge">Reviews</span>
+            </div>
+        </div>
+
+        <!-- Braider Account -->
+        <div class="credential-card braider">
+            <div class="d-flex justify-content-between align-items-start mb-2">
+                <div>
+                    <h5 class="mb-1"><i class="fas fa-scissors me-2"></i>Braider Account</h5>
+                    <p class="text-muted mb-2">Manage your braiding business</p>
+                </div>
+                <button class="btn btn-sm btn-success copy-btn" onclick="copyCredentials('braider@braidly.com', 'Braider123!')">
+                    <i class="fas fa-copy me-1"></i>Copy
+                </button>
+            </div>
+            <div class="mb-2">
+                <strong>Email:</strong> <code>braider@braidly.com</code><br>
+                <strong>Password:</strong> <code>Braider123!</code>
+            </div>
+            <div>
+                <span class="feature-badge">Earnings Dashboard</span>
+                <span class="feature-badge">Photo Editor</span>
+                <span class="feature-badge">Booking Management</span>
+                <span class="feature-badge">Portfolio</span>
+            </div>
+        </div>
+
+        <!-- Admin Account -->
+        <div class="credential-card admin">
+            <div class="d-flex justify-content-between align-items-start mb-2">
+                <div>
+                    <h5 class="mb-1"><i class="fas fa-shield-alt me-2"></i>Admin Account</h5>
+                    <p class="text-muted mb-2">Platform management and oversight</p>
+                </div>
+                <button class="btn btn-sm btn-danger copy-btn" onclick="copyCredentials('admin@braidly.com', 'Admin123!')">
+                    <i class="fas fa-copy me-1"></i>Copy
+                </button>
+            </div>
+            <div class="mb-2">
+                <strong>Email:</strong> <code>admin@braidly.com</code><br>
+                <strong>Password:</strong> <code>Admin123!</code>
+            </div>
+            <div>
+                <span class="feature-badge">User Management</span>
+                <span class="feature-badge">Dispute Resolution</span>
+                <span class="feature-badge">Fraud Detection</span>
+                <span class="feature-badge">Analytics</span>
+            </div>
+        </div>
+
+        <div class="row mt-4">
+            <div class="col-md-6 mb-3">
+                <a href="login.html" class="btn btn-primary btn-lg w-100">
+                    <i class="fas fa-sign-in-alt me-2"></i>Go to Login
+                </a>
+            </div>
+            <div class="col-md-6 mb-3">
+                <a href="index.html" class="btn btn-outline-primary btn-lg w-100">
+                    <i class="fas fa-home me-2"></i>View Landing Page
+                </a>
+            </div>
+        </div>
+
+        <div class="alert alert-warning mt-3">
+            <strong><i class="fas fa-lightbulb me-2"></i>Quick Tip:</strong> 
+            Click the "Copy" button next to any account, then paste the credentials on the login page!
+        </div>
+
+        <div class="text-center mt-4">
+            <p class="text-muted mb-2">
+                <i class="fas fa-book me-2"></i>
+                <a href="QUICK_START.md" target="_blank">Quick Start Guide</a> | 
+                <a href="README.md" target="_blank">Full Documentation</a> | 
+                <a href="DEMO_CREDENTIALS.md" target="_blank">All Credentials</a>
+            </p>
+            <small class="text-muted">
+                Built with <i class="fas fa-heart text-danger"></i> for the braiding community
+            </small>
+        </div>
+    </div>
+
+    <script>
+        function copyCredentials(email, password) {
+            const text = `Email: ${email}\nPassword: ${password}`;
+            navigator.clipboard.writeText(text).then(() => {
+                // Show success message
+                const btn = event.target.closest('button');
+                const originalHTML = btn.innerHTML;
+                btn.innerHTML = '<i class="fas fa-check me-1"></i>Copied!';
+                btn.disabled = true;
+                
+                setTimeout(() => {
+                    btn.innerHTML = originalHTML;
+                    btn.disabled = false;
+                }, 2000);
+            });
+        }
+
+        // Auto-redirect if already logged in
+        window.addEventListener('load', () => {
+            const isLoggedIn = localStorage.getItem('isLoggedIn');
+            if (isLoggedIn === 'true') {
+                const userData = JSON.parse(localStorage.getItem('userData') || '{}');
+                if (confirm('You are already logged in. Go to your dashboard?')) {
+                    if (userData.role === 'customer') {
+                        window.location.href = 'customer-dashboard.html';
+                    } else if (userData.role === 'braider') {
+                        window.location.href = 'braider-dashboard.html';
+                    } else if (userData.role === 'admin') {
+                        window.location.href = 'admin-dashboard.html';
+                    }
+                }
+            }
+        });
+    </script>
+</body>
+</html>

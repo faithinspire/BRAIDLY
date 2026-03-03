@@ -1,0 +1,178 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Verification Queue - Braidly Admin</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
+    <link rel="stylesheet" href="css/admin-dashboard.css">
+    <link rel="stylesheet" href="css/footer-nav.css">
+    <link rel="stylesheet" href="css/theme.css">
+</head>
+<body>
+    <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+        <div class="container-fluid">
+            <a class="navbar-brand" href="admin-dashboard.html"><i class="fas fa-shield-alt"></i> Braidly Admin</a>
+            <div class="ms-auto">
+                <button class="btn btn-outline-light btn-sm" id="logoutBtn"><i class="fas fa-sign-out-alt"></i> Logout</button>
+            </div>
+        </div>
+    </nav>
+
+    <div class="container-fluid">
+        <div class="row">
+            <nav class="col-md-3 col-lg-2 d-md-block sidebar">
+                <div class="position-sticky pt-3">
+                    <ul class="nav flex-column">
+                        <li class="nav-item"><a class="nav-link" href="admin-dashboard.html"><i class="fas fa-home"></i> Dashboard</a></li>
+                        <li class="nav-item"><a class="nav-link" href="admin-user-management.html"><i class="fas fa-users"></i> User Management</a></li>
+                        <li class="nav-item"><a class="nav-link active" href="admin-verification.html"><i class="fas fa-id-card"></i> Verification Queue</a></li>
+                        <li class="nav-item"><a class="nav-link" href="admin-background-checks.html"><i class="fas fa-user-shield"></i> Background Checks</a></li>
+                        <li class="nav-item"><a class="nav-link" href="admin-disputes.html"><i class="fas fa-gavel"></i> Dispute Center</a></li>
+                        <li class="nav-item"><a class="nav-link" href="admin-fraud.html"><i class="fas fa-exclamation-triangle"></i> Fraud Alerts</a></li>
+                        <li class="nav-item"><a class="nav-link" href="admin-financial.html"><i class="fas fa-chart-bar"></i> Financial Overview</a></li>
+                        <li class="nav-item"><a class="nav-link" href="admin-badges.html"><i class="fas fa-award"></i> Badge Management</a></li>
+                        <li class="nav-item"><a class="nav-link" href="admin-referrals.html"><i class="fas fa-share-alt"></i> Referral Tracking</a></li>
+                        <li class="nav-item"><a class="nav-link" href="admin-analytics.html"><i class="fas fa-chart-line"></i> Analytics</a></li>
+                    </ul>
+                </div>
+            </nav>
+
+            <main class="col-md-9 ms-sm-auto col-lg-10 px-md-4">
+                <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
+                    <h1 class="h2"><i class="fas fa-id-card me-2"></i>Verification Queue</h1>
+                    <div class="btn-toolbar mb-2 mb-md-0">
+                        <span class="badge bg-warning me-2" id="pendingCount">0 Pending</span>
+                        <button class="btn btn-sm btn-primary" onclick="refreshQueue()"><i class="fas fa-sync-alt"></i> Refresh</button>
+                    </div>
+                </div>
+
+                <div id="loadingSpinner" class="text-center py-5">
+                    <div class="spinner-border text-primary" role="status"></div>
+                    <p class="mt-2">Loading verification requests...</p>
+                </div>
+
+                <div id="verificationQueue" style="display:none;">
+                    <div id="queueList"></div>
+                </div>
+            </main>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script src="js/supabase-config.js"></script>
+    <script src="js/logout.js"></script>
+    <script src="js/offline-mode.js"></script>
+    <script src="js/footer-nav.js"></script>
+    <script src="js/theme.js"></script>
+    <script>
+        async function loadVerificationQueue() {
+            try {
+                const { data: braiders, error } = await supabaseClient
+                    .from('braider_profiles')
+                    .select(`
+                        *,
+                        profiles:user_id (full_name, email, avatar_url)
+                    `)
+                    .eq('verification_status', 'unverified')
+                    .order('created_at', { ascending: false });
+
+                if (error) throw error;
+
+                document.getElementById('loadingSpinner').style.display = 'none';
+                document.getElementById('verificationQueue').style.display = 'block';
+                document.getElementById('pendingCount').textContent = `${braiders.length} Pending`;
+
+                const queueList = document.getElementById('queueList');
+                if (braiders.length === 0) {
+                    queueList.innerHTML = '<div class="alert alert-info">No pending verification requests</div>';
+                    return;
+                }
+
+                queueList.innerHTML = braiders.map(braider => `
+                    <div class="card mb-3">
+                        <div class="card-body">
+                            <div class="row">
+                                <div class="col-md-2">
+                                    <img src="${braider.profiles?.avatar_url || 'assets/images/default-avatar.jpg'}" 
+                                         class="img-fluid rounded-circle" alt="Braider">
+                                </div>
+                                <div class="col-md-7">
+                                    <h5>${braider.profiles?.full_name || 'N/A'}</h5>
+                                    <p class="mb-1"><i class="fas fa-envelope me-2"></i>${braider.profiles?.email}</p>
+                                    <p class="mb-1"><i class="fas fa-map-marker-alt me-2"></i>${braider.city || 'N/A'}, ${braider.state || 'N/A'}</p>
+                                    <p class="mb-0"><small class="text-muted">Submitted: ${new Date(braider.created_at).toLocaleString()}</small></p>
+                                </div>
+                                <div class="col-md-3 text-end">
+                                    <button class="btn btn-success btn-sm mb-2 w-100" onclick="approveBraider('${braider.id}')">
+                                        <i class="fas fa-check"></i> Approve
+                                    </button>
+                                    <button class="btn btn-danger btn-sm w-100" onclick="rejectBraider('${braider.id}')">
+                                        <i class="fas fa-times"></i> Reject
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                `).join('');
+            } catch (error) {
+                console.error('Error loading verification queue:', error);
+                document.getElementById('loadingSpinner').style.display = 'none';
+                document.getElementById('queueList').style.display = 'block';
+                
+                let errorMessage = 'Failed to load verification queue. ';
+                if (error.message && (error.message.includes('column') || error.message.includes('relation'))) {
+                    errorMessage += '<br><br><strong>Database Setup Required:</strong><br>';
+                    errorMessage += 'Run <code>supabase/schema-fixed.sql</code> in Supabase SQL Editor.<br>';
+                    errorMessage += 'See <code>FIX_DATABASE_ERRORS.md</code> for instructions.';
+                } else {
+                    errorMessage += '<br><br>Error: ' + error.message;
+                }
+                
+                document.getElementById('queueList').innerHTML = `
+                    <div class="alert alert-danger">
+                        <h5><i class="fas fa-exclamation-triangle"></i> Error</h5>
+                        <p>${errorMessage}</p>
+                        <button class="btn btn-primary mt-2" onclick="refreshQueue()">
+                            <i class="fas fa-sync-alt"></i> Try Again
+                        </button>
+                    </div>
+                `;
+            }
+        }
+
+        async function approveBraider(braiderId) {
+            try {
+                const { error } = await supabaseClient
+                    .from('braider_profiles')
+                    .update({ verification_status: 'tier1' })
+                    .eq('id', braiderId);
+
+                if (error) throw error;
+                alert('Braider approved successfully!');
+                refreshQueue();
+            } catch (error) {
+                console.error('Error approving braider:', error);
+                alert('Failed to approve braider');
+            }
+        }
+
+        async function rejectBraider(braiderId) {
+            if (confirm('Are you sure you want to reject this verification?')) {
+                alert('Braider rejected');
+                refreshQueue();
+            }
+        }
+
+        function refreshQueue() {
+            document.getElementById('loadingSpinner').style.display = 'block';
+            document.getElementById('verificationQueue').style.display = 'none';
+            loadVerificationQueue();
+        }
+
+        loadVerificationQueue();
+    </script>
+</body>
+</html>

@@ -1,0 +1,261 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Customer Dashboard - Braidly</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
+    <link rel="stylesheet" href="css/dashboard.css">
+    <link rel="stylesheet" href="css/footer-nav.css">
+    <link rel="stylesheet" href="css/theme.css">
+    <style>
+        body {
+            padding-bottom: 80px; /* Space for footer nav */
+        }
+        .main-content {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px 15px;
+        }
+        /* Remove sidebar styles */
+        .sidebar {
+            display: none !important;
+        }
+    </style>
+</head>
+<body>
+    <!-- Top Navigation -->
+    <nav class="navbar navbar-expand-lg navbar-dark bg-primary sticky-top">
+        <div class="container-fluid">
+            <a class="navbar-brand" href="customer-dashboard.html">
+                <img src="assets/images/WhatsApp Image 2026-02-25 at 3.18.01 AM.jpeg" alt="Braidly" style="height: 50px; width: auto; background: transparent !important; mix-blend-mode: multiply; filter: brightness(1.3) contrast(1.2);">
+            </a>
+            <div class="ms-auto d-flex align-items-center gap-3">
+                <button id="theme-toggle" class="btn btn-link text-white" title="Toggle Theme">
+                    <i class="fas fa-moon" id="theme-icon"></i>
+                </button>
+                <div class="notification-icon">
+                    <i class="fas fa-bell text-white"></i>
+                    <span class="badge bg-danger">2</span>
+                </div>
+                <div class="dropdown">
+                    <a class="nav-link dropdown-toggle text-white" href="#" role="button" data-bs-toggle="dropdown">
+                        <i class="fas fa-user-circle fa-2x"></i>
+                    </a>
+                    <ul class="dropdown-menu dropdown-menu-end">
+                        <li><a class="dropdown-item" href="profile-settings.html"><i class="fas fa-user me-2"></i>Profile</a></li>
+                        <li><a class="dropdown-item" href="profile-settings.html"><i class="fas fa-cog me-2"></i>Settings</a></li>
+                        <li><hr class="dropdown-divider"></li>
+                        <li><a class="dropdown-item" href="#" id="logoutBtn"><i class="fas fa-sign-out-alt me-2"></i>Logout</a></li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Main Content (No Sidebar) -->
+    <main class="main-content">
+        <div class="pt-3 pb-2 mb-3">
+            <h2 data-welcome-user>Welcome Back!</h2>
+            <p class="text-muted">Find your next perfect style</p>
+        </div>
+
+        <!-- Search Bar -->
+        <div class="search-section mb-4">
+            <div class="row g-3">
+                <div class="col-md-6">
+                    <div class="input-group">
+                        <span class="input-group-text"><i class="fas fa-map-marker-alt"></i></span>
+                        <input type="text" class="form-control" id="locationInput" placeholder="Enter your location">
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="input-group">
+                        <span class="input-group-text"><i class="fas fa-search"></i></span>
+                        <input type="text" class="form-control" placeholder="Search style...">
+                    </div>
+                </div>
+                <div class="col-md-2">
+                    <button class="btn btn-primary w-100"><i class="fas fa-sliders-h"></i> Filters</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Categories -->
+        <div class="categories-section mb-4">
+            <h5 class="mb-3">Popular Styles</h5>
+            <div class="row g-3">
+                <div class="col-6 col-md-3 col-lg-2">
+                    <div class="category-card" onclick="window.location.href='box-braids.html'">
+                        <i class="fas fa-crown"></i>
+                        <p>Box Braids</p>
+                    </div>
+                </div>
+                <div class="col-6 col-md-3 col-lg-2">
+                    <div class="category-card" onclick="window.location.href='knotless-braids.html'">
+                        <i class="fas fa-star"></i>
+                        <p>Knotless</p>
+                    </div>
+                </div>
+                <div class="col-6 col-md-3 col-lg-2">
+                    <div class="category-card" onclick="window.location.href='kids-braids.html'">
+                        <i class="fas fa-child"></i>
+                        <p>Kids Braids</p>
+                    </div>
+                </div>
+                <div class="col-6 col-md-3 col-lg-2">
+                    <div class="category-card" onclick="window.location.href='cornrows.html'">
+                        <i class="fas fa-gem"></i>
+                        <p>Cornrows</p>
+                    </div>
+                </div>
+                <div class="col-6 col-md-3 col-lg-2">
+                    <div class="category-card" onclick="window.location.href='twists.html'">
+                        <i class="fas fa-magic"></i>
+                        <p>Twists</p>
+                    </div>
+                </div>
+                <div class="col-6 col-md-3 col-lg-2">
+                    <div class="category-card" onclick="window.location.href='styles-gallery.html'">
+                        <i class="fas fa-ellipsis-h"></i>
+                        <p>More</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Featured Braiders -->
+        <div class="featured-section mb-4">
+            <h5 class="mb-3">Featured Braiders Near You</h5>
+            <div class="row g-4">
+                <!-- Braider Card 1 -->
+                <div class="col-md-6 col-lg-4">
+                    <div class="braider-card">
+                        <div class="braider-image">
+                            <img src="assets/images/gemini-3-pro-image-preview-2k_b_Professional_headsho.png" alt="Braider">
+                            <span class="badge-verified"><i class="fas fa-check-circle"></i></span>
+                            <button class="btn-favorite"><i class="far fa-heart"></i></button>
+                        </div>
+                        <div class="braider-info">
+                            <h6>TashaBraids</h6>
+                            <div class="rating mb-2">
+                                <i class="fas fa-star"></i>
+                                <i class="fas fa-star"></i>
+                                <i class="fas fa-star"></i>
+                                <i class="fas fa-star"></i>
+                                <i class="fas fa-star-half-alt"></i>
+                                <span class="ms-1">4.9 (127)</span>
+                            </div>
+                            <p class="location"><i class="fas fa-map-marker-alt me-1"></i>2.3 miles away</p>
+                            <div class="d-flex justify-content-between align-items-center">
+                                <span class="price">From $120</span>
+                                <span class="badge bg-success">Mobile Available</span>
+                            </div>
+                            <button class="btn btn-primary w-100 mt-3" onclick="window.location.href='braider-profile.html'">View Profile</button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Braider Card 2 -->
+                <div class="col-md-6 col-lg-4">
+                    <div class="braider-card">
+                        <div class="braider-image">
+                            <img src="assets/images/gemini-3-pro-image-preview-2k_b_Professional_portrai.png" alt="Braider">
+                            <span class="badge-verified"><i class="fas fa-check-circle"></i></span>
+                            <span class="badge-pro">PRO</span>
+                            <button class="btn-favorite"><i class="far fa-heart"></i></button>
+                        </div>
+                        <div class="braider-info">
+                            <h6>Stylist Keisha</h6>
+                            <div class="rating mb-2">
+                                <i class="fas fa-star"></i>
+                                <i class="fas fa-star"></i>
+                                <i class="fas fa-star"></i>
+                                <i class="fas fa-star"></i>
+                                <i class="fas fa-star"></i>
+                                <span class="ms-1">5.0 (89)</span>
+                            </div>
+                            <p class="location"><i class="fas fa-map-marker-alt me-1"></i>1.8 miles away</p>
+                            <div class="d-flex justify-content-between align-items-center">
+                                <span class="price">From $150</span>
+                                <span class="badge bg-info">Available Today</span>
+                            </div>
+                            <button class="btn btn-primary w-100 mt-3" onclick="window.location.href='braider-profile.html'">View Profile</button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Braider Card 3 -->
+                <div class="col-md-6 col-lg-4">
+                    <div class="braider-card">
+                        <div class="braider-image">
+                            <img src="assets/images/gpt-image-1.5-high-fidelity_a_Professional_headsho.png" alt="Braider">
+                            <span class="badge-verified"><i class="fas fa-check-circle"></i></span>
+                            <button class="btn-favorite active"><i class="fas fa-heart"></i></button>
+                        </div>
+                        <div class="braider-info">
+                            <h6>Braid's Beauty</h6>
+                            <div class="rating mb-2">
+                                <i class="fas fa-star"></i>
+                                <i class="fas fa-star"></i>
+                                <i class="fas fa-star"></i>
+                                <i class="fas fa-star"></i>
+                                <i class="far fa-star"></i>
+                                <span class="ms-1">4.7 (203)</span>
+                            </div>
+                            <p class="location"><i class="fas fa-map-marker-alt me-1"></i>3.1 miles away</p>
+                            <div class="d-flex justify-content-between align-items-center">
+                                <span class="price">From $95</span>
+                                <span class="badge bg-secondary">Salon</span>
+                            </div>
+                            <button class="btn btn-primary w-100 mt-3" onclick="window.location.href='braider-profile.html'">View Profile</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <!-- Bottom Navigation -->
+    <nav class="bottom-nav">
+        <a href="customer-dashboard.html" class="nav-item active">
+            <i class="fas fa-home"></i>
+            <span>Home</span>
+        </a>
+        <a href="customer-bookings.html" class="nav-item">
+            <i class="fas fa-calendar"></i>
+            <span>Bookings</span>
+        </a>
+        <a href="customer-favorites.html" class="nav-item">
+            <i class="fas fa-heart"></i>
+            <span>Favorites</span>
+        </a>
+        <a href="customer-history.html" class="nav-item">
+            <i class="fas fa-history"></i>
+            <span>History</span>
+        </a>
+        <a href="profile-settings.html" class="nav-item">
+            <i class="fas fa-user"></i>
+            <span>Profile</span>
+        </a>
+    </nav>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script src="js/supabase-config.js"></script>
+    <script src="js/auth-core.js"></script>
+    <script>window.protectPage();</script>
+    <script src="js/main.js"></script>
+    <script src="js/dashboard.js"></script>
+    <script src="js/theme.js"></script>
+    <script src="js/ai-chatbot.js"></script>
+    <script>
+        // Logout handler
+        document.getElementById('logoutBtn')?.addEventListener('click', function(e) {
+            e.preventDefault();
+            if (confirm('Logout?')) window.braidlyLogout();
+        });
+    </script>
+</body>
+</html>

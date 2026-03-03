@@ -1,0 +1,74 @@
+═══════════════════════════════════════════════════════════════
+  ⚠️ IMPORTANT - READ THIS FIRST ⚠️
+═══════════════════════════════════════════════════════════════
+
+YOU NOW HAVE TWO APPS IN THIS FOLDER:
+
+1. OLD APP (HTML/CSS/JS) - All the .html files
+2. NEW APP (REACT) - All files in src/ folder
+
+═══════════════════════════════════════════════════════════════
+  WHY YOU'RE SEEING OLD HTML/CSS/JS
+═══════════════════════════════════════════════════════════════
+
+You're probably opening the old HTML files directly in your browser.
+
+The React app needs to be STARTED with a command, not opened directly.
+
+═══════════════════════════════════════════════════════════════
+  HOW TO RUN THE NEW REACT APP
+═══════════════════════════════════════════════════════════════
+
+1. Open PowerShell in this folder
+
+2. Run these commands:
+
+   npm install
+   npm run dev
+
+3. Browser will open automatically to http://localhost:3000
+
+4. You'll see the NEW React app (not old HTML)
+
+═══════════════════════════════════════════════════════════════
+  LOGIN CREDENTIALS (FIXED)
+═══════════════════════════════════════════════════════════════
+
+Email: customer@braidly.com
+Password: Customer123!
+
+(Email is now case-insensitive, so CUSTOMER@BRAIDLY.COM also works)
+
+═══════════════════════════════════════════════════════════════
+  WHAT'S THE DIFFERENCE?
+═══════════════════════════════════════════════════════════════
+
+OLD APP:
+- Open .html files directly in browser
+- Has redirect loops and bugs
+- Uses vanilla JavaScript
+
+NEW REACT APP:
+- Must run with "npm run dev"
+- No redirect loops
+- Clean navigation
+- Modern React architecture
+- Fixed all issues
+
+═══════════════════════════════════════════════════════════════
+  QUICK START
+═══════════════════════════════════════════════════════════════
+
+Step 1: npm install
+Step 2: Copy-Item -Recurse assets public/
+Step 3: npm run dev
+
+That's it! Browser opens automatically.
+
+═══════════════════════════════════════════════════════════════
+  DETAILED INSTRUCTIONS
+═══════════════════════════════════════════════════════════════
+
+See: START_REACT_APP.md
+
+═══════════════════════════════════════════════════════════════

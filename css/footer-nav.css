@@ -1,0 +1,193 @@
+/* Bottom Navigation (Footer) */
+.bottom-nav {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    background: #ffffff;
+    box-shadow: 0 -2px 10px rgba(0, 0, 0, 0.1);
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+    padding: 8px 0;
+    z-index: 1000;
+    height: 70px;
+}
+
+.bottom-nav .nav-item {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    text-decoration: none;
+    color: #6c757d;
+    font-size: 12px;
+    padding: 8px 12px;
+    transition: all 0.3s ease;
+    flex: 1;
+    max-width: 100px;
+}
+
+.bottom-nav .nav-item i {
+    font-size: 20px;
+    margin-bottom: 4px;
+}
+
+.bottom-nav .nav-item span {
+    font-size: 11px;
+    font-weight: 500;
+}
+
+.bottom-nav .nav-item:hover {
+    color: #667eea;
+    transform: translateY(-2px);
+}
+
+.bottom-nav .nav-item.active {
+    color: #667eea;
+    font-weight: 600;
+}
+
+.bottom-nav .nav-item.active i {
+    color: #667eea;
+}
+
+/* Dark mode support */
+body.dark-mode .bottom-nav {
+    background: #2d3748;
+    box-shadow: 0 -2px 10px rgba(0, 0, 0, 0.3);
+}
+
+body.dark-mode .bottom-nav .nav-item {
+    color: #a0aec0;
+}
+
+body.dark-mode .bottom-nav .nav-item:hover,
+body.dark-mode .bottom-nav .nav-item.active {
+    color: #667eea;
+}
+
+/* Responsive adjustments */
+@media (max-width: 480px) {
+    .bottom-nav {
+        height: 65px;
+        padding: 6px 0;
+    }
+    
+    .bottom-nav .nav-item {
+        padding: 6px 8px;
+    }
+    
+    .bottom-nav .nav-item i {
+        font-size: 18px;
+    }
+    
+    .bottom-nav .nav-item span {
+        font-size: 10px;
+    }
+}
+
+@media (min-width: 768px) {
+    .bottom-nav {
+        height: 75px;
+    }
+    
+    .bottom-nav .nav-item {
+        padding: 10px 15px;
+    }
+    
+    .bottom-nav .nav-item i {
+        font-size: 22px;
+    }
+    
+    .bottom-nav .nav-item span {
+        font-size: 12px;
+    }
+}
+
+/* Notification badge on nav items */
+.bottom-nav .nav-item .badge {
+    position: absolute;
+    top: 5px;
+    right: 15px;
+    background: #f56565;
+    color: white;
+    border-radius: 10px;
+    padding: 2px 6px;
+    font-size: 10px;
+    font-weight: 700;
+}
+
+/* AI Chatbot positioning at footer level */
+.chatbot-container {
+    position: fixed;
+    bottom: 80px; /* Above footer nav */
+    right: 20px;
+    z-index: 999; /* Below footer nav */
+}
+
+.chat-toggle-btn {
+    width: 60px;
+    height: 60px;
+    border-radius: 50%;
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    border: none;
+    color: white;
+    font-size: 24px;
+    cursor: pointer;
+    box-shadow: 0 4px 20px rgba(102, 126, 234, 0.4);
+    transition: all 0.3s ease;
+    animation: pulse 2s infinite;
+}
+
+.chat-toggle-btn:hover {
+    transform: scale(1.1);
+    box-shadow: 0 6px 30px rgba(102, 126, 234, 0.6);
+}
+
+@keyframes pulse {
+    0%, 100% { box-shadow: 0 4px 20px rgba(102, 126, 234, 0.4); }
+    50% { box-shadow: 0 4px 30px rgba(102, 126, 234, 0.7); }
+}
+
+/* Chat window positioning */
+.chat-window {
+    position: fixed;
+    bottom: 150px; /* Above chatbot button */
+    right: 20px;
+    width: 380px;
+    max-height: calc(100vh - 200px);
+    z-index: 999;
+}
+
+/* Mobile chatbot adjustments */
+@media (max-width: 480px) {
+    .chatbot-container {
+        bottom: 75px;
+        right: 15px;
+    }
+    
+    .chat-toggle-btn {
+        width: 50px;
+        height: 50px;
+        font-size: 20px;
+    }
+    
+    .chat-window {
+        width: calc(100vw - 30px);
+        max-height: calc(100vh - 150px);
+        bottom: 135px;
+        right: 15px;
+    }
+}
+
+@media (min-width: 481px) and (max-width: 768px) {
+    .chatbot-container {
+        bottom: 80px;
+    }
+    
+    .chat-window {
+        width: 350px;
+        bottom: 145px;
+    }
+}

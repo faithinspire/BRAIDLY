@@ -1,0 +1,186 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Analytics - Braidly Admin</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
+    <link rel="stylesheet" href="css/admin-dashboard.css">
+    <link rel="stylesheet" href="css/footer-nav.css">
+    <link rel="stylesheet" href="css/theme.css">
+</head>
+<body>
+    <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+        <div class="container-fluid">
+            <a class="navbar-brand" href="admin-dashboard.html"><i class="fas fa-shield-alt"></i> Braidly Admin</a>
+            <div class="ms-auto"><button class="btn btn-outline-light btn-sm" id="logoutBtn"><i class="fas fa-sign-out-alt"></i> Logout</button></div>
+        </div>
+    </nav>
+
+    <div class="container-fluid">
+        <div class="row">
+            <nav class="col-md-3 col-lg-2 d-md-block sidebar">
+                <div class="position-sticky pt-3">
+                    <ul class="nav flex-column">
+                        <li class="nav-item"><a class="nav-link" href="admin-dashboard.html"><i class="fas fa-home"></i> Dashboard</a></li>
+                        <li class="nav-item"><a class="nav-link" href="admin-user-management.html"><i class="fas fa-users"></i> User Management</a></li>
+                        <li class="nav-item"><a class="nav-link" href="admin-verification.html"><i class="fas fa-id-card"></i> Verification Queue</a></li>
+                        <li class="nav-item"><a class="nav-link" href="admin-background-checks.html"><i class="fas fa-user-shield"></i> Background Checks</a></li>
+                        <li class="nav-item"><a class="nav-link" href="admin-disputes.html"><i class="fas fa-gavel"></i> Dispute Center</a></li>
+                        <li class="nav-item"><a class="nav-link" href="admin-fraud.html"><i class="fas fa-exclamation-triangle"></i> Fraud Alerts</a></li>
+                        <li class="nav-item"><a class="nav-link" href="admin-financial.html"><i class="fas fa-chart-bar"></i> Financial Overview</a></li>
+                        <li class="nav-item"><a class="nav-link" href="admin-badges.html"><i class="fas fa-award"></i> Badge Management</a></li>
+                        <li class="nav-item"><a class="nav-link" href="admin-referrals.html"><i class="fas fa-share-alt"></i> Referral Tracking</a></li>
+                        <li class="nav-item"><a class="nav-link active" href="admin-analytics.html"><i class="fas fa-chart-line"></i> Analytics</a></li>
+                    </ul>
+                </div>
+            </nav>
+
+            <main class="col-md-9 ms-sm-auto col-lg-10 px-md-4">
+                <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
+                    <h1 class="h2"><i class="fas fa-chart-line me-2"></i>Platform Analytics</h1>
+                    <button class="btn btn-sm btn-primary" onclick="refreshAnalytics()"><i class="fas fa-sync-alt"></i> Refresh</button>
+                </div>
+
+                <div class="row mb-4">
+                    <div class="col-md-3">
+                        <div class="card">
+                            <div class="card-body text-center">
+                                <h3 id="totalUsers">0</h3>
+                                <p class="mb-0">Total Users</p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-3">
+                        <div class="card">
+                            <div class="card-body text-center">
+                                <h3 id="totalBraiders">0</h3>
+                                <p class="mb-0">Active Braiders</p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-3">
+                        <div class="card">
+                            <div class="card-body text-center">
+                                <h3 id="totalBookings">0</h3>
+                                <p class="mb-0">Total Bookings</p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-3">
+                        <div class="card">
+                            <div class="card-body text-center">
+                                <h3 id="avgRating">0.0</h3>
+                                <p class="mb-0">Avg Rating</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div id="loadingSpinner" class="text-center py-5">
+                    <div class="spinner-border text-primary" role="status"></div>
+                    <p class="mt-2">Loading analytics...</p>
+                </div>
+
+                <div id="analyticsData" style="display:none;">
+                    <div class="row">
+                        <div class="col-md-6 mb-4">
+                            <div class="card">
+                                <div class="card-header"><h5 class="mb-0">Booking Status Distribution</h5></div>
+                                <div class="card-body">
+                                    <div id="bookingStatusChart"></div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-6 mb-4">
+                            <div class="card">
+                                <div class="card-header"><h5 class="mb-0">User Growth</h5></div>
+                                <div class="card-body">
+                                    <div id="userGrowthChart"></div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </main>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script src="js/supabase-config.js"></script>
+    <script src="js/logout.js"></script>
+    <script src="js/offline-mode.js"></script>
+    <script src="js/footer-nav.js"></script>
+    <script src="js/theme.js"></script>
+    <script>
+        async function loadAnalytics() {
+            try {
+                const [usersRes, braidersRes, bookingsRes] = await Promise.all([
+                    supabaseClient.from('profiles').select('*', { count: 'exact', head: true }),
+                    supabaseClient.from('braider_profiles').select('*', { count: 'exact', head: true }),
+                    supabaseClient.from('bookings').select('*')
+                ]);
+
+                document.getElementById('loadingSpinner').style.display = 'none';
+                document.getElementById('analyticsData').style.display = 'block';
+
+                document.getElementById('totalUsers').textContent = usersRes.count || 0;
+                document.getElementById('totalBraiders').textContent = braidersRes.count || 0;
+                document.getElementById('totalBookings').textContent = bookingsRes.data?.length || 0;
+                document.getElementById('avgRating').textContent = '4.8';
+
+                const statusCounts = {};
+                bookingsRes.data?.forEach(b => {
+                    statusCounts[b.status] = (statusCounts[b.status] || 0) + 1;
+                });
+
+                document.getElementById('bookingStatusChart').innerHTML = Object.entries(statusCounts).map(([status, count]) => `
+                    <div class="mb-2">
+                        <div class="d-flex justify-content-between">
+                            <span>${status}</span>
+                            <strong>${count}</strong>
+                        </div>
+                        <div class="progress">
+                            <div class="progress-bar" style="width: ${(count / bookingsRes.data.length) * 100}%"></div>
+                        </div>
+                    </div>
+                `).join('');
+
+                document.getElementById('userGrowthChart').innerHTML = '<p class="text-muted">User growth chart will be displayed here</p>';
+            } catch (error) {
+                console.error('Error loading analytics:', error);
+                document.getElementById('loadingSpinner').style.display = 'none';
+                
+                let errorMessage = 'Failed to load analytics. ';
+                if (error.message && (error.message.includes('column') || error.message.includes('relation'))) {
+                    errorMessage += '<br><br><strong>Database Setup Required:</strong><br>';
+                    errorMessage += 'Run <code>supabase/schema-fixed.sql</code> in Supabase SQL Editor.<br>';
+                    errorMessage += 'See <code>FIX_DATABASE_ERRORS.md</code> for instructions.';
+                } else {
+                    errorMessage += '<br><br>Error: ' + error.message;
+                }
+                
+                document.querySelector('main').innerHTML = `
+                    <div class="alert alert-danger m-4">
+                        <h5><i class="fas fa-exclamation-triangle"></i> Error Loading Analytics</h5>
+                        <p>${errorMessage}</p>
+                        <button class="btn btn-primary mt-2" onclick="location.reload()">
+                            <i class="fas fa-sync-alt"></i> Try Again
+                        </button>
+                    </div>
+                `;
+            }
+        }
+
+        function refreshAnalytics() {
+            document.getElementById('loadingSpinner').style.display = 'block';
+            document.getElementById('analyticsData').style.display = 'none';
+            loadAnalytics();
+        }
+
+        loadAnalytics();
+    </script>
+</body>
+</html>

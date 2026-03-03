@@ -1,0 +1,33 @@
+# Documentation files
+*.md
+*.txt
+!README.md
+
+# Test files
+test-*.html
+CLICK_ME_FIRST.html
+FORCE_REFRESH.html
+TEST_ALL_CHANGES.html
+LOGO_TEST.html
+APPLY_CHANGES_NOW.html
+
+# Git files
+.git
+.gitignore
+
+# Node modules
+node_modules
+
+# IDE files
+.vscode
+.idea
+*.swp
+*.swo
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# Temporary files
+*.tmp
+*.log

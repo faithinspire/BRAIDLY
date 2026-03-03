@@ -1,0 +1,78 @@
+🔥 DISABLE EMAIL RATE LIMITING IN SUPABASE 🔥
+
+PROBLEM:
+========
+"email rate limit exceeded" when trying to signup
+
+ROOT CAUSE:
+===========
+Supabase has email rate limiting enabled by default
+
+SOLUTION:
+=========
+Disable email rate limiting in Supabase project settings
+
+═══════════════════════════════════════════════════════════════════════════════
+
+STEP 1: GO TO SUPABASE PROJECT SETTINGS
+
+1. Go to: https://app.supabase.com/project/_/settings/auth
+2. Look for "Email Rate Limit" or "Rate Limiting" section
+3. Find the setting that says "Email rate limit" or similar
+
+═══════════════════════════════════════════════════════════════════════════════
+
+STEP 2: DISABLE EMAIL RATE LIMITING
+
+Option A: If you see a toggle/checkbox:
+- Uncheck the box to disable email rate limiting
+- Click "Save"
+
+Option B: If you see a number field:
+- Set the value to 0 (zero) to disable
+- Click "Save"
+
+Option C: If you see "Rate limit" settings:
+- Look for "Email max frequency" or similar
+- Set to 0 or disable
+- Click "Save"
+
+═══════════════════════════════════════════════════════════════════════════════
+
+STEP 3: TEST SIGNUP AGAIN
+
+1. Go to: http://localhost:3002/signup
+2. Fill form:
+   - Full Name: Test User
+   - Email: test@example.com
+   - Phone: 555-1234
+   - Role: Customer
+   - Password: Test123
+3. Click "Create Account"
+4. Should work without "email rate limit exceeded" error
+
+═══════════════════════════════════════════════════════════════════════════════
+
+IF YOU CAN'T FIND THE SETTING:
+
+1. Go to: https://app.supabase.com/project/_/settings/auth
+2. Scroll down to find "Email" or "Rate Limit" section
+3. Look for any setting with "rate", "limit", "email", "frequency"
+4. Disable or set to 0
+
+═══════════════════════════════════════════════════════════════════════════════
+
+ALTERNATIVE: USE DIFFERENT EMAIL ADDRESSES
+
+If you can't disable rate limiting:
+- Use different email addresses for each test signup
+- Example: test1@example.com, test2@example.com, test3@example.com
+- This bypasses the rate limit
+
+═══════════════════════════════════════════════════════════════════════════════
+
+STATUS: ✅ READY
+
+Disable email rate limiting and test signup again.
+
+═══════════════════════════════════════════════════════════════════════════════

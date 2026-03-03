@@ -1,0 +1,64 @@
+🚨 DO THIS RIGHT NOW - NOTHING ELSE MATTERS
+
+CURRENT STATE:
+- App code is CORRECT ✅
+- Auth service has retry logic ✅
+- Console shows: "Profile not found (attempt 1/3), retrying..."
+- Then: "Profile not found (attempt 2/3), retrying..."
+- Then: "Profile not found (attempt 3/3), retrying..."
+- Then: "Profile not found after retries, creating..."
+- Then: "Failed to create profile: permission denied for schema public" ❌
+
+ROOT CAUSE:
+RLS is STILL ENABLED in Supabase and BLOCKING all access
+
+SOLUTION:
+Deploy the SQL fix to Supabase RIGHT NOW
+
+EXACT STEPS (DO NOT SKIP):
+
+1. Open browser
+2. Go to: https://app.supabase.com
+3. Login if needed
+4. Click on "braidly" project (select it)
+5. Left sidebar → Click "SQL Editor"
+6. Click "New Query" button
+7. You should see an empty SQL editor
+8. Copy the ENTIRE content from: 🔥_PERMANENT_SCHEMA_FIX.sql
+9. Paste into the SQL editor
+10. Click the blue "Run" button
+11. Wait 10-15 seconds
+12. You should see: "SCHEMA FIX COMPLETE"
+
+IF YOU SEE "SCHEMA FIX COMPLETE":
+✅ The fix worked
+✅ Go back to your browser with the app
+✅ Hard refresh: Ctrl+Shift+R
+✅ Clear cache: Ctrl+Shift+Delete
+✅ Close browser completely
+✅ Reopen browser
+✅ Go to: http://localhost:3003
+✅ Try login again
+✅ It should work now
+
+IF YOU SEE AN ERROR:
+❌ Something went wrong
+❌ Copy the error message
+❌ Try running the SQL again
+❌ If it still fails, contact Supabase support
+
+WHAT THE SQL DOES:
+- Drops old profiles table
+- Recreates with correct structure
+- Enables RLS with CORRECT policies
+- Creates auto-profile trigger
+- Creates braider_profiles table
+
+AFTER THIS WORKS:
+1. Deploy storage policies: 🔥_STORAGE_BUCKET_POLICIES.sql
+2. Test uploads
+3. Commit to Git
+4. Deploy to Vercel
+
+DO NOT DO ANYTHING ELSE UNTIL THIS IS DONE.
+THIS IS THE ONLY THING BLOCKING YOUR APP.

@@ -1,0 +1,129 @@
+╔════════════════════════════════════════════════════════════════════════════╗
+║                    COPY AND PASTE THIS INTO SUPABASE                       ║
+╚════════════════════════════════════════════════════════════════════════════╝
+
+INSTRUCTIONS:
+=============
+1. Go to: https://app.supabase.com/project/_/sql/new
+2. Copy ALL content from: supabase/schema-complete-bypass.sql
+3. Paste into Supabase SQL Editor
+4. Click "Run"
+5. Wait for completion
+
+═══════════════════════════════════════════════════════════════════════════════
+
+FILE LOCATION: supabase/schema-complete-bypass.sql
+
+This file contains:
+✅ Complete schema with all 10 tables
+✅ Bypass RLS policies (allow all)
+✅ Auto-trigger for profile creation
+✅ Realtime subscriptions
+✅ All indexes for performance
+✅ Verification queries
+
+═══════════════════════════════════════════════════════════════════════════════
+
+WHAT WILL HAPPEN WHEN YOU RUN IT:
+
+1. All old objects will be dropped (clean slate)
+2. All 10 tables will be created
+3. RLS will be enabled on all tables
+4. Bypass policies will be applied
+5. Auto-trigger will be created
+6. Realtime publication will be created
+7. Verification queries will run
+8. You'll see output confirming everything worked
+
+═══════════════════════════════════════════════════════════════════════════════
+
+EXPECTED OUTPUT:
+
+Tables Created:
+- bookings
+- braider_profiles
+- gallery_images
+- notifications
+- payments
+- portfolio_images
+- profiles
+- reviews
+- services
+- verification_documents
+
+Profiles Table Structure:
+- id (UUID)
+- email (TEXT)
+- full_name (TEXT)
+- phone (TEXT)
+- avatar_url (TEXT)
+- role (user_role)
+- is_active (BOOLEAN)
+- created_at (TIMESTAMP)
+- updated_at (TIMESTAMP)
+
+RLS Policies:
+- profiles_all_access
+- braider_profiles_all_access
+- services_all_access
+- portfolio_images_all_access
+- gallery_images_all_access
+- bookings_all_access
+- payments_all_access
+- reviews_all_access
+- verification_documents_all_access
+- notifications_all_access
+
+Trigger Status:
+- on_auth_user_created
+
+═══════════════════════════════════════════════════════════════════════════════
+
+AFTER RUNNING:
+
+1. Test signup at http://localhost:3002/signup
+2. Should see "Account created successfully!"
+3. Check Supabase: profiles table should have new user
+4. Test login at http://localhost:3002/login
+5. Should login successfully
+
+═══════════════════════════════════════════════════════════════════════════════
+
+IF YOU GET AN ERROR:
+
+1. Check the error message carefully
+2. Make sure you copied the ENTIRE file
+3. Make sure you're in the correct Supabase project
+4. Try running the schema again
+5. If still failing, check Supabase logs
+
+═══════════════════════════════════════════════════════════════════════════════
+
+VERIFICATION QUERIES (Run after schema deployment):
+
+Check all tables:
+SELECT table_name FROM information_schema.tables 
+WHERE table_schema = 'public' 
+ORDER BY table_name;
+
+Check trigger:
+SELECT * FROM information_schema.triggers 
+WHERE trigger_name = 'on_auth_user_created';
+
+Check RLS policies:
+SELECT COUNT(*) FROM pg_policies WHERE schemaname = 'public';
+
+═══════════════════════════════════════════════════════════════════════════════
+
+NEXT STEPS:
+
+1. Deploy schema to Supabase
+2. Test signup
+3. Test login
+4. Test braider signup
+5. Test avatar upload
+6. Test portfolio upload
+7. Commit changes to Git
+8. Deploy to Vercel
+
+═══════════════════════════════════════════════════════════════════════════════

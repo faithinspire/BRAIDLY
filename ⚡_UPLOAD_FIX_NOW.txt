@@ -1,0 +1,101 @@
+⚡ UPLOAD FIX - IMMEDIATE ACTION
+═══════════════════════════════════════════════════════════════════════════════
+
+🔴 PROBLEM:
+───────────────────────────────────────────────────────────────────────────────
+SQL script tried to delete storage buckets directly
+Supabase doesn't allow this for data protection
+Error: "Direct deletion from storage tables is not allowed"
+
+
+🟢 SOLUTION:
+───────────────────────────────────────────────────────────────────────────────
+1. Delete buckets via Supabase UI (manual)
+2. Run simplified SQL script (no deletion)
+3. Test uploads
+
+
+═══════════════════════════════════════════════════════════════════════════════
+
+🎯 STEP-BY-STEP FIX (15 minutes total)
+───────────────────────────────────────────────────────────────────────────────
+
+STEP 1: DELETE BUCKETS VIA UI (2 min)
+─────────────────────────────────────
+1. Go to: Supabase Dashboard > Storage
+2. For each bucket (avatars, portfolio, gallery):
+   - Click three dots (⋯)
+   - Select "Delete bucket"
+   - Confirm
+3. Wait for deletion to complete
+
+
+STEP 2: RUN SQL SCRIPT (3 min)
+──────────────────────────────
+1. Go to: Supabase Dashboard > SQL Editor > New Query
+2. Copy from: 🔥_UPLOAD_SETUP_SIMPLE.sql
+3. Paste into SQL Editor
+4. Click: Run
+5. Expected: "Query executed successfully"
+
+
+STEP 3: VERIFY BUCKETS (2 min)
+──────────────────────────────
+1. Go to: Supabase Dashboard > Storage
+2. Verify you see:
+   ✓ avatars
+   ✓ portfolio
+   ✓ gallery
+3. Click each bucket > Policies tab
+4. Verify: 4 policies per bucket
+
+
+STEP 4: TEST AVATAR UPLOAD (3 min)
+──────────────────────────────────
+1. Go to: http://localhost:3002/braider/profile
+2. Click: Upload Avatar
+3. Select: JPG/PNG image
+4. Expected: ✅ Upload successful
+
+
+STEP 5: TEST PORTFOLIO UPLOAD (3 min)
+─────────────────────────────────────
+1. Go to: http://localhost:3002/braider/portfolio
+2. Click: Upload Photos
+3. Select: JPG/PNG images
+4. Expected: ✅ Upload successful
+
+
+STEP 6: TEST PROFILE SAVE (2 min)
+─────────────────────────────────
+1. Go to: http://localhost:3002/braider/profile
+2. Fill: Profile information
+3. Click: Save Profile
+4. Expected: ✅ Save successful
+
+
+═══════════════════════════════════════════════════════════════════════════════
+
+📋 KEY POINTS
+───────────────────────────────────────────────────────────────────────────────
+
+✓ Buckets MUST be deleted via Supabase UI (not SQL)
+✓ SQL script only creates, never deletes
+✓ Safe to run SQL script multiple times
+✓ All code fixes already applied
+✓ .env file already created
+
+
+═══════════════════════════════════════════════════════════════════════════════
+
+📚 DOCUMENTATION
+───────────────────────────────────────────────────────────────────────────────
+
+Read: 🚀_UPLOAD_FIX_FINAL.md (comprehensive guide)
+Use: 🔥_UPLOAD_SETUP_SIMPLE.sql (SQL script)
+
+
+═══════════════════════════════════════════════════════════════════════════════
+
+✨ READY! Start with STEP 1 above.
+═══════════════════════════════════════════════════════════════════════════════

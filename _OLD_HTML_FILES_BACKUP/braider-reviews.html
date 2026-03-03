@@ -1,0 +1,180 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Reviews - Braidly Pro</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
+    <link rel="stylesheet" href="css/braider-dashboard.css">
+    <link rel="stylesheet" href="css/footer-nav.css">
+    <link rel="stylesheet" href="css/theme.css">
+</head>
+<body>
+    <nav class="navbar navbar-expand-lg navbar-dark bg-primary">
+        <div class="container-fluid">
+            <a class="navbar-brand" href="braider-dashboard.html"><img src="assets/images/braidly-logo.svg" alt="Braidly Pro" style="height: 50px; width: auto;"></a>
+            <div class="ms-auto"><button class="btn btn-outline-light btn-sm" id="logoutBtn"><i class="fas fa-sign-out-alt"></i> Logout</button></div>
+        </div>
+    </nav>
+
+    <div class="container-fluid">
+        <div class="row">
+            <nav class="col-md-3 col-lg-2 d-md-block sidebar">
+                <div class="position-sticky pt-3">
+                    <ul class="nav flex-column">
+                        <li class="nav-item"><a class="nav-link" href="braider-dashboard.html"><i class="fas fa-home"></i> Dashboard</a></li>
+                        <li class="nav-item"><a class="nav-link" href="braider-bookings.html"><i class="fas fa-calendar-check"></i> Bookings</a></li>
+                        <li class="nav-item"><a class="nav-link" href="braider-schedule.html"><i class="fas fa-clock"></i> Schedule</a></li>
+                        <li class="nav-item"><a class="nav-link" href="braider-earnings.html"><i class="fas fa-wallet"></i> Earnings</a></li>
+                        <li class="nav-item"><a class="nav-link" href="braider-portfolio.html"><i class="fas fa-images"></i> Portfolio</a></li>
+                        <li class="nav-item"><a class="nav-link active" href="braider-reviews.html"><i class="fas fa-star"></i> Reviews</a></li>
+                        <li class="nav-item"><a class="nav-link" href="braider-analytics.html"><i class="fas fa-chart-line"></i> Analytics</a></li>
+                        <li class="nav-item"><a class="nav-link" href="customer-support.html"><i class="fas fa-headset"></i> Support</a></li>
+                    </ul>
+                </div>
+            </nav>
+
+            <main class="col-md-9 ms-sm-auto col-lg-10 px-md-4">
+                <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
+                    <h1 class="h2"><i class="fas fa-star me-2"></i>Customer Reviews</h1>
+                    <button class="btn btn-sm btn-primary" onclick="refreshReviews()"><i class="fas fa-sync-alt"></i> Refresh</button>
+                </div>
+
+                <div class="row mb-4">
+                    <div class="col-md-4">
+                        <div class="card text-center">
+                            <div class="card-body">
+                                <h2 id="avgRating">0.0</h2>
+                                <div class="text-warning mb-2">
+                                    <i class="fas fa-star"></i>
+                                    <i class="fas fa-star"></i>
+                                    <i class="fas fa-star"></i>
+                                    <i class="fas fa-star"></i>
+                                    <i class="fas fa-star"></i>
+                                </div>
+                                <p class="mb-0"><span id="totalReviews">0</span> Reviews</p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-8">
+                        <div class="card">
+                            <div class="card-body">
+                                <div class="d-flex align-items-center mb-2">
+                                    <span class="me-2">5 <i class="fas fa-star text-warning"></i></span>
+                                    <div class="progress flex-grow-1">
+                                        <div class="progress-bar bg-warning" style="width: 80%"></div>
+                                    </div>
+                                    <span class="ms-2">80%</span>
+                                </div>
+                                <div class="d-flex align-items-center mb-2">
+                                    <span class="me-2">4 <i class="fas fa-star text-warning"></i></span>
+                                    <div class="progress flex-grow-1">
+                                        <div class="progress-bar bg-warning" style="width: 15%"></div>
+                                    </div>
+                                    <span class="ms-2">15%</span>
+                                </div>
+                                <div class="d-flex align-items-center mb-2">
+                                    <span class="me-2">3 <i class="fas fa-star text-warning"></i></span>
+                                    <div class="progress flex-grow-1">
+                                        <div class="progress-bar bg-warning" style="width: 5%"></div>
+                                    </div>
+                                    <span class="ms-2">5%</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div id="loadingSpinner" class="text-center py-5">
+                    <div class="spinner-border text-primary" role="status"></div>
+                    <p class="mt-2">Loading reviews...</p>
+                </div>
+
+                <div id="reviewsList" style="display:none;"></div>
+            </main>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script src="js/supabase-config.js"></script>
+    <script src="js/logout.js"></script>
+    <script src="js/offline-mode.js"></script>
+    <script src="js/footer-nav.js"></script>
+    <script src="js/theme.js"></script>
+    <script>
+        async function loadReviews() {
+            try {
+                const userData = JSON.parse(localStorage.getItem('userData'));
+                if (!userData || !userData.email) { 
+                    console.log('No user data found, redirecting to login');
+                    window.location.href = 'login.html'; 
+                    return; 
+                }
+                const user = userData;
+
+                const { data: profile } = await supabaseClient.from('profiles').select('id').eq('email', user.email).single();
+                if (!profile) return;
+
+                const { data: braiderProfile } = await supabaseClient.from('braider_profiles').select('id, rating, total_reviews').eq('user_id', profile.id).single();
+                if (!braiderProfile) return;
+
+                const { data: reviews, error } = await supabaseClient
+                    .from('reviews')
+                    .select(`
+                        *,
+                        profiles:customer_id (full_name, avatar_url)
+                    `)
+                    .eq('braider_id', braiderProfile.id)
+                    .order('created_at', { ascending: false });
+
+                if (error) throw error;
+
+                document.getElementById('loadingSpinner').style.display = 'none';
+                document.getElementById('reviewsList').style.display = 'block';
+
+                document.getElementById('avgRating').textContent = braiderProfile.rating || '0.0';
+                document.getElementById('totalReviews').textContent = braiderProfile.total_reviews || 0;
+
+                const list = document.getElementById('reviewsList');
+                if (!reviews || reviews.length === 0) {
+                    list.innerHTML = '<div class="alert alert-info">No reviews yet</div>';
+                    return;
+                }
+
+                list.innerHTML = reviews.map(review => `
+                    <div class="card mb-3">
+                        <div class="card-body">
+                            <div class="d-flex align-items-center mb-3">
+                                <img src="${review.profiles?.avatar_url || 'assets/images/default-avatar.jpg'}" 
+                                     class="rounded-circle me-3" width="50" height="50" alt="Customer">
+                                <div>
+                                    <h6 class="mb-0">${review.profiles?.full_name || 'Customer'}</h6>
+                                    <div class="text-warning">
+                                        ${'<i class="fas fa-star"></i>'.repeat(review.rating)}
+                                        ${'<i class="far fa-star"></i>'.repeat(5 - review.rating)}
+                                    </div>
+                                    <small class="text-muted">${new Date(review.created_at).toLocaleDateString()}</small>
+                                </div>
+                            </div>
+                            <p class="mb-0">${review.comment || 'No comment provided'}</p>
+                        </div>
+                    </div>
+                `).join('');
+            } catch (error) {
+                console.error('Error loading reviews:', error);
+                alert('Failed to load reviews');
+            }
+        }
+
+        function refreshReviews() {
+            document.getElementById('loadingSpinner').style.display = 'block';
+            document.getElementById('reviewsList').style.display = 'none';
+            loadReviews();
+        }
+
+        loadReviews();
+    </script>
+</body>
+</html>

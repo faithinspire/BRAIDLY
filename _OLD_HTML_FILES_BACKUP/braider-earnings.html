@@ -1,0 +1,342 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Earnings - Braidly Pro</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
+    <link rel="stylesheet" href="css/braider-dashboard.css">
+    <link rel="stylesheet" href="css/footer-nav.css">
+    <link rel="stylesheet" href="css/theme.css">
+</head>
+<body>
+    <nav class="navbar navbar-expand-lg navbar-dark bg-primary">
+        <div class="container-fluid">
+            <a class="navbar-brand" href="braider-dashboard.html"><img src="assets/images/braidly-logo.svg" alt="Braidly Pro" style="height: 50px; width: auto;"></a>
+            <div class="ms-auto"><button class="btn btn-outline-light btn-sm" id="logoutBtn"><i class="fas fa-sign-out-alt"></i> Logout</button></div>
+        </div>
+    </nav>
+
+    <div class="container-fluid">
+        <div class="row">
+            <nav class="col-md-3 col-lg-2 d-md-block sidebar">
+                <div class="position-sticky pt-3">
+                    <ul class="nav flex-column">
+                        <li class="nav-item"><a class="nav-link" href="braider-dashboard.html"><i class="fas fa-home"></i> Dashboard</a></li>
+                        <li class="nav-item"><a class="nav-link" href="braider-bookings.html"><i class="fas fa-calendar-check"></i> Bookings</a></li>
+                        <li class="nav-item"><a class="nav-link" href="braider-schedule.html"><i class="fas fa-clock"></i> Schedule</a></li>
+                        <li class="nav-item"><a class="nav-link active" href="braider-earnings.html"><i class="fas fa-wallet"></i> Earnings</a></li>
+                        <li class="nav-item"><a class="nav-link" href="braider-portfolio.html"><i class="fas fa-images"></i> Portfolio</a></li>
+                        <li class="nav-item"><a class="nav-link" href="braider-reviews.html"><i class="fas fa-star"></i> Reviews</a></li>
+                        <li class="nav-item"><a class="nav-link" href="braider-analytics.html"><i class="fas fa-chart-line"></i> Analytics</a></li>
+                        <li class="nav-item"><a class="nav-link" href="customer-support.html"><i class="fas fa-headset"></i> Support</a></li>
+                    </ul>
+                </div>
+            </nav>
+
+            <main class="col-md-9 ms-sm-auto col-lg-10 px-md-4">
+                <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
+                    <h1 class="h2"><i class="fas fa-wallet me-2"></i>Earnings</h1>
+                    <button class="btn btn-sm btn-primary" onclick="refreshEarnings()"><i class="fas fa-sync-alt"></i> Refresh</button>
+                </div>
+
+                <div class="row mb-4">
+                    <div class="col-md-3">
+                        <div class="card">
+                            <div class="card-body text-center">
+                                <h3 class="text-success" id="totalEarnings">$0.00</h3>
+                                <p class="mb-0">Total Earnings</p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-3">
+                        <div class="card">
+                            <div class="card-body text-center">
+                                <h3 class="text-warning" id="pendingEarnings">$0.00</h3>
+                                <p class="mb-0">Pending (Escrow)</p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-3">
+                        <div class="card">
+                            <div class="card-body text-center">
+                                <h3 class="text-primary" id="availableBalance">$0.00</h3>
+                                <p class="mb-0">Available</p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-3">
+                        <div class="card">
+                            <div class="card-body text-center">
+                                <h3 class="text-info" id="paidOut">$0.00</h3>
+                                <p class="mb-0">Paid Out</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="card mb-4">
+                    <div class="card-header d-flex justify-content-between align-items-center">
+                        <h5 class="mb-0">Payout Methods</h5>
+                        <button class="btn btn-sm btn-primary" data-bs-toggle="modal" data-bs-target="#bankModal">
+                            <i class="fas fa-plus"></i> Add Bank Account
+                        </button>
+                    </div>
+                    <div class="card-body">
+                        <div id="bankAccountsList">
+                            <div class="alert alert-info">No payout methods configured yet</div>
+                        </div>
+                    </div>
+                </div>
+
+                <div id="loadingSpinner" class="text-center py-5">
+                    <div class="spinner-border text-primary" role="status"></div>
+                    <p class="mt-2">Loading earnings...</p>
+                </div>
+
+                <div id="earningsTable" style="display:none;">
+                    <div class="card">
+                        <div class="card-header"><h5 class="mb-0">Transaction History</h5></div>
+                        <div class="card-body">
+                            <div class="table-responsive">
+                                <table class="table table-hover">
+                                    <thead>
+                                        <tr>
+                                            <th>Date</th>
+                                            <th>Booking</th>
+                                            <th>Amount</th>
+                                            <th>Platform Fee</th>
+                                            <th>Your Earnings</th>
+                                            <th>Status</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody id="earningsTableBody"></tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </main>
+        </div>
+    </div>
+
+    <!-- Bank Account Modal -->
+    <div class="modal fade" id="bankModal" tabindex="-1">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title"><i class="fas fa-university me-2"></i>Add Bank Account</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body">
+                    <form id="bankForm">
+                        <div class="mb-3">
+                            <label class="form-label">Account Holder Name</label>
+                            <input type="text" class="form-control" id="accountName" placeholder="Full name on account" required>
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label">Bank Name</label>
+                            <input type="text" class="form-control" id="bankName" placeholder="e.g., Chase, Bank of America" required>
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label">Account Number</label>
+                            <input type="text" class="form-control" id="accountNumber" placeholder="Account number" required>
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label">Routing Number</label>
+                            <input type="text" class="form-control" id="routingNumber" placeholder="9-digit routing number" maxlength="9" required>
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label">Account Type</label>
+                            <select class="form-select" id="accountType" required>
+                                <option value="">Select type</option>
+                                <option value="checking">Checking</option>
+                                <option value="savings">Savings</option>
+                            </select>
+                        </div>
+                        <div class="alert alert-info">
+                            <i class="fas fa-info-circle me-2"></i>
+                            <small>Your bank information is encrypted and secure. Payouts are processed within 2-3 business days.</small>
+                        </div>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                    <button type="button" class="btn btn-primary" id="saveBankBtn" onclick="saveBankAccount()">
+                        <i class="fas fa-save"></i> Save Account
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script src="js/supabase-config.js"></script>
+    <script src="js/logout.js"></script>
+    <script src="js/offline-mode.js"></script>
+    <script src="js/footer-nav.js"></script>
+    <script src="js/theme.js"></script>
+    <script>
+        async function loadEarnings() {
+            try {
+                const userData = JSON.parse(localStorage.getItem('userData'));
+                if (!userData || !userData.email) { 
+                    console.log('No user data found, redirecting to login');
+                    window.location.href = 'login.html'; 
+                    return; 
+                }
+                const user = userData;
+
+                const { data: profile } = await supabaseClient.from('profiles').select('id').eq('email', user.email).single();
+                if (!profile) return;
+
+                const { data: braiderProfile } = await supabaseClient.from('braider_profiles').select('id').eq('user_id', profile.id).single();
+                if (!braiderProfile) return;
+
+                const { data: bookings, error } = await supabaseClient
+                    .from('bookings')
+                    .select('*')
+                    .eq('braider_id', braiderProfile.id)
+                    .in('status', ['escrowed', 'completed']);
+
+                if (error) throw error;
+
+                document.getElementById('loadingSpinner').style.display = 'none';
+                document.getElementById('earningsTable').style.display = 'block';
+
+                const total = bookings.reduce((sum, b) => sum + parseFloat(b.braider_amount || 0), 0);
+                const pending = bookings.filter(b => b.status === 'escrowed').reduce((sum, b) => sum + parseFloat(b.braider_amount || 0), 0);
+                const completed = bookings.filter(b => b.status === 'completed').reduce((sum, b) => sum + parseFloat(b.braider_amount || 0), 0);
+
+                document.getElementById('totalEarnings').textContent = `$${total.toFixed(2)}`;
+                document.getElementById('pendingEarnings').textContent = `$${pending.toFixed(2)}`;
+                document.getElementById('availableBalance').textContent = `$${completed.toFixed(2)}`;
+                document.getElementById('paidOut').textContent = '$0.00';
+
+                const tbody = document.getElementById('earningsTableBody');
+                tbody.innerHTML = bookings.map(b => `
+                    <tr>
+                        <td>${new Date(b.booking_date).toLocaleDateString()}</td>
+                        <td>${b.booking_number}</td>
+                        <td>$${parseFloat(b.total_amount).toFixed(2)}</td>
+                        <td>$${parseFloat(b.platform_fee).toFixed(2)}</td>
+                        <td><strong>$${parseFloat(b.braider_amount).toFixed(2)}</strong></td>
+                        <td><span class="badge bg-${b.status === 'completed' ? 'success' : 'warning'}">${b.status}</span></td>
+                    </tr>
+                `).join('');
+            } catch (error) {
+                console.error('Error loading earnings:', error);
+                alert('Failed to load earnings');
+            }
+        }
+
+        function refreshEarnings() {
+            document.getElementById('loadingSpinner').style.display = 'block';
+            document.getElementById('earningsTable').style.display = 'none';
+            loadEarnings();
+        }
+
+        function saveBankAccount() {
+            const form = document.getElementById('bankForm');
+            if (!form.checkValidity()) {
+                form.reportValidity();
+                return;
+            }
+
+            const accountName = document.getElementById('accountName').value;
+            const bankName = document.getElementById('bankName').value;
+            const accountNumber = document.getElementById('accountNumber').value;
+            const routingNumber = document.getElementById('routingNumber').value;
+            const accountType = document.getElementById('accountType').value;
+
+            // Validate routing number
+            if (routingNumber.length !== 9 || !/^\d+$/.test(routingNumber)) {
+                alert('Routing number must be exactly 9 digits');
+                return;
+            }
+
+            const saveBankBtn = document.getElementById('saveBankBtn');
+            saveBankBtn.disabled = true;
+            saveBankBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Saving...';
+
+            // Simulate saving (in production, this would save to Supabase)
+            setTimeout(() => {
+                // Get existing accounts from localStorage
+                let bankAccounts = JSON.parse(localStorage.getItem('bankAccounts') || '[]');
+                
+                // Add new account (mask account number for security)
+                const maskedAccount = accountNumber.slice(-4).padStart(accountNumber.length, '*');
+                bankAccounts.push({
+                    id: Date.now(),
+                    accountName,
+                    bankName,
+                    accountNumber: maskedAccount,
+                    routingNumber,
+                    accountType,
+                    addedDate: new Date().toISOString()
+                });
+
+                localStorage.setItem('bankAccounts', JSON.stringify(bankAccounts));
+
+                // Update UI
+                displayBankAccounts();
+                
+                alert('Bank account added successfully!');
+                bootstrap.Modal.getInstance(document.getElementById('bankModal')).hide();
+                form.reset();
+                
+                saveBankBtn.disabled = false;
+                saveBankBtn.innerHTML = '<i class="fas fa-save"></i> Save Account';
+            }, 1000);
+        }
+
+        function displayBankAccounts() {
+            const bankAccounts = JSON.parse(localStorage.getItem('bankAccounts') || '[]');
+            const container = document.getElementById('bankAccountsList');
+
+            if (bankAccounts.length === 0) {
+                container.innerHTML = '<div class="alert alert-info">No payout methods configured yet</div>';
+                return;
+            }
+
+            container.innerHTML = bankAccounts.map(account => `
+                <div class="card mb-2">
+                    <div class="card-body">
+                        <div class="d-flex justify-content-between align-items-center">
+                            <div>
+                                <h6 class="mb-1"><i class="fas fa-university me-2"></i>${account.bankName}</h6>
+                                <p class="mb-0 text-muted">
+                                    ${account.accountType.charAt(0).toUpperCase() + account.accountType.slice(1)} 
+                                    •••• ${account.accountNumber.slice(-4)}
+                                </p>
+                                <small class="text-muted">${account.accountName}</small>
+                            </div>
+                            <div>
+                                <span class="badge bg-success">Active</span>
+                                <button class="btn btn-sm btn-outline-danger ms-2" onclick="removeBankAccount(${account.id})">
+                                    <i class="fas fa-trash"></i>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        function removeBankAccount(accountId) {
+            if (confirm('Remove this bank account?')) {
+                let bankAccounts = JSON.parse(localStorage.getItem('bankAccounts') || '[]');
+                bankAccounts = bankAccounts.filter(acc => acc.id !== accountId);
+                localStorage.setItem('bankAccounts', JSON.stringify(bankAccounts));
+                displayBankAccounts();
+            }
+        }
+
+        // Load bank accounts on page load
+        displayBankAccounts();
+        loadEarnings();
+    </script>
+</body>
+</html>

@@ -1,0 +1,199 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Box Braids - Braidly</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
+    <link rel="stylesheet" href="css/dashboard.css">
+    <link rel="stylesheet" href="css/theme.css">
+</head>
+<body>
+    <nav class="navbar navbar-expand-lg navbar-dark bg-primary">
+        <div class="container-fluid">
+            <a class="navbar-brand" href="customer-dashboard.html">
+                <img src="assets/images/WhatsApp Image 2026-02-25 at 3.18.01 AM.jpeg" alt="Braidly" style="height: 50px; width: auto; filter: brightness(1.2) contrast(1.1);">
+            </a>
+            <div class="ms-auto d-flex align-items-center gap-3">
+                <button id="theme-toggle" class="btn btn-link text-white" title="Toggle Theme">
+                    <i class="fas fa-moon" id="theme-icon"></i>
+                </button>
+                <button class="btn btn-outline-light btn-sm" onclick="window.location.href='customer-dashboard.html'">
+                    <i class="fas fa-arrow-left"></i> Back to Home
+                </button>
+            </div>
+        </div>
+    </nav>
+
+    <div class="container py-5">
+        <div class="text-center mb-5">
+            <h1 class="display-4"><i class="fas fa-crown me-3"></i>Box Braids</h1>
+            <p class="lead text-muted">Classic protective style with endless possibilities</p>
+        </div>
+
+        <div class="row mb-5">
+            <div class="col-md-6">
+                <img src="assets/images/b_Long_box_braids_with.png" class="img-fluid rounded shadow" alt="Box Braids" style="width: 100%; height: 400px; object-fit: cover;">
+            </div>
+            <div class="col-md-6">
+                <h3>About Box Braids</h3>
+                <p>Box braids are individual plaits that are divided by small squared off parts or boxes. This iconic protective style has been a staple in African and African-American culture for decades.</p>
+                
+                <h5 class="mt-4">Benefits:</h5>
+                <ul>
+                    <li><i class="fas fa-check text-success me-2"></i>Low maintenance protective style</li>
+                    <li><i class="fas fa-check text-success me-2"></i>Lasts 6-8 weeks with proper care</li>
+                    <li><i class="fas fa-check text-success me-2"></i>Versatile styling options</li>
+                    <li><i class="fas fa-check text-success me-2"></i>Promotes hair growth</li>
+                    <li><i class="fas fa-check text-success me-2"></i>Available in various lengths and colors</li>
+                </ul>
+
+                <h5 class="mt-4">Typical Duration:</h5>
+                <p><i class="fas fa-clock me-2"></i>4-8 hours depending on length and size</p>
+
+                <h5 class="mt-4">Price Range:</h5>
+                <p><i class="fas fa-dollar-sign me-2"></i>$120 - $300</p>
+            </div>
+        </div>
+
+        <div class="card mb-4">
+            <div class="card-header bg-primary text-white">
+                <h4 class="mb-0"><i class="fas fa-users me-2"></i>Find Box Braids Specialists Near You</h4>
+            </div>
+            <div class="card-body">
+                <div class="row mb-3">
+                    <div class="col-md-6">
+                        <input type="text" class="form-control" placeholder="Enter your location" value="Atlanta, GA">
+                    </div>
+                    <div class="col-md-3">
+                        <select class="form-select">
+                            <option>Any Price</option>
+                            <option>Under $150</option>
+                            <option>$150 - $200</option>
+                            <option>$200+</option>
+                        </select>
+                    </div>
+                    <div class="col-md-3">
+                        <button class="btn btn-primary w-100" onclick="searchBraiders()">
+                            <i class="fas fa-search"></i> Search
+                        </button>
+                    </div>
+                </div>
+
+                <div id="braidersList">
+                    <div class="text-center py-4">
+                        <div class="spinner-border text-primary" role="status"></div>
+                        <p class="mt-2">Loading braiders...</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-md-4">
+                <div class="card">
+                    <div class="card-body text-center">
+                        <i class="fas fa-info-circle fa-3x text-primary mb-3"></i>
+                        <h5>Care Tips</h5>
+                        <p>Keep your scalp moisturized and sleep with a satin bonnet to maintain your box braids.</p>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="card">
+                    <div class="card-body text-center">
+                        <i class="fas fa-calendar-alt fa-3x text-success mb-3"></i>
+                        <h5>Book Now</h5>
+                        <p>Find available braiders and book your appointment in just a few clicks.</p>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="card">
+                    <div class="card-body text-center">
+                        <i class="fas fa-star fa-3x text-warning mb-3"></i>
+                        <h5>Top Rated</h5>
+                        <p>All our braiders are verified and highly rated by customers like you.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script src="js/supabase-config.js"></script>
+    <script src="js/auth-core.js"></script>
+    <script>
+        // Protect page if user is logged in
+        const userData = JSON.parse(localStorage.getItem('userData') || '{}');
+        if (userData && userData.email) {
+            // User is logged in, allow access
+            console.log('User authenticated');
+        }
+    </script>
+    <script src="js/theme.js"></script>
+    <script src="js/ai-chatbot.js"></script>
+    <script>
+        async function searchBraiders() {
+            const list = document.getElementById('braidersList');
+            list.innerHTML = '<div class="text-center py-4"><div class="spinner-border text-primary"></div><p class="mt-2">Searching...</p></div>';
+
+            try {
+                const { data: braiders, error } = await supabaseClient
+                    .from('braider_profiles')
+                    .select(`
+                        *,
+                        profiles:user_id (full_name, email),
+                        services!inner (*)
+                    `)
+                    .eq('is_active', true)
+                    .ilike('services.category', '%box%')
+                    .limit(10);
+
+                if (error) throw error;
+
+                if (!braiders || braiders.length === 0) {
+                    list.innerHTML = '<div class="alert alert-info">No braiders found. Try adjusting your search.</div>';
+                    return;
+                }
+
+                list.innerHTML = braiders.map(braider => `
+                    <div class="card mb-3">
+                        <div class="card-body">
+                            <div class="row align-items-center">
+                                <div class="col-md-2 text-center">
+                                    <i class="fas fa-user-circle fa-4x text-primary"></i>
+                                </div>
+                                <div class="col-md-7">
+                                    <h5>${braider.business_name || braider.profiles?.full_name || 'Professional Braider'}</h5>
+                                    <div class="mb-2">
+                                        ${[...Array(5)].map((_, i) => 
+                                            `<i class="fas fa-star ${i < Math.floor(braider.rating) ? 'text-warning' : 'text-muted'}"></i>`
+                                        ).join('')}
+                                        <span class="ms-2">${braider.rating || 0} (${braider.total_reviews || 0} reviews)</span>
+                                    </div>
+                                    <p class="mb-1"><i class="fas fa-map-marker-alt me-2"></i>${braider.city || 'Location'}, ${braider.state || 'State'}</p>
+                                    <p class="mb-0"><i class="fas fa-check-circle text-success me-2"></i>${braider.verification_status || 'Verified'}</p>
+                                </div>
+                                <div class="col-md-3 text-end">
+                                    <h4 class="text-primary mb-2">From $${braider.services?.[0]?.price || '150'}</h4>
+                                    <button class="btn btn-primary w-100" onclick="window.location.href='booking.html?braider=${braider.id}'">
+                                        Book Now
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                `).join('');
+            } catch (error) {
+                console.error('Error:', error);
+                list.innerHTML = '<div class="alert alert-warning">Unable to load braiders. Please try again.</div>';
+            }
+        }
+
+        searchBraiders();
+    </script>
+</body>
+</html>

@@ -1,0 +1,73 @@
+{
+  "name": "Braidly - Professional Braiding Services",
+  "short_name": "Braidly",
+  "description": "Connect with professional braiders in your area. Book appointments, view portfolios, and get the perfect braids.",
+  "start_url": "/",
+  "scope": "/",
+  "display": "standalone",
+  "orientation": "portrait-primary",
+  "theme_color": "#7e22ce",
+  "background_color": "#ffffff",
+  "categories": ["business", "lifestyle"],
+  "screenshots": [
+    {
+      "src": "/assets/images/braidly-logo.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "/assets/images/braidly-logo.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any"
+    }
+  ],
+  "icons": [
+    {
+      "src": "/assets/images/braidly-logo.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "/assets/images/braidly-logo.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "/assets/images/braidly-logo.svg",
+      "sizes": "any",
+      "type": "image/svg+xml",
+      "purpose": "maskable"
+    }
+  ],
+  "shortcuts": [
+    {
+      "name": "Browse Braiders",
+      "short_name": "Browse",
+      "description": "Browse available braiders",
+      "url": "/customer/browse",
+      "icons": [
+        {
+          "src": "/assets/images/braidly-logo.png",
+          "sizes": "192x192"
+        }
+      ]
+    },
+    {
+      "name": "My Bookings",
+      "short_name": "Bookings",
+      "description": "View your bookings",
+      "url": "/customer/bookings",
+      "icons": [
+        {
+          "src": "/assets/images/braidly-logo.png",
+          "sizes": "192x192"
+        }
+      ]
+    }
+  ],
+  "prefer_related_applications": false
+}

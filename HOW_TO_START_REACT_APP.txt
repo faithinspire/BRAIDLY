@@ -1,0 +1,99 @@
+═══════════════════════════════════════════════════════════════
+  🚨 YOU'RE SEEING OLD HTML FILES - HERE'S WHY 🚨
+═══════════════════════════════════════════════════════════════
+
+PROBLEM:
+You're opening index.html or other .html files directly in your browser.
+That shows the OLD app with bugs.
+
+SOLUTION:
+You need to START the React development server.
+
+═══════════════════════════════════════════════════════════════
+  ✅ 3 SIMPLE STEPS TO START REACT APP
+═══════════════════════════════════════════════════════════════
+
+STEP 1: Open PowerShell in this folder
+        (Right-click folder → "Open in Terminal" or "Open PowerShell here")
+
+STEP 2: Type this command and press Enter:
+        
+        npm install
+
+        (Wait 2-3 minutes for it to finish)
+
+STEP 3: Type this command and press Enter:
+
+        npm run dev
+
+        (Browser will open AUTOMATICALLY to http://localhost:3000)
+
+═══════════════════════════════════════════════════════════════
+  🎯 WHAT YOU'LL SEE
+═══════════════════════════════════════════════════════════════
+
+✅ NEW React app (clean, no bugs)
+✅ Purple chatbot button (bottom-right corner)
+✅ Working navigation (no loops)
+✅ Login works perfectly
+
+═══════════════════════════════════════════════════════════════
+  🔑 LOGIN CREDENTIALS (COPY EXACTLY)
+═══════════════════════════════════════════════════════════════
+
+Email:    customer@braidly.com
+Password: Customer123!
+
+(Copy and paste these EXACTLY - case matters for password!)
+
+═══════════════════════════════════════════════════════════════
+  ❌ COMMON MISTAKES
+═══════════════════════════════════════════════════════════════
+
+❌ Opening index.html directly → Shows OLD app
+❌ Double-clicking .html files → Shows OLD app
+❌ Not running "npm run dev" → Shows OLD app
+
+✅ Running "npm run dev" → Shows NEW React app
+
+═══════════════════════════════════════════════════════════════
+  📱 COPY ASSETS (OPTIONAL - FOR IMAGES)
+═══════════════════════════════════════════════════════════════
+
+If you want images to show, run this in PowerShell:
+
+Copy-Item -Recurse -Force assets public/
+
+═══════════════════════════════════════════════════════════════
+  🆘 TROUBLESHOOTING
+═══════════════════════════════════════════════════════════════
+
+Issue: "npm: command not found"
+Fix: Install Node.js from https://nodejs.org/
+
+Issue: Still seeing old HTML
+Fix: Make sure you ran "npm run dev" and browser opened automatically
+
+Issue: Port already in use
+Fix: Close other apps, then run "npm run dev" again
+
+═══════════════════════════════════════════════════════════════
+  📞 NEED HELP?
+═══════════════════════════════════════════════════════════════
+
+1. Take a screenshot of your PowerShell window
+2. Take a screenshot of what you see in browser
+3. Share both screenshots
+
+═══════════════════════════════════════════════════════════════
+
+QUICK RECAP:
+1. Open PowerShell in this folder
+2. Run: npm install
+3. Run: npm run dev
+4. Browser opens automatically
+5. Login with: customer@braidly.com / Customer123!
+
+That's it! 🚀
+
+═══════════════════════════════════════════════════════════════

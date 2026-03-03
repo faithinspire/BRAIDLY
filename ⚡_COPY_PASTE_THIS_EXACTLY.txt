@@ -1,0 +1,33 @@
+🔥 COPY AND PASTE THIS EXACTLY - NO COMMENTS
+
+STEPS:
+1. Go to: https://app.supabase.com
+2. Select: braidly project
+3. Click: SQL Editor (left sidebar)
+4. Click: New Query
+5. DELETE any existing text
+6. COPY EVERYTHING BELOW (all 10 lines):
+
+---START COPY HERE---
+
+ALTER TABLE public.profiles DISABLE ROW LEVEL SECURITY;
+ALTER TABLE public.braider_profiles DISABLE ROW LEVEL SECURITY;
+ALTER TABLE public.services DISABLE ROW LEVEL SECURITY;
+ALTER TABLE public.portfolio_images DISABLE ROW LEVEL SECURITY;
+ALTER TABLE public.gallery_images DISABLE ROW LEVEL SECURITY;
+ALTER TABLE public.bookings DISABLE ROW LEVEL SECURITY;
+ALTER TABLE public.payments DISABLE ROW LEVEL SECURITY;
+ALTER TABLE public.reviews DISABLE ROW LEVEL SECURITY;
+ALTER TABLE public.verification_documents DISABLE ROW LEVEL SECURITY;
+ALTER TABLE public.notifications DISABLE ROW LEVEL SECURITY;
+
+---END COPY HERE---
+
+7. PASTE into SQL Editor
+8. Click: Run (blue button)
+9. Wait for success
+
+AFTER:
+- Hard refresh: Ctrl+Shift+R
+- Clear cache: Ctrl+Shift+Delete
+- Test login/signup

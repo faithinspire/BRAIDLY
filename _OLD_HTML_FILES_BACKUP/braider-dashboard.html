@@ -1,0 +1,250 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Braider Dashboard - Braidly</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
+    <link rel="stylesheet" href="css/braider-dashboard.css">
+    <link rel="stylesheet" href="css/footer-nav.css">
+    <link rel="stylesheet" href="css/theme.css">
+    <style>
+        body {
+            padding-bottom: 80px; /* Space for footer nav */
+        }
+        .main-content {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px 15px;
+        }
+        /* Remove sidebar styles */
+        .sidebar {
+            display: none !important;
+        }
+    </style>
+</head>
+<body>
+    <!-- Top Navigation -->
+    <nav class="navbar navbar-expand-lg navbar-dark bg-primary sticky-top">
+        <div class="container-fluid">
+            <a class="navbar-brand" href="braider-dashboard.html">
+                <img src="assets/images/WhatsApp Image 2026-02-25 at 3.18.01 AM.jpeg" alt="Braidly Pro" style="height: 50px; width: auto; background: transparent !important; mix-blend-mode: multiply; filter: brightness(1.3) contrast(1.2);">
+            </a>
+            <div class="ms-auto d-flex align-items-center gap-3">
+                <button id="theme-toggle" class="btn btn-link text-white" title="Toggle Theme">
+                    <i class="fas fa-moon" id="theme-icon"></i>
+                </button>
+                <div class="notification-icon">
+                    <i class="fas fa-bell text-white"></i>
+                    <span class="badge bg-danger">4</span>
+                </div>
+                <div class="dropdown">
+                    <a class="nav-link dropdown-toggle text-white" href="#" role="button" data-bs-toggle="dropdown">
+                        <i class="fas fa-user-circle fa-2x"></i>
+                    </a>
+                    <ul class="dropdown-menu dropdown-menu-end">
+                        <li><a class="dropdown-item" href="braider-profile.html"><i class="fas fa-user me-2"></i>Profile</a></li>
+                        <li><a class="dropdown-item" href="profile-settings.html"><i class="fas fa-cog me-2"></i>Settings</a></li>
+                        <li><hr class="dropdown-divider"></li>
+                        <li><a class="dropdown-item" href="#" id="logoutBtn"><i class="fas fa-sign-out-alt me-2"></i>Logout</a></li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Main Content (No Sidebar) -->
+    <main class="main-content">
+        <div class="pt-3 pb-2 mb-3">
+            <h2 data-welcome-user>Welcome Back!</h2>
+            <p class="text-muted">Here's what's happening with your business today</p>
+        </div>
+
+        <!-- Stats Cards -->
+        <div class="row g-4 mb-4">
+            <div class="col-md-3 col-6">
+                <div class="stat-card">
+                    <div class="stat-icon bg-primary">
+                        <i class="fas fa-dollar-sign"></i>
+                    </div>
+                    <div class="stat-info">
+                        <h3>$1,200</h3>
+                        <p>Total Earnings</p>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-3 col-6">
+                <div class="stat-card">
+                    <div class="stat-icon bg-success">
+                        <i class="fas fa-calendar-check"></i>
+                    </div>
+                    <div class="stat-info">
+                        <h3>4</h3>
+                        <p>Upcoming</p>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-3 col-6">
+                <div class="stat-card">
+                    <div class="stat-icon bg-warning">
+                        <i class="fas fa-envelope"></i>
+                    </div>
+                    <div class="stat-info">
+                        <h3>2</h3>
+                        <p>Messages</p>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-3 col-6">
+                <div class="stat-card">
+                    <div class="stat-icon bg-info">
+                        <i class="fas fa-star"></i>
+                    </div>
+                    <div class="stat-info">
+                        <h3>4.9</h3>
+                        <p>Rating</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Upcoming Bookings -->
+        <div class="card mb-4">
+            <div class="card-header d-flex justify-content-between align-items-center">
+                <h5 class="mb-0"><i class="fas fa-calendar-alt me-2"></i>Upcoming Appointments</h5>
+                <a href="braider-bookings.html" class="btn btn-sm btn-primary">View All</a>
+            </div>
+            <div class="card-body">
+                <div class="booking-item">
+                    <div class="booking-time">
+                        <div class="time-badge">10:00 AM</div>
+                        <small>Today</small>
+                    </div>
+                    <div class="booking-details">
+                        <h6 class="mb-0">Sarah Johnson</h6>
+                        <small class="text-muted">Box Braids - $150</small>
+                        <div class="booking-meta mt-2">
+                            <span><i class="fas fa-map-marker-alt me-1"></i>Mobile Service</span>
+                            <span class="badge bg-success">Confirmed</span>
+                        </div>
+                    </div>
+                    <div class="booking-actions">
+                        <button class="btn btn-sm btn-outline-primary">View</button>
+                    </div>
+                </div>
+
+                <div class="booking-item">
+                    <div class="booking-time">
+                        <div class="time-badge">2:00 PM</div>
+                        <small>Today</small>
+                    </div>
+                    <div class="booking-details">
+                        <h6 class="mb-0">Maya Williams</h6>
+                        <small class="text-muted">Knotless Braids - $180</small>
+                        <div class="booking-meta mt-2">
+                            <span><i class="fas fa-home me-1"></i>Salon</span>
+                            <span class="badge bg-info">Pending</span>
+                        </div>
+                    </div>
+                    <div class="booking-actions">
+                        <button class="btn btn-sm btn-success">Accept</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Earnings Summary -->
+        <div class="row g-4 mb-4">
+            <div class="col-md-6">
+                <div class="card">
+                    <div class="card-header">
+                        <h5 class="mb-0"><i class="fas fa-chart-line me-2"></i>Earnings Summary</h5>
+                    </div>
+                    <div class="card-body">
+                        <div class="earnings-item">
+                            <span>Total Earnings</span>
+                            <strong>$3,450.00</strong>
+                        </div>
+                        <div class="earnings-item">
+                            <span>Completed Payouts</span>
+                            <strong>$2,850.00</strong>
+                        </div>
+                        <div class="earnings-item">
+                            <span>Pending in Escrow</span>
+                            <strong>$600.00</strong>
+                        </div>
+                        <hr>
+                        <button class="btn btn-primary w-100">Request Payout</button>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-md-6">
+                <div class="card">
+                    <div class="card-header">
+                        <h5 class="mb-0"><i class="fas fa-shield-alt me-2"></i>Verification Status</h5>
+                    </div>
+                    <div class="card-body">
+                        <div class="verification-item completed">
+                            <i class="fas fa-check-circle"></i>
+                            <div>
+                                <strong>Tier 1 Verified</strong>
+                                <p class="mb-0">Identity verification complete</p>
+                            </div>
+                        </div>
+                        <div class="verification-item completed">
+                            <i class="fas fa-check-circle"></i>
+                            <div>
+                                <strong>Background Check</strong>
+                                <p class="mb-0">Safety badge earned</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <!-- Bottom Navigation (Footer) -->
+    <nav class="bottom-nav">
+        <a href="braider-dashboard.html" class="nav-item active">
+            <i class="fas fa-home"></i>
+            <span>Home</span>
+        </a>
+        <a href="braider-bookings.html" class="nav-item">
+            <i class="fas fa-calendar"></i>
+            <span>Bookings</span>
+        </a>
+        <a href="braider-earnings.html" class="nav-item">
+            <i class="fas fa-wallet"></i>
+            <span>Earnings</span>
+        </a>
+        <a href="braider-portfolio.html" class="nav-item">
+            <i class="fas fa-images"></i>
+            <span>Portfolio</span>
+        </a>
+        <a href="braider-profile.html" class="nav-item">
+            <i class="fas fa-user"></i>
+            <span>Profile</span>
+        </a>
+    </nav>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script src="js/supabase-config.js"></script>
+    <script src="js/auth-core.js"></script>
+    <script>window.protectPage();</script>
+    <script src="js/main.js"></script>
+    <script src="js/braider-dashboard.js"></script>
+    <script src="js/theme.js"></script>
+    <script src="js/ai-chatbot.js"></script>
+    <script>
+        // Logout handler
+        document.getElementById('logoutBtn')?.addEventListener('click', function(e) {
+            e.preventDefault();
+            if (confirm('Logout?')) window.braidlyLogout();
+        });
+    </script>
+</body>
+</html>

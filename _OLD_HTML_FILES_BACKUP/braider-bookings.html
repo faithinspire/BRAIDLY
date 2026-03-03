@@ -1,0 +1,190 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Bookings - Braidly Pro</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
+    <link rel="stylesheet" href="css/braider-dashboard.css">
+    <link rel="stylesheet" href="css/footer-nav.css">
+    <link rel="stylesheet" href="css/theme.css">
+</head>
+<body>
+    <nav class="navbar navbar-expand-lg navbar-dark bg-primary">
+        <div class="container-fluid">
+            <a class="navbar-brand" href="braider-dashboard.html"><img src="assets/images/braidly-logo.svg" alt="Braidly Pro" style="height: 50px; width: auto;"></a>
+            <div class="ms-auto"><button class="btn btn-outline-light btn-sm" id="logoutBtn"><i class="fas fa-sign-out-alt"></i> Logout</button></div>
+        </div>
+    </nav>
+
+    <div class="container-fluid">
+        <div class="row">
+            <nav class="col-md-3 col-lg-2 d-md-block sidebar">
+                <div class="position-sticky pt-3">
+                    <ul class="nav flex-column">
+                        <li class="nav-item"><a class="nav-link" href="braider-dashboard.html"><i class="fas fa-home"></i> Dashboard</a></li>
+                        <li class="nav-item"><a class="nav-link active" href="braider-bookings.html"><i class="fas fa-calendar-check"></i> Bookings</a></li>
+                        <li class="nav-item"><a class="nav-link" href="braider-schedule.html"><i class="fas fa-clock"></i> Schedule</a></li>
+                        <li class="nav-item"><a class="nav-link" href="braider-earnings.html"><i class="fas fa-wallet"></i> Earnings</a></li>
+                        <li class="nav-item"><a class="nav-link" href="braider-portfolio.html"><i class="fas fa-images"></i> Portfolio</a></li>
+                        <li class="nav-item"><a class="nav-link" href="braider-reviews.html"><i class="fas fa-star"></i> Reviews</a></li>
+                        <li class="nav-item"><a class="nav-link" href="braider-analytics.html"><i class="fas fa-chart-line"></i> Analytics</a></li>
+                        <li class="nav-item"><a class="nav-link" href="customer-support.html"><i class="fas fa-headset"></i> Support</a></li>
+                    </ul>
+                </div>
+            </nav>
+
+            <main class="col-md-9 ms-sm-auto col-lg-10 px-md-4">
+                <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
+                    <h1 class="h2"><i class="fas fa-calendar-check me-2"></i>Manage Bookings</h1>
+                    <button class="btn btn-sm btn-primary" onclick="refreshBookings()"><i class="fas fa-sync-alt"></i> Refresh</button>
+                </div>
+
+                <ul class="nav nav-tabs mb-4">
+                    <li class="nav-item"><a class="nav-link active" href="#" onclick="filterBookings('pending')">Pending</a></li>
+                    <li class="nav-item"><a class="nav-link" href="#" onclick="filterBookings('confirmed')">Confirmed</a></li>
+                    <li class="nav-item"><a class="nav-link" href="#" onclick="filterBookings('completed')">Completed</a></li>
+                </ul>
+
+                <div id="loadingSpinner" class="text-center py-5">
+                    <div class="spinner-border text-primary" role="status"></div>
+                    <p class="mt-2">Loading bookings...</p>
+                </div>
+
+                <div id="bookingsList" style="display:none;"></div>
+            </main>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script src="js/supabase-config.js"></script>
+    <script src="js/logout.js"></script>
+    <script src="js/offline-mode.js"></script>
+    <script src="js/footer-nav.js"></script>
+    <script src="js/theme.js"></script>
+    <script>
+        let allBookings = [];
+
+        async function loadBookings() {
+            try {
+                const userData = JSON.parse(localStorage.getItem('userData'));
+                if (!userData || !userData.email) { 
+                    console.log('No user data found, redirecting to login');
+                    window.location.href = 'login.html'; 
+                    return; 
+                }
+                const user = userData;
+
+                const { data: profile } = await supabaseClient.from('profiles').select('id').eq('email', user.email).single();
+                if (!profile) return;
+
+                const { data: braiderProfile } = await supabaseClient.from('braider_profiles').select('id').eq('user_id', profile.id).single();
+                if (!braiderProfile) return;
+
+                const { data: bookings, error } = await supabaseClient
+                    .from('bookings')
+                    .select(`
+                        *,
+                        services (name),
+                        profiles:customer_id (full_name, email, avatar_url)
+                    `)
+                    .eq('braider_id', braiderProfile.id)
+                    .order('booking_date', { ascending: false });
+
+                if (error) throw error;
+
+                allBookings = bookings || [];
+                document.getElementById('loadingSpinner').style.display = 'none';
+                document.getElementById('bookingsList').style.display = 'block';
+                displayBookings(allBookings.filter(b => b.status === 'pending'));
+            } catch (error) {
+                console.error('Error loading bookings:', error);
+                alert('Failed to load bookings');
+            }
+        }
+
+        function displayBookings(bookings) {
+            const list = document.getElementById('bookingsList');
+            if (bookings.length === 0) {
+                list.innerHTML = '<div class="alert alert-info">No bookings found</div>';
+                return;
+            }
+
+            list.innerHTML = bookings.map(b => `
+                <div class="card mb-3">
+                    <div class="card-body">
+                        <div class="row">
+                            <div class="col-md-2">
+                                <img src="${b.profiles?.avatar_url || 'assets/images/default-avatar.jpg'}" 
+                                     class="img-fluid rounded-circle" alt="Customer">
+                            </div>
+                            <div class="col-md-7">
+                                <h5>${b.services?.name || 'Service'}</h5>
+                                <p class="mb-1"><i class="fas fa-user me-2"></i>${b.profiles?.full_name || 'Customer'}</p>
+                                <p class="mb-1"><i class="fas fa-calendar me-2"></i>${new Date(b.booking_date).toLocaleDateString()} at ${b.booking_time}</p>
+                                <p class="mb-1"><i class="fas fa-map-marker-alt me-2"></i>${b.location_type === 'mobile' ? 'Mobile Service' : 'Salon'}</p>
+                                <p class="mb-0"><strong>$${parseFloat(b.braider_amount).toFixed(2)}</strong> (Your earnings)</p>
+                            </div>
+                            <div class="col-md-3 text-end">
+                                <span class="badge bg-${getStatusBadge(b.status)} mb-2">${b.status}</span>
+                                <br>
+                                ${b.status === 'pending' ? `
+                                    <button class="btn btn-sm btn-success mb-2 w-100" onclick="acceptBooking('${b.id}')">Accept</button>
+                                    <button class="btn btn-sm btn-danger w-100" onclick="declineBooking('${b.id}')">Decline</button>
+                                ` : ''}
+                                ${b.status === 'confirmed' ? `
+                                    <button class="btn btn-sm btn-primary w-100" onclick="startService('${b.id}')">Start Service</button>
+                                ` : ''}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        function getStatusBadge(status) {
+            const badges = { pending: 'warning', confirmed: 'info', escrowed: 'primary', in_progress: 'success', completed: 'success' };
+            return badges[status] || 'secondary';
+        }
+
+        function filterBookings(filter) {
+            document.querySelectorAll('.nav-tabs .nav-link').forEach(link => link.classList.remove('active'));
+            event.target.classList.add('active');
+            displayBookings(allBookings.filter(b => b.status === filter || (filter === 'confirmed' && ['confirmed', 'escrowed', 'in_progress'].includes(b.status))));
+        }
+
+        async function acceptBooking(bookingId) {
+            try {
+                const { error } = await supabaseClient.from('bookings').update({ status: 'confirmed' }).eq('id', bookingId);
+                if (error) throw error;
+                alert('Booking accepted!');
+                refreshBookings();
+            } catch (error) {
+                console.error('Error accepting booking:', error);
+                alert('Failed to accept booking');
+            }
+        }
+
+        function declineBooking(bookingId) {
+            if (confirm('Decline this booking?')) {
+                alert('Booking declined');
+                refreshBookings();
+            }
+        }
+
+        function startService(bookingId) {
+            alert('Service started');
+        }
+
+        function refreshBookings() {
+            document.getElementById('loadingSpinner').style.display = 'block';
+            document.getElementById('bookingsList').style.display = 'none';
+            loadBookings();
+        }
+
+        loadBookings();
+    </script>
+</body>
+</html>

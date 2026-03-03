@@ -1,0 +1,250 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Book Appointment - Braidly</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
+    <link rel="stylesheet" href="css/booking.css">
+</head>
+<body>
+    <div class="container py-4">
+        <!-- Progress Steps -->
+        <div class="booking-progress mb-5">
+            <div class="step active">
+                <div class="step-circle">1</div>
+                <p>Select Service</p>
+            </div>
+            <div class="step-line"></div>
+            <div class="step">
+                <div class="step-circle">2</div>
+                <p>Date & Time</p>
+            </div>
+            <div class="step-line"></div>
+            <div class="step">
+                <div class="step-circle">3</div>
+                <p>Review</p>
+            </div>
+            <div class="step-line"></div>
+            <div class="step">
+                <div class="step-circle">4</div>
+                <p>Payment</p>
+            </div>
+        </div>
+
+        <div class="row">
+            <!-- Main Booking Content -->
+            <div class="col-lg-8">
+                <!-- Braider Info -->
+                <div class="card braider-card mb-4">
+                    <div class="card-body">
+                        <div class="d-flex align-items-center">
+                            <img src="assets/images/gemini-3-pro-image-preview-2k_b_Professional_headsho.png" alt="Braider" class="braider-avatar">
+                            <div class="ms-3">
+                                <h5 class="mb-1">Braid's Beauty</h5>
+                                <div class="rating mb-1">
+                                    <i class="fas fa-star"></i>
+                                    <i class="fas fa-star"></i>
+                                    <i class="fas fa-star"></i>
+                                    <i class="fas fa-star"></i>
+                                    <i class="fas fa-star-half-alt"></i>
+                                    <span class="ms-1">4.9 (127 reviews)</span>
+                                </div>
+                                <p class="mb-0 text-muted"><i class="fas fa-map-marker-alt me-1"></i>Atlanta, GA</p>
+                            </div>
+                            <div class="ms-auto">
+                                <span class="badge bg-success"><i class="fas fa-check-circle me-1"></i>Verified</span>
+                                <span class="badge bg-info ms-2"><i class="fas fa-car me-1"></i>Mobile Available</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Service Selection -->
+                <div class="card mb-4">
+                    <div class="card-header">
+                        <h5 class="mb-0"><i class="fas fa-list me-2"></i>Select Service</h5>
+                    </div>
+                    <div class="card-body">
+                        <div class="service-option">
+                            <input type="radio" name="service" id="service1" checked>
+                            <label for="service1">
+                                <div class="service-details">
+                                    <h6>Box Braids</h6>
+                                    <p class="text-muted mb-1">Medium length, classic style</p>
+                                    <small><i class="far fa-clock me-1"></i>4-5 hours</small>
+                                </div>
+                                <div class="service-price">$150</div>
+                            </label>
+                        </div>
+
+                        <div class="service-option">
+                            <input type="radio" name="service" id="service2">
+                            <label for="service2">
+                                <div class="service-details">
+                                    <h6>Knotless Braids</h6>
+                                    <p class="text-muted mb-1">Lightweight, less tension</p>
+                                    <small><i class="far fa-clock me-1"></i>5-6 hours</small>
+                                </div>
+                                <div class="service-price">$180</div>
+                            </label>
+                        </div>
+
+                        <div class="service-option">
+                            <input type="radio" name="service" id="service3">
+                            <label for="service3">
+                                <div class="service-details">
+                                    <h6>Cornrows</h6>
+                                    <p class="text-muted mb-1">Sleek and stylish</p>
+                                    <small><i class="far fa-clock me-1"></i>2-3 hours</small>
+                                </div>
+                                <div class="service-price">$95</div>
+                            </label>
+                        </div>
+
+                        <div class="service-option">
+                            <input type="radio" name="service" id="service4">
+                            <label for="service4">
+                                <div class="service-details">
+                                    <h6>Kids Braids</h6>
+                                    <p class="text-muted mb-1">Gentle styling for children</p>
+                                    <small><i class="far fa-clock me-1"></i>2-3 hours</small>
+                                </div>
+                                <div class="service-price">$80</div>
+                            </label>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Date & Time Selection -->
+                <div class="card mb-4">
+                    <div class="card-header">
+                        <h5 class="mb-0"><i class="fas fa-calendar-alt me-2"></i>Select Date & Time</h5>
+                    </div>
+                    <div class="card-body">
+                        <div class="row mb-3">
+                            <div class="col-md-6">
+                                <label class="form-label">Select Date</label>
+                                <input type="date" class="form-control" value="2024-04-15">
+                            </div>
+                            <div class="col-md-6">
+                                <label class="form-label">Select Time</label>
+                                <select class="form-select">
+                                    <option>9:00 AM</option>
+                                    <option selected>10:00 AM</option>
+                                    <option>11:00 AM</option>
+                                    <option>1:00 PM</option>
+                                    <option>2:00 PM</option>
+                                    <option>3:00 PM</option>
+                                </select>
+                            </div>
+                        </div>
+
+                        <!-- Available Time Slots -->
+                        <div class="time-slots">
+                            <button class="time-slot">9:00 AM</button>
+                            <button class="time-slot active">10:00 AM</button>
+                            <button class="time-slot">11:00 AM</button>
+                            <button class="time-slot">1:00 PM</button>
+                            <button class="time-slot">2:00 PM</button>
+                            <button class="time-slot disabled" disabled>3:00 PM</button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Location -->
+                <div class="card mb-4">
+                    <div class="card-header">
+                        <h5 class="mb-0"><i class="fas fa-map-marker-alt me-2"></i>Service Location</h5>
+                    </div>
+                    <div class="card-body">
+                        <div class="form-check mb-3">
+                            <input class="form-check-input" type="radio" name="location" id="mobile" checked>
+                            <label class="form-check-label" for="mobile">
+                                <strong>Mobile Service</strong> - Braider comes to you
+                            </label>
+                        </div>
+                        <div class="form-check">
+                            <input class="form-check-input" type="radio" name="location" id="salon">
+                            <label class="form-check-label" for="salon">
+                                <strong>Salon</strong> - Visit braider's location
+                            </label>
+                        </div>
+                        <div class="mt-3">
+                            <input type="text" class="form-control" placeholder="Enter your address">
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Booking Summary Sidebar -->
+            <div class="col-lg-4">
+                <div class="card booking-summary sticky-top">
+                    <div class="card-header">
+                        <h5 class="mb-0">Booking Summary</h5>
+                    </div>
+                    <div class="card-body">
+                        <div class="summary-item">
+                            <span>Service</span>
+                            <strong>Box Braids</strong>
+                        </div>
+                        <div class="summary-item">
+                            <span>Date</span>
+                            <strong>April 15, 2024</strong>
+                        </div>
+                        <div class="summary-item">
+                            <span>Time</span>
+                            <strong>10:00 AM</strong>
+                        </div>
+                        <div class="summary-item">
+                            <span>Duration</span>
+                            <strong>4-5 hours</strong>
+                        </div>
+                        <div class="summary-item">
+                            <span>Location</span>
+                            <strong>Mobile Service</strong>
+                        </div>
+                        <hr>
+                        <div class="summary-item">
+                            <span>Service Cost</span>
+                            <strong>$150.00</strong>
+                        </div>
+                        <div class="summary-item text-muted small">
+                            <span>Platform Fee</span>
+                            <span>Included</span>
+                        </div>
+                        <hr>
+                        <div class="summary-item total">
+                            <span>Total</span>
+                            <strong>$150.00</strong>
+                        </div>
+
+                        <div class="alert alert-info mt-3">
+                            <i class="fas fa-shield-alt me-2"></i>
+                            <small>Funds held securely until service completion</small>
+                        </div>
+
+                        <button class="btn btn-primary w-100 btn-lg mb-2">
+                            <i class="fas fa-lock me-2"></i>Proceed to Payment
+                        </button>
+
+                        <div class="cancellation-policy mt-3">
+                            <h6>Cancellation Policy</h6>
+                            <small class="text-muted">
+                                Free cancellation up to 24 hours before appointment. 
+                                50% refund within 24 hours.
+                            </small>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="js/main.js"></script>
+    <script src="js/logout.js"></script>
+    <script src="js/booking.js"></script>
+</body>
+</html>

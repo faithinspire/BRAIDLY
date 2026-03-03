@@ -1,0 +1,251 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dispute Center - Braidly Admin</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
+    <link rel="stylesheet" href="css/admin-dashboard.css">
+    <link rel="stylesheet" href="css/footer-nav.css">
+    <link rel="stylesheet" href="css/theme.css">
+</head>
+<body>
+    <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+        <div class="container-fluid">
+            <a class="navbar-brand" href="admin-dashboard.html"><i class="fas fa-shield-alt"></i> Braidly Admin</a>
+            <div class="ms-auto">
+                <button class="btn btn-outline-light btn-sm" id="logoutBtn"><i class="fas fa-sign-out-alt"></i> Logout</button>
+            </div>
+        </div>
+    </nav>
+
+    <div class="container-fluid">
+        <div class="row">
+            <nav class="col-md-3 col-lg-2 d-md-block sidebar">
+                <div class="position-sticky pt-3">
+                    <ul class="nav flex-column">
+                        <li class="nav-item"><a class="nav-link" href="admin-dashboard.html"><i class="fas fa-home"></i> Dashboard</a></li>
+                        <li class="nav-item"><a class="nav-link" href="admin-user-management.html"><i class="fas fa-users"></i> User Management</a></li>
+                        <li class="nav-item"><a class="nav-link" href="admin-verification.html"><i class="fas fa-id-card"></i> Verification Queue</a></li>
+                        <li class="nav-item"><a class="nav-link" href="admin-background-checks.html"><i class="fas fa-user-shield"></i> Background Checks</a></li>
+                        <li class="nav-item"><a class="nav-link active" href="admin-disputes.html"><i class="fas fa-gavel"></i> Dispute Center</a></li>
+                        <li class="nav-item"><a class="nav-link" href="admin-fraud.html"><i class="fas fa-exclamation-triangle"></i> Fraud Alerts</a></li>
+                        <li class="nav-item"><a class="nav-link" href="admin-financial.html"><i class="fas fa-chart-bar"></i> Financial Overview</a></li>
+                        <li class="nav-item"><a class="nav-link" href="admin-badges.html"><i class="fas fa-award"></i> Badge Management</a></li>
+                        <li class="nav-item"><a class="nav-link" href="admin-referrals.html"><i class="fas fa-share-alt"></i> Referral Tracking</a></li>
+                        <li class="nav-item"><a class="nav-link" href="admin-analytics.html"><i class="fas fa-chart-line"></i> Analytics</a></li>
+                    </ul>
+                </div>
+            </nav>
+
+            <main class="col-md-9 ms-sm-auto col-lg-10 px-md-4">
+                <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
+                    <h1 class="h2"><i class="fas fa-gavel me-2"></i>Dispute Center</h1>
+                    <button class="btn btn-sm btn-primary" onclick="refreshDisputes()"><i class="fas fa-sync-alt"></i> Refresh</button>
+                </div>
+
+                <div class="row mb-4">
+                    <div class="col-md-3">
+                        <div class="card text-center">
+                            <div class="card-body">
+                                <h3 class="text-danger" id="openDisputes">0</h3>
+                                <p class="mb-0">Open</p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-3">
+                        <div class="card text-center">
+                            <div class="card-body">
+                                <h3 class="text-warning" id="investigatingDisputes">0</h3>
+                                <p class="mb-0">Investigating</p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-3">
+                        <div class="card text-center">
+                            <div class="card-body">
+                                <h3 class="text-success" id="resolvedDisputes">0</h3>
+                                <p class="mb-0">Resolved</p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-3">
+                        <div class="card text-center">
+                            <div class="card-body">
+                                <h3 class="text-info" id="totalDisputes">0</h3>
+                                <p class="mb-0">Total</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div id="loadingSpinner" class="text-center py-5">
+                    <div class="spinner-border text-primary" role="status"></div>
+                    <p class="mt-2">Loading disputes...</p>
+                </div>
+
+                <div id="disputesList" style="display:none;"></div>
+            </main>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script src="js/supabase-config.js"></script>
+    <script src="js/logout.js"></script>
+    <script src="js/offline-mode.js"></script>
+    <script src="js/footer-nav.js"></script>
+    <script src="js/theme.js"></script>
+    <script>
+        async function loadDisputes() {
+            try {
+                const { data: disputes, error } = await supabaseClient
+                    .from('disputes')
+                    .select(`
+                        *,
+                        bookings:booking_id (booking_number, total_amount),
+                        profiles:filed_by (full_name, email)
+                    `)
+                    .order('created_at', { ascending: false });
+
+                if (error) throw error;
+
+                document.getElementById('loadingSpinner').style.display = 'none';
+                document.getElementById('disputesList').style.display = 'block';
+
+                const open = disputes.filter(d => d.status === 'open').length;
+                const investigating = disputes.filter(d => d.status === 'investigating').length;
+                const resolved = disputes.filter(d => d.status === 'resolved').length;
+
+                document.getElementById('openDisputes').textContent = open;
+                document.getElementById('investigatingDisputes').textContent = investigating;
+                document.getElementById('resolvedDisputes').textContent = resolved;
+                document.getElementById('totalDisputes').textContent = disputes.length;
+
+                const list = document.getElementById('disputesList');
+                if (disputes.length === 0) {
+                    list.innerHTML = '<div class="alert alert-info">No disputes found</div>';
+                    return;
+                }
+
+                list.innerHTML = disputes.map(dispute => `
+                    <div class="card mb-3">
+                        <div class="card-header d-flex justify-content-between align-items-center">
+                            <div>
+                                <strong>Booking #${dispute.bookings?.booking_number || 'N/A'}</strong>
+                                <span class="badge bg-${getStatusBadge(dispute.status)} ms-2">${dispute.status}</span>
+                            </div>
+                            <small class="text-muted">${new Date(dispute.created_at).toLocaleString()}</small>
+                        </div>
+                        <div class="card-body">
+                            <div class="row">
+                                <div class="col-md-8">
+                                    <p><strong>Filed by:</strong> ${dispute.profiles?.full_name || 'N/A'} (${dispute.profiles?.email})</p>
+                                    <p><strong>Reason:</strong> ${dispute.reason}</p>
+                                    <p><strong>Description:</strong> ${dispute.description}</p>
+                                    <p><strong>Amount:</strong> $${dispute.bookings?.total_amount || '0.00'}</p>
+                                </div>
+                                <div class="col-md-4 text-end">
+                                    ${dispute.status === 'open' ? `
+                                        <button class="btn btn-warning btn-sm mb-2 w-100" onclick="investigateDispute('${dispute.id}')">
+                                            <i class="fas fa-search"></i> Investigate
+                                        </button>
+                                    ` : ''}
+                                    ${dispute.status === 'investigating' ? `
+                                        <button class="btn btn-success btn-sm mb-2 w-100" onclick="resolveDispute('${dispute.id}', 'refund')">
+                                            <i class="fas fa-undo"></i> Full Refund
+                                        </button>
+                                        <button class="btn btn-info btn-sm mb-2 w-100" onclick="resolveDispute('${dispute.id}', 'partial')">
+                                            <i class="fas fa-percent"></i> Partial Refund
+                                        </button>
+                                        <button class="btn btn-primary btn-sm w-100" onclick="resolveDispute('${dispute.id}', 'release')">
+                                            <i class="fas fa-check"></i> Release Funds
+                                        </button>
+                                    ` : ''}
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                `).join('');
+            } catch (error) {
+                console.error('Error loading disputes:', error);
+                document.getElementById('loadingSpinner').style.display = 'none';
+                document.getElementById('disputesList').style.display = 'block';
+                
+                let errorMessage = 'Failed to load disputes. ';
+                if (error.message && error.message.includes('column')) {
+                    errorMessage += '<br><br><strong>Database Error:</strong> Your Supabase database schema is not set up correctly.<br><br>';
+                    errorMessage += '<strong>Quick Fix:</strong><br>';
+                    errorMessage += '1. Open <code>supabase/schema-fixed.sql</code><br>';
+                    errorMessage += '2. Copy all the content<br>';
+                    errorMessage += '3. Go to Supabase Dashboard → SQL Editor<br>';
+                    errorMessage += '4. Paste and run the SQL<br><br>';
+                    errorMessage += 'See <code>FIX_DATABASE_ERRORS.md</code> for detailed instructions.';
+                } else if (error.message && error.message.includes('relation')) {
+                    errorMessage += '<br><br><strong>Tables Not Found:</strong> Your database tables haven\'t been created yet.<br><br>';
+                    errorMessage += 'Run <code>supabase/schema-fixed.sql</code> in Supabase SQL Editor.';
+                } else {
+                    errorMessage += '<br><br>Error: ' + error.message;
+                }
+                
+                document.getElementById('disputesList').innerHTML = `
+                    <div class="alert alert-danger">
+                        <h5><i class="fas fa-exclamation-triangle"></i> Error Loading Disputes</h5>
+                        <p>${errorMessage}</p>
+                        <button class="btn btn-primary mt-2" onclick="refreshDisputes()">
+                            <i class="fas fa-sync-alt"></i> Try Again
+                        </button>
+                    </div>
+                `;
+            }
+        }
+
+        function getStatusBadge(status) {
+            const badges = { open: 'danger', investigating: 'warning', resolved: 'success', closed: 'secondary' };
+            return badges[status] || 'secondary';
+        }
+
+        async function investigateDispute(disputeId) {
+            try {
+                const { error } = await supabaseClient
+                    .from('disputes')
+                    .update({ status: 'investigating' })
+                    .eq('id', disputeId);
+
+                if (error) throw error;
+                alert('Dispute moved to investigating');
+                refreshDisputes();
+            } catch (error) {
+                console.error('Error updating dispute:', error);
+                alert('Failed to update dispute');
+            }
+        }
+
+        async function resolveDispute(disputeId, action) {
+            try {
+                const resolution = `${action} - Resolved by admin`;
+                const { error } = await supabaseClient
+                    .from('disputes')
+                    .update({ status: 'resolved', resolution })
+                    .eq('id', disputeId);
+
+                if (error) throw error;
+                alert('Dispute resolved successfully');
+                refreshDisputes();
+            } catch (error) {
+                console.error('Error resolving dispute:', error);
+                alert('Failed to resolve dispute');
+            }
+        }
+
+        function refreshDisputes() {
+            document.getElementById('loadingSpinner').style.display = 'block';
+            document.getElementById('disputesList').style.display = 'none';
+            loadDisputes();
+        }
+
+        loadDisputes();
+    </script>
+</body>
+</html>

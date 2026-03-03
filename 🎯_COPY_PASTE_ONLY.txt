@@ -1,0 +1,48 @@
+🎯 COPY AND PASTE ONLY - NO TYPING
+
+STEP 1: Open Supabase
+- Go to: https://app.supabase.com
+- Login
+- Click: braidly project
+
+STEP 2: Open SQL Editor
+- Left sidebar → SQL Editor
+- Click: New Query
+
+STEP 3: CLEAR THE EDITOR
+- Select all text (Ctrl+A)
+- Delete it
+- Make sure editor is EMPTY
+
+STEP 4: COPY THE SQL
+- Open file: 🔥_CLEAN_SCHEMA_FIX.sql
+- Select ALL content (Ctrl+A)
+- Copy (Ctrl+C)
+
+STEP 5: PASTE INTO SUPABASE
+- Click in the SQL editor
+- Paste (Ctrl+V)
+- You should see SQL code in the editor
+
+STEP 6: RUN THE SQL
+- Click the blue "Run" button
+- Wait 10-15 seconds
+- You should see: "SUCCESS - SCHEMA FIX COMPLETE"
+
+IF YOU SEE SUCCESS:
+✅ Go back to app
+✅ Hard refresh: Ctrl+Shift+R
+✅ Clear cache: Ctrl+Shift+Delete
+✅ Close browser
+✅ Reopen browser
+✅ Go to: http://localhost:3003
+✅ Try login
+
+IF YOU SEE ERROR:
+❌ Copy the error message
+❌ Try again
+❌ Make sure you copied the ENTIRE file
+❌ Make sure editor was empty before pasting
+
+DO NOT TYPE ANYTHING.
+ONLY COPY AND PASTE.

@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Referral Tracking - Braidly Admin</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
+    <link rel="stylesheet" href="css/admin-dashboard.css">
+    <link rel="stylesheet" href="css/footer-nav.css">
+    <link rel="stylesheet" href="css/theme.css">
+</head>
+<body>
+    <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+        <div class="container-fluid">
+            <a class="navbar-brand" href="admin-dashboard.html"><i class="fas fa-shield-alt"></i> Braidly Admin</a>
+            <div class="ms-auto"><button class="btn btn-outline-light btn-sm" id="logoutBtn"><i class="fas fa-sign-out-alt"></i> Logout</button></div>
+        </div>
+    </nav>
+
+    <div class="container-fluid">
+        <div class="row">
+            <nav class="col-md-3 col-lg-2 d-md-block sidebar">
+                <div class="position-sticky pt-3">
+                    <ul class="nav flex-column">
+                        <li class="nav-item"><a class="nav-link" href="admin-dashboard.html"><i class="fas fa-home"></i> Dashboard</a></li>
+                        <li class="nav-item"><a class="nav-link" href="admin-user-management.html"><i class="fas fa-users"></i> User Management</a></li>
+                        <li class="nav-item"><a class="nav-link" href="admin-verification.html"><i class="fas fa-id-card"></i> Verification Queue</a></li>
+                        <li class="nav-item"><a class="nav-link" href="admin-background-checks.html"><i class="fas fa-user-shield"></i> Background Checks</a></li>
+                        <li class="nav-item"><a class="nav-link" href="admin-disputes.html"><i class="fas fa-gavel"></i> Dispute Center</a></li>
+                        <li class="nav-item"><a class="nav-link" href="admin-fraud.html"><i class="fas fa-exclamation-triangle"></i> Fraud Alerts</a></li>
+                        <li class="nav-item"><a class="nav-link" href="admin-financial.html"><i class="fas fa-chart-bar"></i> Financial Overview</a></li>
+                        <li class="nav-item"><a class="nav-link" href="admin-badges.html"><i class="fas fa-award"></i> Badge Management</a></li>
+                        <li class="nav-item"><a class="nav-link active" href="admin-referrals.html"><i class="fas fa-share-alt"></i> Referral Tracking</a></li>
+                        <li class="nav-item"><a class="nav-link" href="admin-analytics.html"><i class="fas fa-chart-line"></i> Analytics</a></li>
+                    </ul>
+                </div>
+            </nav>
+
+            <main class="col-md-9 ms-sm-auto col-lg-10 px-md-4">
+                <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
+                    <h1 class="h2"><i class="fas fa-share-alt me-2"></i>Referral Tracking</h1>
+                    <button class="btn btn-sm btn-primary" onclick="refreshReferrals()"><i class="fas fa-sync-alt"></i> Refresh</button>
+                </div>
+
+                <div class="row mb-4">
+                    <div class="col-md-4">
+                        <div class="card">
+                            <div class="card-body text-center">
+                                <h3 class="text-success" id="totalReferrals">0</h3>
+                                <p class="mb-0">Total Referrals</p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <div class="card">
+                            <div class="card-body text-center">
+                                <h3 class="text-primary" id="activeReferrers">0</h3>
+                                <p class="mb-0">Active Referrers</p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <div class="card">
+                            <div class="card-body text-center">
+                                <h3 class="text-info" id="conversionRate">0%</h3>
+                                <p class="mb-0">Conversion Rate</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="card">
+                    <div class="card-header"><h5 class="mb-0">Top Referrers</h5></div>
+                    <div class="card-body">
+                        <div class="alert alert-info">
+                            <i class="fas fa-info-circle me-2"></i>
+                            Referral program tracking will be available once users start sharing referral links.
+                        </div>
+                    </div>
+                </div>
+            </main>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script src="js/supabase-config.js"></script>
+    <script src="js/logout.js"></script>
+    <script src="js/offline-mode.js"></script>
+    <script src="js/footer-nav.js"></script>
+    <script src="js/theme.js"></script>
+    <script>
+        function refreshReferrals() {
+            document.getElementById('totalReferrals').textContent = '0';
+            document.getElementById('activeReferrers').textContent = '0';
+            document.getElementById('conversionRate').textContent = '0%';
+        }
+    </script>
+</body>
+</html>

@@ -1,0 +1,80 @@
+╔═══════════════════════════════════════════════════════════════════════════════╗
+║                                                                               ║
+║                    ⚡ CASCADE FIX INSTRUCTIONS ⚡                              ║
+║                                                                               ║
+║              ERROR: cannot drop function ... CASCADE FIX                      ║
+║                                                                               ║
+╚═══════════════════════════════════════════════════════════════════════════════╝
+
+
+🔧 WHAT WAS THE ERROR:
+
+ERROR: 2BP01: cannot drop function update_updated_at_column() 
+because other objects depend on it
+
+DETAIL: trigger update_bookings_updated_at on table bookings depends on function
+        trigger update_disputes_updated_at on table disputes depends on function
+
+HINT: Use DROP ... CASCADE to drop the dependent objects too.
+
+
+✅ WHAT'S FIXED:
+
+The new SQL script uses CASCADE to drop dependent objects:
+  ✅ Drops triggers with CASCADE
+  ✅ Drops functions with CASCADE
+  ✅ Properly handles all dependencies
+  ✅ Creates fresh schema
+  ✅ Sets up admin user
+  ✅ Configures storage
+  ✅ Enables RLS
+
+
+🚀 HOW TO FIX:
+
+1. Go to: https://app.supabase.com
+2. Select: Braidly project
+3. Click: SQL Editor → New query
+4. Open: 🔥_FINAL_CASCADE_FIX.sql
+5. Copy: Entire file content
+6. Paste: Into SQL editor
+7. Click: Run
+8. Wait: For ✅ FINAL CASCADE FIX COMPLETE message
+
+
+⏱️  Time: 5 minutes
+
+
+✅ VERIFICATION:
+
+After running the script, you should see:
+
+✅ FINAL CASCADE FIX COMPLETE
+Admin User: admin@braidly.com
+Tables Created: 4
+RLS Enabled: 4
+Storage Buckets: 3
+
+
+🔐 TEST CREDENTIALS:
+
+Email: admin@braidly.com
+Password: Admin123456
+
+
+🎯 NEXT STEPS:
+
+1. Run 🔥_FINAL_CASCADE_FIX.sql
+2. Verify setup completed
+3. Test admin login
+4. Test braider profile
+5. Test portfolio upload
+6. Test customer dashboard
+
+
+═══════════════════════════════════════════════════════════════════════════════
+
+                    👉 RUN: 🔥_FINAL_CASCADE_FIX.sql
+
+═══════════════════════════════════════════════════════════════════════════════
+

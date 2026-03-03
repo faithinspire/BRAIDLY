@@ -1,0 +1,200 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Badge Management - Braidly Admin</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
+    <link rel="stylesheet" href="css/admin-dashboard.css">
+    <link rel="stylesheet" href="css/footer-nav.css">
+    <link rel="stylesheet" href="css/theme.css">
+</head>
+<body>
+    <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+        <div class="container-fluid">
+            <a class="navbar-brand" href="admin-dashboard.html"><i class="fas fa-shield-alt"></i> Braidly Admin</a>
+            <div class="ms-auto"><button class="btn btn-outline-light btn-sm" id="logoutBtn"><i class="fas fa-sign-out-alt"></i> Logout</button></div>
+        </div>
+    </nav>
+
+    <div class="container-fluid">
+        <div class="row">
+            <nav class="col-md-3 col-lg-2 d-md-block sidebar">
+                <div class="position-sticky pt-3">
+                    <ul class="nav flex-column">
+                        <li class="nav-item"><a class="nav-link" href="admin-dashboard.html"><i class="fas fa-home"></i> Dashboard</a></li>
+                        <li class="nav-item"><a class="nav-link" href="admin-user-management.html"><i class="fas fa-users"></i> User Management</a></li>
+                        <li class="nav-item"><a class="nav-link" href="admin-verification.html"><i class="fas fa-id-card"></i> Verification Queue</a></li>
+                        <li class="nav-item"><a class="nav-link" href="admin-background-checks.html"><i class="fas fa-user-shield"></i> Background Checks</a></li>
+                        <li class="nav-item"><a class="nav-link" href="admin-disputes.html"><i class="fas fa-gavel"></i> Dispute Center</a></li>
+                        <li class="nav-item"><a class="nav-link" href="admin-fraud.html"><i class="fas fa-exclamation-triangle"></i> Fraud Alerts</a></li>
+                        <li class="nav-item"><a class="nav-link" href="admin-financial.html"><i class="fas fa-chart-bar"></i> Financial Overview</a></li>
+                        <li class="nav-item"><a class="nav-link active" href="admin-badges.html"><i class="fas fa-award"></i> Badge Management</a></li>
+                        <li class="nav-item"><a class="nav-link" href="admin-referrals.html"><i class="fas fa-share-alt"></i> Referral Tracking</a></li>
+                        <li class="nav-item"><a class="nav-link" href="admin-analytics.html"><i class="fas fa-chart-line"></i> Analytics</a></li>
+                    </ul>
+                </div>
+            </nav>
+
+            <main class="col-md-9 ms-sm-auto col-lg-10 px-md-4">
+                <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
+                    <h1 class="h2"><i class="fas fa-award me-2"></i>Badge Management</h1>
+                    <button class="btn btn-sm btn-primary" onclick="refreshBadges()"><i class="fas fa-sync-alt"></i> Refresh</button>
+                </div>
+
+                <div class="row mb-4">
+                    <div class="col-md-3">
+                        <div class="card text-center">
+                            <div class="card-body">
+                                <h3 id="unverifiedCount">0</h3>
+                                <p class="mb-0">Unverified</p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-3">
+                        <div class="card text-center border-info">
+                            <div class="card-body">
+                                <h3 class="text-info" id="tier1Count">0</h3>
+                                <p class="mb-0">Tier 1 Verified</p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-3">
+                        <div class="card text-center border-success">
+                            <div class="card-body">
+                                <h3 class="text-success" id="tier2Count">0</h3>
+                                <p class="mb-0">Tier 2 (Safety Badge)</p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-3">
+                        <div class="card text-center border-warning">
+                            <div class="card-body">
+                                <h3 class="text-warning" id="proCount">0</h3>
+                                <p class="mb-0">Pro Badge</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div id="loadingSpinner" class="text-center py-5">
+                    <div class="spinner-border text-primary" role="status"></div>
+                    <p class="mt-2">Loading badge data...</p>
+                </div>
+
+                <div id="badgesTable" style="display:none;">
+                    <div class="table-responsive">
+                        <table class="table table-hover">
+                            <thead>
+                                <tr>
+                                    <th>Braider</th>
+                                    <th>Current Badge</th>
+                                    <th>Bookings</th>
+                                    <th>Rating</th>
+                                    <th>Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody id="badgesTableBody"></tbody>
+                        </table>
+                    </div>
+                </div>
+            </main>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script src="js/supabase-config.js"></script>
+    <script src="js/logout.js"></script>
+    <script src="js/offline-mode.js"></script>
+    <script src="js/footer-nav.js"></script>
+    <script src="js/theme.js"></script>
+    <script>
+        async function loadBadges() {
+            try {
+                const { data: braiders, error } = await supabaseClient
+                    .from('braider_profiles')
+                    .select(`
+                        *,
+                        profiles:user_id (full_name, email, avatar_url)
+                    `)
+                    .order('total_bookings', { ascending: false });
+
+                if (error) throw error;
+
+                document.getElementById('loadingSpinner').style.display = 'none';
+                document.getElementById('badgesTable').style.display = 'block';
+
+                const unverified = braiders.filter(b => b.verification_status === 'unverified').length;
+                const tier1 = braiders.filter(b => b.verification_status === 'tier1').length;
+                const tier2 = braiders.filter(b => b.verification_status === 'tier2').length;
+                const pro = braiders.filter(b => b.verification_status === 'pro').length;
+
+                document.getElementById('unverifiedCount').textContent = unverified;
+                document.getElementById('tier1Count').textContent = tier1;
+                document.getElementById('tier2Count').textContent = tier2;
+                document.getElementById('proCount').textContent = pro;
+
+                const tbody = document.getElementById('badgesTableBody');
+                tbody.innerHTML = braiders.map(braider => `
+                    <tr>
+                        <td>
+                            <div class="d-flex align-items-center">
+                                <img src="${braider.profiles?.avatar_url || 'assets/images/default-avatar.jpg'}" 
+                                     class="rounded-circle me-2" width="40" height="40">
+                                <div>
+                                    <strong>${braider.profiles?.full_name || 'N/A'}</strong>
+                                    <br><small class="text-muted">${braider.profiles?.email}</small>
+                                </div>
+                            </div>
+                        </td>
+                        <td><span class="badge bg-${getBadgeColor(braider.verification_status)}">${braider.verification_status}</span></td>
+                        <td>${braider.total_bookings || 0}</td>
+                        <td>${braider.rating || '0.00'} <i class="fas fa-star text-warning"></i></td>
+                        <td>
+                            ${braider.total_bookings >= 50 && braider.verification_status !== 'pro' ? `
+                                <button class="btn btn-sm btn-warning" onclick="awardProBadge('${braider.id}')">
+                                    <i class="fas fa-award"></i> Award Pro
+                                </button>
+                            ` : ''}
+                        </td>
+                    </tr>
+                `).join('');
+            } catch (error) {
+                console.error('Error loading badges:', error);
+                alert('Failed to load badge data');
+            }
+        }
+
+        function getBadgeColor(status) {
+            const colors = { unverified: 'secondary', tier1: 'info', tier2: 'success', pro: 'warning' };
+            return colors[status] || 'secondary';
+        }
+
+        async function awardProBadge(braiderId) {
+            try {
+                const { error } = await supabaseClient
+                    .from('braider_profiles')
+                    .update({ verification_status: 'pro' })
+                    .eq('id', braiderId);
+
+                if (error) throw error;
+                alert('Pro badge awarded successfully!');
+                refreshBadges();
+            } catch (error) {
+                console.error('Error awarding badge:', error);
+                alert('Failed to award badge');
+            }
+        }
+
+        function refreshBadges() {
+            document.getElementById('loadingSpinner').style.display = 'block';
+            document.getElementById('badgesTable').style.display = 'none';
+            loadBadges();
+        }
+
+        loadBadges();
+    </script>
+</body>
+</html>

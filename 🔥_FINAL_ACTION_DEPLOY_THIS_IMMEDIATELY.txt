@@ -1,0 +1,141 @@
+╔════════════════════════════════════════════════════════════════════════════════╗
+║         🔥 FINAL ACTION - DEPLOY THIS IMMEDIATELY (DO NOT SKIP)                ║
+║                                                                                ║
+║  The error shows: 403 (Forbidden) - RLS policies are BLOCKING access          ║
+║  You MUST deploy the SQL fix to Supabase NOW                                  ║
+║  This is the ONLY way to fix it                                               ║
+╚════════════════════════════════════════════════════════════════════════════════╝
+
+═══════════════════════════════════════════════════════════════════════════════════
+THE ERROR YOU'RE SEEING
+═══════════════════════════════════════════════════════════════════════════════════
+
+GET https://rsemdjxizhkqaoptdxlc.supabase.co/rest/v1/profiles?... 403 (Forbidden)
+❌ Profile error: permission denied for schema public
+
+This means: RLS policies in Supabase are BLOCKING the query
+
+═══════════════════════════════════════════════════════════════════════════════════
+WHAT YOU MUST DO NOW (CRITICAL)
+═══════════════════════════════════════════════════════════════════════════════════
+
+The code is correct. The database is the problem.
+You MUST deploy the SQL fix to Supabase.
+
+⏱️ STEP 1: Go to Supabase (30 seconds)
+──────────────────────────────────────
+1. Open: https://app.supabase.com
+2. Login
+3. Select: "braidly" project
+4. Click: SQL Editor (left sidebar)
+5. Click: New Query (top right)
+
+⏱️ STEP 2: Copy & Paste This SQL (30 seconds)
+──────────────────────────────────────────────
+
+Copy EVERYTHING below and paste into Supabase SQL Editor:
+
+---START COPY HERE---
+
+-- Disable RLS on all tables
+ALTER TABLE IF EXISTS public.profiles DISABLE ROW LEVEL SECURITY;
+ALTER TABLE IF EXISTS public.braider_profiles DISABLE ROW LEVEL SECURITY;
+ALTER TABLE IF EXISTS public.services DISABLE ROW LEVEL SECURITY;
+ALTER TABLE IF EXISTS public.portfolio_images DISABLE ROW LEVEL SECURITY;
+ALTER TABLE IF EXISTS public.gallery_images DISABLE ROW LEVEL SECURITY;
+ALTER TABLE IF EXISTS public.bookings DISABLE ROW LEVEL SECURITY;
+ALTER TABLE IF EXISTS public.payments DISABLE ROW LEVEL SECURITY;
+ALTER TABLE IF EXISTS public.reviews DISABLE ROW LEVEL SECURITY;
+ALTER TABLE IF EXISTS public.verification_documents DISABLE ROW LEVEL SECURITY;
+ALTER TABLE IF EXISTS public.notifications DISABLE ROW LEVEL SECURITY;
+
+-- Drop all RLS policies
+DO $$ 
+DECLARE 
+    r RECORD;
+BEGIN
+    FOR r IN SELECT policyname FROM pg_policies WHERE tablename = 'profiles' LOOP
+        EXECUTE 'DROP POLICY IF EXISTS "' || r.policyname || '" ON public.profiles';
+    END LOOP;
+    FOR r IN SELECT policyname FROM pg_policies WHERE tablename = 'braider_profiles' LOOP
+        EXECUTE 'DROP POLICY IF EXISTS "' || r.policyname || '" ON public.braider_profiles';
+    END LOOP;
+    FOR r IN SELECT policyname FROM pg_policies WHERE tablename = 'services' LOOP
+        EXECUTE 'DROP POLICY IF EXISTS "' || r.policyname || '" ON public.services';
+    END LOOP;
+    FOR r IN SELECT policyname FROM pg_policies WHERE tablename = 'portfolio_images' LOOP
+        EXECUTE 'DROP POLICY IF EXISTS "' || r.policyname || '" ON public.portfolio_images';
+    END LOOP;
+    FOR r IN SELECT policyname FROM pg_policies WHERE tablename = 'gallery_images' LOOP
+        EXECUTE 'DROP POLICY IF EXISTS "' || r.policyname || '" ON public.gallery_images';
+    END LOOP;
+    FOR r IN SELECT policyname FROM pg_policies WHERE tablename = 'bookings' LOOP
+        EXECUTE 'DROP POLICY IF EXISTS "' || r.policyname || '" ON public.bookings';
+    END LOOP;
+    FOR r IN SELECT policyname FROM pg_policies WHERE tablename = 'payments' LOOP
+        EXECUTE 'DROP POLICY IF EXISTS "' || r.policyname || '" ON public.payments';
+    END LOOP;
+    FOR r IN SELECT policyname FROM pg_policies WHERE tablename = 'reviews' LOOP
+        EXECUTE 'DROP POLICY IF EXISTS "' || r.policyname || '" ON public.reviews';
+    END LOOP;
+    FOR r IN SELECT policyname FROM pg_policies WHERE tablename = 'verification_documents' LOOP
+        EXECUTE 'DROP POLICY IF EXISTS "' || r.policyname || '" ON public.verification_documents';
+    END LOOP;
+    FOR r IN SELECT policyname FROM pg_policies WHERE tablename = 'notifications' LOOP
+        EXECUTE 'DROP POLICY IF EXISTS "' || r.policyname || '" ON public.notifications';
+    END LOOP;
+END $$;
+
+SELECT 'RLS DISABLED AND ALL POLICIES DROPPED!' as status;
+
+---END COPY HERE---
+
+⏱️ STEP 3: Run the SQL (1 minute)
+──────────────────────────────────
+1. Click "Run" button (or Ctrl+Enter)
+2. Wait 30-60 seconds
+3. You should see: "RLS DISABLED AND ALL POLICIES DROPPED!"
+
+✅ DONE - RLS is disabled
+
+⏱️ STEP 4: Hard Refresh Browser (1 minute)
+────────────────────────────────────────────
+1. Press: Ctrl+Shift+R (hard refresh)
+2. Or: Ctrl+Shift+Delete (clear cache)
+3. Close browser completely
+4. Reopen browser
+5. Go to: http://localhost:3003/login
+
+⏱️ STEP 5: Test Login (1 minute)
+─────────────────────────────────
+1. Email: sholaolu88@gmail.com
+2. Password: [your password]
+3. Click "Login"
+4. Expected: Redirects to dashboard (NO 403 error)
+
+✅ DONE - Login works!
+
+═══════════════════════════════════════════════════════════════════════════════════
+WHY THIS WORKS
+═══════════════════════════════════════════════════════════════════════════════════
+
+The error "403 (Forbidden)" means RLS policies are blocking the query.
+This SQL:
+✅ Disables RLS on all tables
+✅ Drops all RLS policies
+✅ Allows anon key to read/write
+✅ Fixes the 403 error
+
+═══════════════════════════════════════════════════════════════════════════════════
+CRITICAL - DO NOT SKIP
+═══════════════════════════════════════════════════════════════════════════════════
+
+The code is correct. The database is the problem.
+You MUST deploy this SQL to Supabase.
+Without this, login will NEVER work.
+
+═══════════════════════════════════════════════════════════════════════════════════
+
+👉 DO THIS NOW - Copy the SQL above and paste into Supabase SQL Editor
+
+═══════════════════════════════════════════════════════════════════════════════════

@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <link rel="icon" type="image/svg+xml" href="/assets/images/braidly-logo.svg" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+    <title>Braidly - Professional Braiding Services</title>
+    <meta name="description" content="Connect with professional braiders in your area. Book appointments, view portfolios, and get the perfect braids." />
+    
+    <!-- PWA Meta Tags -->
+    <meta name="theme-color" content="#7e22ce" />
+    <meta name="mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+    <meta name="apple-mobile-web-app-title" content="Braidly" />
+    <link rel="apple-touch-icon" href="/assets/images/braidly-logo.png" />
+    <link rel="manifest" href="/manifest.json" />
+    
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
+    
+    <style>
+      #pwa-install-btn {
+        display: none;
+        position: fixed;
+        top: 20px;
+        right: 20px;
+        z-index: 9999;
+        padding: 12px 24px;
+        background: linear-gradient(135deg, #7e22ce 0%, #6b21a8 100%);
+        color: white;
+        border: none;
+        border-radius: 8px;
+        font-size: 14px;
+        font-weight: 600;
+        cursor: pointer;
+        box-shadow: 0 4px 12px rgba(126, 34, 206, 0.3);
+        transition: all 0.3s ease;
+      }
+      
+      #pwa-install-btn:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 6px 16px rgba(126, 34, 206, 0.4);
+      }
+      
+      #pwa-install-btn:active {
+        transform: translateY(0);
+      }
+    </style>
+  </head>
+  <body>
+    <button id="pwa-install-btn">
+      <i class="fas fa-download"></i> Install App
+    </button>
+    
+    <div id="root"></div>
+    <script type="module" src="/src/main.jsx"></script>
+    <script>
+      // Register service worker
+      if ('serviceWorker' in navigator) {
+        window.addEventListener('load', () => {
+          navigator.serviceWorker.register('/sw.js')
+            .then(registration => {
+              console.log('✅ Service Worker registered:', registration)
+            })
+            .catch(err => {
+              console.warn('⚠️ Service Worker registration failed:', err)
+            })
+        })
+      }
+    </script>
+  </body>
+</html>
