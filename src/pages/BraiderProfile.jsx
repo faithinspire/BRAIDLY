@@ -103,14 +103,13 @@ export default function BraiderProfile() {
         .eq('user_id', user.id)
 
       if (error) {
-        alert('Failed to save profile')
-        console.error(error)
-        throw error
+        console.error('Save error:', error)
+        throw new Error(error.message || 'Failed to save profile')
       }
 
       setSuccessMessage('✅ Profile saved successfully!')
       setTimeout(() => setSuccessMessage(''), 3000)
-      loadBraiderProfile()
+      await loadBraiderProfile()
     } catch (error) {
       console.error('Save error:', error)
       throw new Error(`Failed to save profile: ${error.message}`)

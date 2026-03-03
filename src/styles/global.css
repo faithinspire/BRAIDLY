@@ -8,7 +8,6 @@
    IMPORTS - Design System & Components
    ============================================ */
 @import '../../css/design-system.css';
-@import '../../css/navbar-bold.css';
 @import '../../css/animated-background.css';
 @import '../../css/blur-braids-background.css';
 @import './responsive-mobile.css';

@@ -1,28 +1,33 @@
 .navbar {
-  background: white;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  background: linear-gradient(135deg, #7e22ce 0%, #6b21a8 100%);
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+  padding: 1rem 0;
   position: sticky;
   top: 0;
   z-index: 1000;
-  padding: 1rem 0;
+  border-bottom: 3px solid #9333ea;
 }
 
 .navbar-content {
   display: flex;
   justify-content: space-between;
   align-items: center;
+  padding: 0 2rem;
+  max-width: 1400px;
+  margin: 0 auto;
 }
 
 .navbar-brand {
   display: flex;
   align-items: center;
   text-decoration: none;
+  gap: 1rem;
 }
 
 .navbar-brand-text {
   font-size: 2rem;
   font-weight: 1000;
-  color: #7e22ce;
+  color: #ffffff;
   letter-spacing: 0.2em;
   text-transform: uppercase;
   transition: all 0.3s ease;
@@ -30,22 +35,28 @@
   -moz-osx-font-smoothing: grayscale;
   text-rendering: optimizeLegibility;
   filter: none;
+  display: block;
+  visibility: visible;
+  text-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
 }
 
 .navbar-brand:hover .navbar-brand-text {
-  color: #6b21a8;
+  color: #fbbf24;
   transform: scale(1.05);
+  text-shadow: 0 0 20px rgba(255, 255, 255, 0.5);
 }
 
 .navbar-menu {
   display: flex;
   align-items: center;
-  gap: 1rem;
+  gap: 2rem;
 }
 
 .navbar-user {
-  color: var(--text);
-  font-weight: 500;
+  color: white;
+  font-weight: 700;
+  font-size: 1.1rem;
+  text-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
 }
 
 .btn-sm {
@@ -56,5 +67,9 @@
 @media (max-width: 768px) {
   .navbar-user {
     display: none;
+  }
+  
+  .navbar-content {
+    padding: 0 1rem;
   }
 }
