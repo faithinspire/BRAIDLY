@@ -28,7 +28,7 @@ export default function Navbar() {
     <nav className="navbar">
       <div className="container navbar-content">
         <Link to="/" className="navbar-brand">
-          <span className="navbar-brand-text">BRAIDLY</span>
+          <span className="navbar-brand-text" style={{ display: 'block', visibility: 'visible' }}>BRAIDLY</span>
         </Link>
 
         <div className="navbar-menu">

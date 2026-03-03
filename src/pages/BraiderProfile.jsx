@@ -444,13 +444,7 @@ export default function BraiderProfile() {
                       display: 'flex',
                       alignItems: 'center',
                       justifyContent: 'center',
-                      gap: '0.5rem',
-                      pointerEvents: isSubmitting ? 'none' : 'auto'
-                    }}
-                    onClick={(e) => {
-                      if (!isSubmitting) {
-                        handleSubmit(e)
-                      }
+                      gap: '0.5rem'
                     }}
                   >
                     <i className="fas fa-save"></i>
