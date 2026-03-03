@@ -11,13 +11,13 @@
   "categories": ["business", "lifestyle"],
   "screenshots": [
     {
-      "src": "/assets/images/braidly-logo.png",
+      "src": "/braidly-logo.png",
       "sizes": "192x192",
       "type": "image/png",
       "purpose": "any"
     },
     {
-      "src": "/assets/images/braidly-logo.png",
+      "src": "/braidly-logo.png",
       "sizes": "512x512",
       "type": "image/png",
       "purpose": "any"
@@ -25,19 +25,19 @@
   ],
   "icons": [
     {
-      "src": "/assets/images/braidly-logo.png",
+      "src": "/braidly-logo.png",
       "sizes": "192x192",
       "type": "image/png",
       "purpose": "any"
     },
     {
-      "src": "/assets/images/braidly-logo.png",
+      "src": "/braidly-logo.png",
       "sizes": "512x512",
       "type": "image/png",
       "purpose": "any"
     },
     {
-      "src": "/assets/images/braidly-logo.svg",
+      "src": "/braidly-logo.svg",
       "sizes": "any",
       "type": "image/svg+xml",
       "purpose": "maskable"
@@ -51,7 +51,7 @@
       "url": "/customer/browse",
       "icons": [
         {
-          "src": "/assets/images/braidly-logo.png",
+          "src": "/braidly-logo.png",
           "sizes": "192x192"
         }
       ]
@@ -63,7 +63,7 @@
       "url": "/customer/bookings",
       "icons": [
         {
-          "src": "/assets/images/braidly-logo.png",
+          "src": "/braidly-logo.png",
           "sizes": "192x192"
         }
       ]
