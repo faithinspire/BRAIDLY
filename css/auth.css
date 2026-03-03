@@ -175,6 +175,14 @@ body {
     animation: fadeInScale 1s ease-out;
 }
 
+.auth-logo-img {
+    width: 64px;
+    height: 64px;
+    margin: 0 auto 1rem;
+    display: block;
+    animation: float 3s ease-in-out infinite;
+}
+
 .auth-logo h1 {
     font-size: 2.5rem;
     font-weight: 700;

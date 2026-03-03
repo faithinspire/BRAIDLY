@@ -15,13 +15,13 @@ export default function Login() {
   const navigate = useNavigate()
 
   const backgroundImages = [
-    '/assets/images/b_Professional_photo_o.png',
-    '/assets/images/b_Professional_photo_o (1).png',
-    '/assets/images/b_Professional_photo_o (2).png',
-    '/assets/images/b_Professional_photo_o (3).png',
-    '/assets/images/b_Long_box_braids_with.png',
-    '/assets/images/b_Knotless_braids_hair.png',
-    '/assets/images/b_Medium_knotless_brai.png'
+    '/backgrounds/bg1.jpg',
+    '/backgrounds/bg2.jpg',
+    '/backgrounds/bg3.jpg',
+    '/backgrounds/bg4.jpg',
+    '/backgrounds/bg5.jpg',
+    '/backgrounds/bg6.jpg',
+    '/backgrounds/bg7.jpg'
   ]
 
   useEffect(() => {
@@ -83,6 +83,11 @@ export default function Login() {
       <div className="auth-container">
         <div className="auth-card">
           <div className="auth-logo">
+            <img 
+              src="/icons/icon-192.png" 
+              alt="Braidly Logo" 
+              className="auth-logo-img"
+            />
             <h1>Braidly</h1>
             <p>Welcome back! Login to your account</p>
           </div>

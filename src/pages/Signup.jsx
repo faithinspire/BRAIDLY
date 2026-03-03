@@ -21,11 +21,11 @@ export default function Signup() {
   const navigate = useNavigate()
 
   const backgroundImages = [
-    '/assets/images/b_Close-up_of_beautifu.png',
-    '/assets/images/b_Classic_medium-lengt.png',
-    '/assets/images/b_Long_jumbo_box_braid.png',
-    '/assets/images/gemini-3-pro-image-preview-2k_b_Professional_portrai.png',
-    '/assets/images/gpt-image-1.5-high-fidelity_a_Professional_portrai.png'
+    '/backgrounds/bg1.jpg',
+    '/backgrounds/bg2.jpg',
+    '/backgrounds/bg3.jpg',
+    '/backgrounds/bg4.jpg',
+    '/backgrounds/bg5.jpg'
   ]
 
   useEffect(() => {
@@ -109,6 +109,11 @@ export default function Signup() {
       <div className="auth-container">
         <div className="auth-card">
           <div className="auth-logo">
+            <img 
+              src="/icons/icon-192.png" 
+              alt="Braidly Logo" 
+              className="auth-logo-img"
+            />
             <h1>Braidly</h1>
             <p>Create your account and get started</p>
           </div>
