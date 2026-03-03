@@ -423,12 +423,13 @@ export default function BraiderProfile() {
                 )}
 
                 {/* Action Buttons */}
-                <div style={{ display: 'flex', gap: '1rem', marginTop: '2rem' }}>
+                <div style={{ display: 'flex', gap: '1rem', marginTop: '2rem', flexWrap: 'wrap' }}>
                   <button 
                     type="submit"
                     disabled={isSubmitting}
                     style={{
-                      flex: 1,
+                      flex: '1 1 auto',
+                      minWidth: '150px',
                       padding: '0.75rem 2rem',
                       height: '48px',
                       background: 'linear-gradient(135deg, #7e22ce 0%, #6b21a8 100%)',
@@ -443,11 +444,18 @@ export default function BraiderProfile() {
                       display: 'flex',
                       alignItems: 'center',
                       justifyContent: 'center',
-                      gap: '0.5rem'
+                      gap: '0.5rem',
+                      pointerEvents: isSubmitting ? 'none' : 'auto'
+                    }}
+                    onClick={(e) => {
+                      if (!isSubmitting) {
+                        handleSubmit(e)
+                      }
                     }}
                   >
                     <i className="fas fa-save"></i>
                     {isSubmitting ? 'Saving...' : 'Save Profile'}
+                  </button>
                   </button>
                   <Button 
                     variant="secondary"

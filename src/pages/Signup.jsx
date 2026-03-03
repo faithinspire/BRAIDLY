@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
+import gsap from 'gsap'
 import { useAuth } from '../auth/AuthContext'
 import ThemeToggle from '../components/ThemeToggle'
 import './Auth.css'
@@ -37,6 +38,24 @@ export default function Signup() {
 
     return () => clearInterval(interval)
   }, [backgroundImages.length])
+
+  useEffect(() => {
+    // GSAP animation for logo
+    gsap.from('.auth-logo h1', {
+      opacity: 0,
+      y: -40,
+      duration: 1.5,
+      ease: 'power4.out'
+    })
+    
+    gsap.from('.auth-logo p', {
+      opacity: 0,
+      y: -20,
+      duration: 1.5,
+      delay: 0.3,
+      ease: 'power4.out'
+    })
+  }, [])
 
   const handleChange = (e) => {
     setFormData({
