@@ -178,9 +178,9 @@ body {
 .auth-logo h1 {
     font-size: 3rem;
     font-weight: 900;
-    color: #7e22ce;
+    color: #ffffff;
     margin: 0 0 0.5rem 0;
-    text-shadow: 0 2px 8px rgba(126, 34, 206, 0.3);
+    text-shadow: 0 2px 8px rgba(126, 34, 206, 0.3), 0 4px 12px rgba(0, 0, 0, 0.4);
     letter-spacing: 2px;
     animation: slideDown 0.8s ease-out;
 }
