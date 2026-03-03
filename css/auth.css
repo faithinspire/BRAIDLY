@@ -176,13 +176,17 @@ body {
 }
 
 .auth-logo h1 {
-    font-size: 3rem;
-    font-weight: 900;
+    font-size: 3.5rem;
+    font-weight: 1000;
     color: #ffffff;
     margin: 0 0 0.5rem 0;
-    text-shadow: 0 2px 8px rgba(126, 34, 206, 0.3), 0 4px 12px rgba(0, 0, 0, 0.4);
-    letter-spacing: 2px;
+    text-shadow: 0 3px 10px rgba(0, 0, 0, 0.5);
+    letter-spacing: 0.3em;
     animation: slideDown 0.8s ease-out;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    text-rendering: optimizeLegibility;
+    filter: none;
 }
 
 .auth-logo p {
