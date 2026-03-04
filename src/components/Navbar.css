@@ -31,7 +31,7 @@
 .navbar-brand-text {
   font-size: 2.5rem;
   font-weight: 900;
-  color: #667EEA !important;
+  color: #ffffff !important;
   letter-spacing: 0.3em;
   text-transform: uppercase;
   transition: all 0.3s ease;
@@ -41,17 +41,16 @@
   filter: none;
   display: block !important;
   visibility: visible !important;
-  text-shadow: 0 0 20px rgba(102, 126, 234, 0.8), 0 0 40px rgba(102, 126, 234, 0.4), 0 4px 12px rgba(0, 0, 0, 0.3);
+  text-shadow: 0 4px 12px rgba(0, 0, 0, 0.5), 0 0 20px rgba(255, 255, 255, 0.3);
   margin: 0;
   padding: 0;
   line-height: 1;
-  animation: navbarLogoShine 2.5s ease-in-out infinite;
 }
 
 .navbar-brand:hover .navbar-brand-text {
-  color: #fbbf24;
+  color: #ffffff;
   transform: scale(1.05);
-  text-shadow: 0 0 20px rgba(255, 255, 255, 0.5);
+  text-shadow: 0 6px 16px rgba(0, 0, 0, 0.6), 0 0 30px rgba(255, 255, 255, 0.4);
 }
 
 .navbar-menu {
@@ -81,16 +80,5 @@
   
   .navbar-content {
     padding: 0 1rem;
-  }
-}
-
-@keyframes navbarLogoShine {
-  0%, 100% {
-    text-shadow: 0 0 20px rgba(102, 126, 234, 0.8), 0 0 40px rgba(102, 126, 234, 0.4), 0 4px 12px rgba(0, 0, 0, 0.3);
-    transform: scale(1);
-  }
-  50% {
-    text-shadow: 0 0 40px rgba(102, 126, 234, 1), 0 0 80px rgba(102, 126, 234, 0.6), 0 4px 12px rgba(0, 0, 0, 0.3);
-    transform: scale(1.03);
   }
 }

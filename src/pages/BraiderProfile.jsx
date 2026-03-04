@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react'
 import { useAuth } from '../auth/AuthContext'
+import { useProfile } from '../auth/ProfileContext'
 import { useNavigate } from 'react-router-dom'
 import { supabase } from '../services/supabase'
 import { uploadAvatar } from '../services/uploadService'
@@ -16,6 +17,7 @@ import '../../css/animated-background.css'
 
 export default function BraiderProfile() {
   const { user } = useAuth()
+  const { updateBraiderProfile, loadBraiderProfile } = useProfile()
   const navigate = useNavigate()
   const [loading, setLoading] = useState(true)
   const [uploadProgress, setUploadProgress] = useState(0)
@@ -55,61 +57,32 @@ export default function BraiderProfile() {
 
   useEffect(() => {
     if (user?.id) {
-      loadBraiderProfile()
+      loadBraiderProfile(user.id).then(() => {
+        setLoading(false)
+      })
     }
-  }, [user?.id])
-
-  const loadBraiderProfile = async () => {
-    try {
-      setLoading(true)
-      
-      const { data: braiderProfile, error } = await supabase
-        .from('braider_profiles')
-        .select('*')
-        .eq('user_id', user.id)
-        .single()
-      
-      if (error && error.code !== 'PGRST116') {
-        console.error('Error loading profile:', error)
-      } else if (braiderProfile) {
-        setValues(braiderProfile)
-      }
-    } catch (error) {
-      console.error('Error:', error)
-    } finally {
-      setLoading(false)
-    }
-  }
+  }, [user?.id, loadBraiderProfile])
 
   async function handleSaveProfile(validatedData) {
     try {
-      const { error } = await supabase
-        .from('braider_profiles')
-        .update({
-          business_name: validatedData.business_name,
-          bio: validatedData.bio,
-          phone: validatedData.phone,
-          city: validatedData.city,
-          state: validatedData.state,
-          zip_code: validatedData.zip_code,
-          address: validatedData.address,
-          base_price: validatedData.base_price,
-          travel_radius: validatedData.travel_radius,
-          mobile_service: validatedData.mobile_service,
-          salon_service: validatedData.salon_service,
-          salon_name: validatedData.salon_name,
-          salon_address: validatedData.salon_address
-        })
-        .eq('user_id', user.id)
-
-      if (error) {
-        console.error('Save error:', error)
-        throw new Error(error.message || 'Failed to save profile')
-      }
+      await updateBraiderProfile(user.id, {
+        business_name: validatedData.business_name,
+        bio: validatedData.bio,
+        phone: validatedData.phone,
+        city: validatedData.city,
+        state: validatedData.state,
+        zip_code: validatedData.zip_code,
+        address: validatedData.address,
+        base_price: validatedData.base_price,
+        travel_radius: validatedData.travel_radius,
+        mobile_service: validatedData.mobile_service,
+        salon_service: validatedData.salon_service,
+        salon_name: validatedData.salon_name,
+        salon_address: validatedData.salon_address
+      })
 
       setSuccessMessage('✅ Profile saved successfully!')
       setTimeout(() => setSuccessMessage(''), 3000)
-      await loadBraiderProfile()
     } catch (error) {
       console.error('Save error:', error)
       throw new Error(`Failed to save profile: ${error.message}`)
