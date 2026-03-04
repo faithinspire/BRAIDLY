@@ -17,7 +17,7 @@ import '../../css/animated-background.css'
 
 export default function BraiderProfile() {
   const { user } = useAuth()
-  const { updateBraiderProfile, loadBraiderProfile } = useProfile()
+  const { braiderProfile, updateBraiderProfile, loadBraiderProfile } = useProfile()
   const navigate = useNavigate()
   const [loading, setLoading] = useState(true)
   const [uploadProgress, setUploadProgress] = useState(0)
@@ -59,9 +59,34 @@ export default function BraiderProfile() {
     if (user?.id) {
       loadBraiderProfile(user.id).then(() => {
         setLoading(false)
+      }).catch((error) => {
+        console.error('Failed to load profile:', error)
+        setLoading(false)
       })
     }
   }, [user?.id, loadBraiderProfile])
+
+  // Update form values when profile loads
+  useEffect(() => {
+    if (braiderProfile) {
+      setValues({
+        business_name: braiderProfile.business_name || '',
+        bio: braiderProfile.bio || '',
+        phone: braiderProfile.phone || '',
+        city: braiderProfile.city || '',
+        state: braiderProfile.state || '',
+        zip_code: braiderProfile.zip_code || '',
+        address: braiderProfile.address || '',
+        base_price: braiderProfile.base_price || 100,
+        travel_radius: braiderProfile.travel_radius || 10,
+        mobile_service: braiderProfile.mobile_service !== false,
+        salon_service: braiderProfile.salon_service === true,
+        salon_name: braiderProfile.salon_name || '',
+        salon_address: braiderProfile.salon_address || '',
+        avatar_url: braiderProfile.avatar_url || ''
+      })
+    }
+  }, [braiderProfile, setValues])
 
   async function handleSaveProfile(validatedData) {
     try {

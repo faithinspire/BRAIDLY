@@ -2,10 +2,12 @@ import { Link, useNavigate } from 'react-router-dom'
 import { useEffect } from 'react'
 import gsap from 'gsap'
 import { useAuth } from '../auth/AuthContext'
+import { useProfile } from '../auth/ProfileContext'
 import './Navbar.css'
 
 export default function Navbar() {
   const { user, logout } = useAuth()
+  const { braiderProfile } = useProfile()
   const navigate = useNavigate()
 
   useEffect(() => {
@@ -33,7 +35,9 @@ export default function Navbar() {
         <div className="navbar-menu">
           {user ? (
             <>
-              <span className="navbar-user">Welcome, {user.fullName}!</span>
+              <span className="navbar-user">
+                {braiderProfile?.business_name || user.fullName}
+              </span>
               <button onClick={handleLogout} className="btn btn-secondary btn-sm">
                 Logout
               </button>

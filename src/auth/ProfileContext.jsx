@@ -14,12 +14,15 @@ export const useProfile = () => {
 export const ProfileProvider = ({ children }) => {
   const [braiderProfile, setBraiderProfile] = useState(null)
   const [profileLoading, setProfileLoading] = useState(false)
+  const [profileError, setProfileError] = useState(null)
 
   const loadBraiderProfile = useCallback(async (userId) => {
     if (!userId) return
     
     try {
       setProfileLoading(true)
+      setProfileError(null)
+      
       const { data, error } = await supabase
         .from('braider_profiles')
         .select('*')
@@ -28,11 +31,14 @@ export const ProfileProvider = ({ children }) => {
 
       if (error && error.code !== 'PGRST116') {
         console.error('Error loading profile:', error)
+        setProfileError(error.message)
       } else if (data) {
         setBraiderProfile(data)
+        setProfileError(null)
       }
     } catch (error) {
       console.error('Error:', error)
+      setProfileError(error.message)
     } finally {
       setProfileLoading(false)
     }
@@ -43,6 +49,7 @@ export const ProfileProvider = ({ children }) => {
 
     try {
       setProfileLoading(true)
+      setProfileError(null)
 
       // Check if profile exists
       const { data: existingProfile, error: fetchError } = await supabase
@@ -77,25 +84,34 @@ export const ProfileProvider = ({ children }) => {
       }
 
       if (error) {
+        setProfileError(error.message)
         throw new Error(error.message || 'Failed to save profile')
       }
 
       // Reload profile to confirm save
       await loadBraiderProfile(userId)
+      setProfileError(null)
       return true
     } catch (error) {
       console.error('Update error:', error)
+      setProfileError(error.message)
       throw error
     } finally {
       setProfileLoading(false)
     }
   }, [loadBraiderProfile])
 
+  const clearProfileError = useCallback(() => {
+    setProfileError(null)
+  }, [])
+
   const value = {
     braiderProfile,
     profileLoading,
+    profileError,
     loadBraiderProfile,
-    updateBraiderProfile
+    updateBraiderProfile,
+    clearProfileError
   }
 
   return (
