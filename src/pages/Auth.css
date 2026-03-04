@@ -102,13 +102,13 @@
 }
 
 .auth-logo h1 {
-  font-size: 2.5rem;
-  font-weight: 800;
-  background: linear-gradient(135deg, var(--primary) 0%, var(--secondary) 100%);
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-  background-clip: text;
+  font-size: 3.5rem;
+  font-weight: 900;
+  color: #ffffff !important;
+  text-shadow: 0 4px 12px rgba(0, 0, 0, 0.5);
   margin-bottom: 0.5rem;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
 }
 
 .auth-logo p {
