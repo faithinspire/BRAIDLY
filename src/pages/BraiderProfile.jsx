@@ -3,7 +3,6 @@ import { useAuth } from '../auth/AuthContext'
 import { useProfile } from '../auth/ProfileContext'
 import { useNavigate } from 'react-router-dom'
 import { supabase } from '../services/supabase'
-import { uploadAvatar } from '../services/uploadService'
 import { braiderProfileSchema } from '../schemas/validationSchemas'
 import { useFormValidation } from '../hooks/useFormValidation'
 import Navbar from '../components/Navbar'
@@ -43,12 +42,9 @@ export default function BraiderProfile() {
 
   const { 
     values, 
-    errors, 
     touched, 
     isSubmitting, 
     submitError,
-    handleChange, 
-    handleBlur, 
     handleSubmit,
     getFieldProps,
     getFieldError,
@@ -118,11 +114,26 @@ export default function BraiderProfile() {
     const file = e.target.files?.[0]
     if (!file) return
 
+    // Validate file type
+    if (!file.type.startsWith('image/')) {
+      setUploadError('❌ Please select a valid image file')
+      return
+    }
+
+    // Validate file size (max 5MB)
+    if (file.size > 5 * 1024 * 1024) {
+      setUploadError('❌ File size must be less than 5MB')
+      return
+    }
+
     try {
       setUploadProgress(0)
       setUploadError('')
 
       const filePath = `${user.id}/avatar.png`
+
+      // Simulate progress
+      setUploadProgress(30)
 
       const { error: uploadError } = await supabase.storage
         .from('avatars')
@@ -132,20 +143,15 @@ export default function BraiderProfile() {
         throw uploadError
       }
 
+      setUploadProgress(60)
+
       const { data } = supabase.storage
         .from('avatars')
         .getPublicUrl(filePath)
 
-      // Update both profiles and braider_profiles tables
-      const { error: profileUpdateError } = await supabase
-        .from('profiles')
-        .update({ avatar_url: data.publicUrl })
-        .eq('id', user.id)
+      setUploadProgress(80)
 
-      if (profileUpdateError) {
-        console.warn('Warning updating profiles table:', profileUpdateError)
-      }
-
+      // Update braider_profiles table
       const { error: braiderUpdateError } = await supabase
         .from('braider_profiles')
         .update({ avatar_url: data.publicUrl })
@@ -155,12 +161,15 @@ export default function BraiderProfile() {
         console.warn('Warning updating braider_profiles table:', braiderUpdateError)
       }
 
+      // Update form values
       setValues(prev => ({ ...prev, avatar_url: data.publicUrl }))
+      
+      setUploadProgress(100)
       setSuccessMessage('✅ Avatar uploaded successfully!')
       setTimeout(() => setSuccessMessage(''), 3000)
     } catch (error) {
       console.error('Upload error:', error)
-      setUploadError(`❌ Failed to save avatar: ${error.message}`)
+      setUploadError(`❌ Failed to upload avatar: ${error.message}`)
     } finally {
       setUploadProgress(0)
     }
