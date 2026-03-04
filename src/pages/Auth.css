@@ -79,6 +79,17 @@
   }
 }
 
+@keyframes logoShine {
+  0%, 100% {
+    text-shadow: 0 0 20px rgba(102, 126, 234, 0.8), 0 4px 12px rgba(0, 0, 0, 0.3);
+    transform: scale(1);
+  }
+  50% {
+    text-shadow: 0 0 40px rgba(102, 126, 234, 1), 0 0 60px rgba(102, 126, 234, 0.6), 0 4px 12px rgba(0, 0, 0, 0.3);
+    transform: scale(1.02);
+  }
+}
+
 /* Auth Container */
 .auth-container {
   position: relative;
@@ -123,11 +134,12 @@
 .auth-logo h1 {
   font-size: 3.5rem;
   font-weight: 900;
-  color: #ffffff !important;
-  text-shadow: 0 4px 12px rgba(0, 0, 0, 0.5);
+  color: #667EEA !important;
+  text-shadow: 0 0 20px rgba(102, 126, 234, 0.8), 0 4px 12px rgba(0, 0, 0, 0.3);
   margin-bottom: 0.5rem;
   letter-spacing: 0.2em;
   text-transform: uppercase;
+  animation: logoShine 2s ease-in-out infinite;
 }
 
 .auth-logo p {

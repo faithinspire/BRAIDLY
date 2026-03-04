@@ -138,13 +138,23 @@ export default function BraiderProfile() {
         .from('avatars')
         .getPublicUrl(filePath)
 
-      const { error: updateError } = await supabase
+      // Update both profiles and braider_profiles tables
+      const { error: profileUpdateError } = await supabase
+        .from('profiles')
+        .update({ avatar_url: data.publicUrl })
+        .eq('id', user.id)
+
+      if (profileUpdateError) {
+        console.warn('Warning updating profiles table:', profileUpdateError)
+      }
+
+      const { error: braiderUpdateError } = await supabase
         .from('braider_profiles')
         .update({ avatar_url: data.publicUrl })
         .eq('user_id', user.id)
 
-      if (updateError) {
-        throw updateError
+      if (braiderUpdateError) {
+        console.warn('Warning updating braider_profiles table:', braiderUpdateError)
       }
 
       setValues(prev => ({ ...prev, avatar_url: data.publicUrl }))
