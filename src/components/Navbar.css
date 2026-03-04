@@ -10,34 +10,40 @@
 
 .navbar-content {
   display: flex;
-  justify-content: space-between;
+  justify-content: center;
   align-items: center;
   padding: 0 2rem;
   max-width: 1400px;
   margin: 0 auto;
+  position: relative;
 }
 
 .navbar-brand {
   display: flex;
   align-items: center;
+  justify-content: center;
   text-decoration: none;
   gap: 1rem;
+  flex: 1;
 }
 
 .navbar-brand-text {
-  font-size: 2rem;
-  font-weight: 1000;
-  color: #ffffff;
-  letter-spacing: 0.2em;
+  font-size: 2.5rem;
+  font-weight: 900;
+  color: #ffffff !important;
+  letter-spacing: 0.3em;
   text-transform: uppercase;
   transition: all 0.3s ease;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   text-rendering: optimizeLegibility;
   filter: none;
-  display: block;
-  visibility: visible;
-  text-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
+  display: block !important;
+  visibility: visible !important;
+  text-shadow: 0 4px 12px rgba(0, 0, 0, 0.5), 0 0 20px rgba(255, 255, 255, 0.2);
+  margin: 0;
+  padding: 0;
+  line-height: 1;
 }
 
 .navbar-brand:hover .navbar-brand-text {
@@ -50,6 +56,8 @@
   display: flex;
   align-items: center;
   gap: 2rem;
+  position: absolute;
+  right: 2rem;
 }
 
 .navbar-user {
