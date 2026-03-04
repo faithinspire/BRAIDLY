@@ -11,6 +11,7 @@ import ChatbotFooter from '../components/ChatbotFooter'
 import ThemeToggle from '../components/ThemeToggle'
 import Button from '../components/Button'
 import FormField from '../components/FormField'
+import ProfileCompletionIndicator from '../components/ProfileCompletionIndicator'
 import '../../css/design-system.css'
 import '../../css/animated-background.css'
 
@@ -219,6 +220,9 @@ export default function BraiderProfile() {
                 {submitError}
               </div>
             )}
+
+            {/* Profile Completion Indicator */}
+            <ProfileCompletionIndicator profile={values} />
 
             {/* Avatar Section */}
             <section className="dashboard-section" style={{ textAlign: 'center', marginBottom: '2rem' }}>
