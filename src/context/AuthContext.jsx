@@ -21,31 +21,22 @@ export function AuthProvider({ children }) {
 
     const checkAuth = async () => {
       try {
-        const { data: { session } } = await supabase.auth.getSession()
-        if (!isMounted) return
-        
-        if (session?.user) {
-          setUser(session.user)
-          
-          // Retry profile fetch with exponential backoff
-          let profileData = null
-          for (let i = 0; i < 5; i++) {
+        // Check localStorage for mock auth
+        const storedUser = localStorage.getItem('auth_user')
+        if (storedUser) {
+          const user = JSON.parse(storedUser)
+          if (isMounted) {
+            setUser(user)
+            
+            // Try to fetch profile
             try {
-              const { profile: p } = await dbService.getProfile(session.user.id)
-              if (p) {
-                profileData = p
-                break
+              const { profile: p } = await dbService.getProfile(user.id)
+              if (isMounted && p) {
+                setProfile(p)
               }
             } catch (e) {
-              console.warn(`Profile fetch attempt ${i + 1}/5:`, e)
-              if (i < 4) await new Promise(r => setTimeout(r, 100 * Math.pow(2, i)))
+              console.warn('Profile fetch error:', e)
             }
-          }
-          
-          if (isMounted && profileData) {
-            setProfile(profileData)
-          } else if (isMounted) {
-            console.error('Failed to fetch profile after retries')
           }
         } else {
           setUser(null)
@@ -61,33 +52,8 @@ export function AuthProvider({ children }) {
 
     checkAuth()
 
-    // Listen for auth changes
-    const { data: { subscription } } = supabase.auth.onAuthStateChange(
-      async (event, session) => {
-        if (!isMounted) return
-        
-        if (session?.user) {
-          setUser(session.user)
-          
-          // Wait for profile to be fetched
-          try {
-            const { profile: profileData } = await dbService.getProfile(session.user.id)
-            if (isMounted && profileData) {
-              setProfile(profileData)
-            }
-          } catch (profileErr) {
-            console.warn('Profile fetch error on auth change:', profileErr)
-          }
-        } else {
-          setUser(null)
-          setProfile(null)
-        }
-      }
-    )
-
     return () => {
       isMounted = false
-      subscription?.unsubscribe()
     }
   }, [])
 
