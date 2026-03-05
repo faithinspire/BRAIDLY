@@ -65,8 +65,7 @@ export const dbService = {
 
       const userId = data.user.id
 
-      // Step 2: Create profile (REQUIRED - not optional)
-      // The trigger will automatically create braider/customer records
+      // Step 2: Create profile
       const { error: profileErr } = await supabase
         .from('profiles')
         .insert([
@@ -83,8 +82,26 @@ export const dbService = {
         throw new Error(`Profile creation failed: ${profileErr.message}`)
       }
 
-      // Wait a moment for trigger to create role-specific record
-      await new Promise(r => setTimeout(r, 500))
+      // Step 3: Create role-specific record immediately
+      if (role === 'braider') {
+        const { error: braiderErr } = await supabase
+          .from('braiders')
+          .insert([{ id: userId }])
+        
+        if (braiderErr) {
+          console.error('Braider record creation failed:', braiderErr)
+          throw new Error(`Braider record creation failed: ${braiderErr.message}`)
+        }
+      } else if (role === 'customer') {
+        const { error: customerErr } = await supabase
+          .from('customers')
+          .insert([{ id: userId }])
+        
+        if (customerErr) {
+          console.error('Customer record creation failed:', customerErr)
+          throw new Error(`Customer record creation failed: ${customerErr.message}`)
+        }
+      }
 
       return { user: data.user, error: null }
     } catch (error) {
