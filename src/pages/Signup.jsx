@@ -1,6 +1,7 @@
 import { useState } from 'react'
 import { useNavigate, Link } from 'react-router-dom'
 import { useAuth } from '../context/AuthContext'
+import { signupDiagnostics } from '../services/signupDiagnostics'
 import PublicNavbar from '../components/PublicNavbar'
 import './Auth.css'
 
@@ -14,11 +15,13 @@ export default function Signup() {
   const [error, setError] = useState('')
   const [success, setSuccess] = useState('')
   const [isLoading, setIsLoading] = useState(false)
+  const [showDiagnostics, setShowDiagnostics] = useState(false)
 
   const handleSubmit = async (e) => {
     e.preventDefault()
     setError('')
     setIsLoading(true)
+    setShowDiagnostics(false)
 
     if (!fullName || !email || !password) {
       setError('Please fill in all fields')
@@ -41,19 +44,16 @@ export default function Signup() {
     }
 
     try {
-      const { success, error: signupError } = await signup(email, password, fullName, role)
+      // Run diagnostics
+      console.log('Running signup diagnostics...')
+      const diagnostics = await signupDiagnostics.testSignup(email, password, fullName, role)
+      signupDiagnostics.logToConsole(diagnostics.logs)
       
-      if (!success) {
-        // Handle specific Supabase errors
-        if (signupError?.includes('already registered')) {
-          setError('This email is already registered. Please sign in instead.')
-        } else if (signupError?.includes('invalid')) {
-          setError('Invalid email or password. Please check and try again.')
-        } else if (signupError?.includes('400')) {
-          setError('Invalid request. Please check your information and try again.')
-        } else {
-          setError(signupError || 'Signup failed. Please try again.')
-        }
+      if (!diagnostics.success) {
+        const diagnosticText = signupDiagnostics.exportLogs(diagnostics.logs)
+        console.error('Diagnostics failed:', diagnosticText)
+        setError('Signup failed. Check console for details.')
+        setShowDiagnostics(true)
         setIsLoading(false)
         return
       }
@@ -105,6 +105,11 @@ export default function Signup() {
 
             {error && <div className="error-message">{error}</div>}
             {success && <div className="success-message">{success}</div>}
+            {showDiagnostics && (
+              <div className="info-message">
+                Check browser console (F12) for detailed diagnostics
+              </div>
+            )}
 
             <form onSubmit={handleSubmit}>
               <div className="form-group">
