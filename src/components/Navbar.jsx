@@ -1,55 +1,88 @@
+import { useState } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
-import { useEffect } from 'react'
-import gsap from 'gsap'
-import { useAuth } from '../auth/AuthContext'
-import { useProfile } from '../auth/ProfileContext'
+import { useAuth } from '../context/AuthContext'
 import './Navbar.css'
 
 export default function Navbar() {
-  const { user, logout } = useAuth()
-  const { braiderProfile } = useProfile()
   const navigate = useNavigate()
+  const { user, profile, logout } = useAuth()
+  const [isLoggingOut, setIsLoggingOut] = useState(false)
+  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false)
 
-  useEffect(() => {
-    // GSAP animation for logo
-    gsap.from('.navbar-brand-text', {
-      opacity: 0,
-      y: -30,
-      duration: 1.2,
-      ease: 'power4.out'
-    })
-  }, [])
+  const handleLogout = async () => {
+    try {
+      setIsLoggingOut(true)
+      const { success } = await logout()
+      if (success) {
+        navigate('/', { replace: true })
+      } else {
+        setIsLoggingOut(false)
+      }
+    } catch (err) {
+      console.error('Logout error:', err)
+      setIsLoggingOut(false)
+    }
+  }
 
-  const handleLogout = () => {
-    logout()
-    navigate('/login')
+  const getDashboardLink = () => {
+    if (!user) return null
+    switch (profile?.role) {
+      case 'braider':
+        return '/braider/dashboard'
+      case 'admin':
+        return '/admin/dashboard'
+      default:
+        return '/customer/dashboard'
+    }
+  }
+
+  const closeMobileMenu = () => {
+    setIsMobileMenuOpen(false)
   }
 
   return (
     <nav className="navbar">
-      <div className="navbar-content">
-        <Link to="/" className="navbar-brand">
-          <span className="navbar-brand-text">BRAIDLY</span>
+      <div className="navbar-container">
+        <Link to="/" className="navbar-logo" onClick={closeMobileMenu}>
+          <span className="logo-icon">B</span>
+          <span className="logo-text">BRAIDLY</span>
         </Link>
 
-        <div className="navbar-menu">
-          {user ? (
+        {/* Hamburger Menu Button */}
+        <button
+          className={`hamburger ${isMobileMenuOpen ? 'active' : ''}`}
+          onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
+          aria-label="Toggle menu"
+          aria-expanded={isMobileMenuOpen}
+        >
+          <span></span>
+          <span></span>
+          <span></span>
+        </button>
+
+        {/* Navigation Menu */}
+        <div className={`navbar-menu ${isMobileMenuOpen ? 'active' : ''}`}>
+          {!user ? (
             <>
-              <span className="navbar-user">
-                {braiderProfile?.business_name || user.fullName}
-              </span>
-              <button onClick={handleLogout} className="btn btn-secondary btn-sm">
-                Logout
-              </button>
+              <Link to="/" className="nav-link" onClick={closeMobileMenu}>Home</Link>
+              <Link to="/login" className="nav-link" onClick={closeMobileMenu}>Sign In</Link>
+              <Link to="/signup" className="nav-btn signup-btn" onClick={closeMobileMenu}>Sign Up</Link>
             </>
           ) : (
             <>
-              <Link to="/login" className="btn btn-secondary btn-sm">
-                Login
-              </Link>
-              <Link to="/signup" className="btn btn-primary btn-sm">
-                Sign Up
-              </Link>
+              <Link to={getDashboardLink()} className="nav-link" onClick={closeMobileMenu}>Dashboard</Link>
+              <Link to="/profile" className="nav-link" onClick={closeMobileMenu}>Profile</Link>
+              <Link to={`/${profile?.role}/chat`} className="nav-link" onClick={closeMobileMenu}>Messages</Link>
+              <button
+                onClick={() => {
+                  handleLogout()
+                  closeMobileMenu()
+                }}
+                disabled={isLoggingOut}
+                className="nav-btn logout-btn"
+              >
+                {isLoggingOut ? 'Logging out...' : 'Logout'}
+              </button>
             </>
           )}
         </div>

@@ -1,0 +1,114 @@
+.public-navbar {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 70px;
+  background: linear-gradient(135deg, #7e22ce 0%, #3b82f6 100%);
+  box-shadow: 0 4px 12px rgba(126, 34, 206, 0.3);
+  z-index: 1000;
+  border-bottom: 2px solid rgba(255, 255, 255, 0.1);
+}
+
+.public-navbar .navbar-container {
+  max-width: 1400px;
+  margin: 0 auto;
+  padding: 0 2rem;
+  height: 100%;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.public-navbar .navbar-logo {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  text-decoration: none;
+  cursor: pointer;
+  transition: transform 0.3s ease;
+}
+
+.public-navbar .navbar-logo:hover {
+  transform: scale(1.05);
+}
+
+.public-navbar .logo-icon {
+  width: 40px;
+  height: 40px;
+  background: white;
+  border-radius: 8px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #7e22ce;
+  font-weight: bold;
+  font-size: 20px;
+}
+
+.public-navbar .logo-text {
+  font-size: 24px;
+  font-weight: 900;
+  color: white;
+  letter-spacing: 2px;
+}
+
+.public-navbar .navbar-menu {
+  display: flex;
+  align-items: center;
+  gap: 2rem;
+}
+
+.public-navbar .nav-link {
+  color: white;
+  text-decoration: none;
+  font-weight: 500;
+  font-size: 0.95rem;
+  transition: all 0.3s ease;
+  padding: 8px 12px;
+  border-radius: 4px;
+}
+
+.public-navbar .nav-link:hover {
+  background: rgba(255, 255, 255, 0.2);
+  color: white;
+}
+
+.public-navbar .nav-btn {
+  padding: 8px 16px;
+  border: none;
+  border-radius: 6px;
+  font-weight: 600;
+  font-size: 0.9rem;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.public-navbar .signup-btn {
+  background: white;
+  color: #7e22ce;
+}
+
+.public-navbar .signup-btn:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(255, 255, 255, 0.3);
+  background: #f0f0f0;
+}
+
+@media (max-width: 768px) {
+  .public-navbar .navbar-container {
+    padding: 0 1rem;
+  }
+
+  .public-navbar .navbar-menu {
+    gap: 1rem;
+  }
+
+  .public-navbar .nav-link {
+    font-size: 0.85rem;
+  }
+
+  .public-navbar .logo-text {
+    font-size: 18px;
+  }
+}

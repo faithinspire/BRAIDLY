@@ -1,176 +1,106 @@
-import { useState, useEffect } from 'react'
-import { Link, useNavigate } from 'react-router-dom'
-import gsap from 'gsap'
-import { useAuth } from '../auth/AuthContext'
-import ThemeToggle from '../components/ThemeToggle'
+import { useState } from 'react'
+import { useNavigate, Link } from 'react-router-dom'
+import { useAuth } from '../context/AuthContext'
+import PublicNavbar from '../components/PublicNavbar'
 import './Auth.css'
 
 export default function Login() {
+  const navigate = useNavigate()
+  const { login, profile } = useAuth()
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
   const [error, setError] = useState('')
-  const [loading, setLoading] = useState(false)
-  const [currentImageIndex, setCurrentImageIndex] = useState(0)
-  
-  const { login } = useAuth()
-  const navigate = useNavigate()
-
-  const backgroundImages = [
-    '/backgrounds/bg1.jpg',
-    '/backgrounds/bg2.jpg',
-    '/backgrounds/bg3.jpg',
-    '/backgrounds/bg4.jpg',
-    '/backgrounds/bg5.jpg',
-    '/backgrounds/bg6.jpg',
-    '/backgrounds/bg7.jpg'
-  ]
-
-  useEffect(() => {
-    const interval = setInterval(() => {
-      setCurrentImageIndex((prevIndex) => 
-        (prevIndex + 1) % backgroundImages.length
-      )
-    }, 6000)
-
-    return () => clearInterval(interval)
-  }, [backgroundImages.length])
-
-  useEffect(() => {
-    // GSAP animation for logo
-    gsap.from('.auth-logo h1', {
-      opacity: 0,
-      y: -40,
-      duration: 1.5,
-      ease: 'power4.out'
-    })
-    
-    gsap.from('.auth-logo p', {
-      opacity: 0,
-      y: -20,
-      duration: 1.5,
-      delay: 0.3,
-      ease: 'power4.out'
-    })
-  }, [])
+  const [isLoading, setIsLoading] = useState(false)
 
   const handleSubmit = async (e) => {
     e.preventDefault()
     setError('')
-    setLoading(true)
+    setIsLoading(true)
+
+    if (!email || !password) {
+      setError('Please fill in all fields')
+      setIsLoading(false)
+      return
+    }
 
     try {
-      const user = await login(email, password)
+      const { success, error: loginError } = await login(email, password)
       
-      // Determine dashboard URL based on role
-      const dashboardUrl = user.role === 'admin' 
-        ? '/admin/dashboard'
-        : user.role === 'braider'
-        ? '/braider/dashboard'
-        : '/customer/dashboard'
+      if (!success) {
+        setError(loginError || 'Login failed')
+        setIsLoading(false)
+        return
+      }
+
+      // Wait for profile to be available (login() now waits for it)
+      // Give a small delay to ensure state is updated
+      await new Promise(r => setTimeout(r, 100))
       
-      // Navigate with replace to prevent going back to login
-      navigate(dashboardUrl, { replace: true })
+      // Check if profile is loaded
+      if (!profile) {
+        setError('Failed to load user profile. Please try again.')
+        setIsLoading(false)
+        return
+      }
+
+      // Redirect based on user role
+      const userRole = profile.role || 'customer'
+      const destination = userRole === 'braider' ? '/braider/dashboard' : 
+                         userRole === 'admin' ? '/admin/dashboard' : 
+                         '/customer/dashboard'
+      navigate(destination, { replace: true })
     } catch (err) {
-      setError(err.message || 'Login failed. Please check your credentials.')
-    } finally {
-      setLoading(false)
+      console.error('Login error:', err)
+      setError(err.message || 'Login failed')
+      setIsLoading(false)
     }
   }
 
   return (
-    <div className="auth-page">
-      {/* Animated Background */}
-      <div className="auth-background">
-        {backgroundImages.map((image, index) => (
-          <img
-            key={index}
-            src={image}
-            alt={`Braiding style ${index + 1}`}
-            className={`auth-background-image ${index === currentImageIndex ? 'active' : ''}`}
-          />
-        ))}
-        <div className="auth-background-overlay"></div>
-      </div>
+    <>
+      <PublicNavbar />
+      <div className="auth-page">
+        <div className="auth-container">
+          <div className="auth-card">
+            <h1>Welcome Back</h1>
+            <p>Sign in to your BRAIDLY account</p>
 
-      {/* Back to Home Link */}
-      <Link to="/" className="auth-back-link">
-        <i className="fas fa-arrow-left"></i>
-        <span>Back to Home</span>
-      </Link>
+            {error && <div className="error-message">{error}</div>}
 
-      {/* Login Form */}
-      <div className="auth-container">
-        <div className="auth-card">
-          <div className="auth-logo">
-            <h1>BRAIDLY</h1>
-            <p>Welcome back! Login to your account</p>
-          </div>
-
-          <form onSubmit={handleSubmit} className="auth-form">
-            {error && (
-              <div className="auth-error">
-                <i className="fas fa-exclamation-circle"></i>
-                <span>{error}</span>
-              </div>
-            )}
-
-            <div className="auth-form-group">
-              <label htmlFor="email">Email Address</label>
-              <div className="auth-input-wrapper">
-                <i className="fas fa-envelope auth-input-icon"></i>
+            <form onSubmit={handleSubmit}>
+              <div className="form-group">
+                <label>Email</label>
                 <input
                   type="email"
-                  id="email"
-                  className="auth-input"
-                  placeholder="Enter your email"
+                  placeholder="your@email.com"
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
-                  required
-                  disabled={loading}
+                  disabled={isLoading}
                 />
               </div>
-            </div>
 
-            <div className="auth-form-group">
-              <label htmlFor="password">Password</label>
-              <div className="auth-input-wrapper">
-                <i className="fas fa-lock auth-input-icon"></i>
+              <div className="form-group">
+                <label>Password</label>
                 <input
                   type="password"
-                  id="password"
-                  className="auth-input"
-                  placeholder="Enter your password"
+                  placeholder="••••••••"
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
-                  required
-                  disabled={loading}
+                  disabled={isLoading}
                 />
               </div>
-            </div>
 
-            <button 
-              type="submit" 
-              className="auth-submit-btn"
-              disabled={loading}
-            >
-              {loading ? (
-                <>
-                  <span className="auth-loading"></span>
-                  <span style={{ marginLeft: '0.5rem' }}>Logging in...</span>
-                </>
-              ) : (
-                'Login'
-              )}
-            </button>
-          </form>
+              <button type="submit" disabled={isLoading} className="submit-btn">
+                {isLoading ? 'Signing in...' : 'Sign In'}
+              </button>
+            </form>
 
-          <div className="auth-footer">
-            <p>Don't have an account? <Link to="/signup">Sign up here</Link></p>
+            <p className="auth-footer">
+              Don't have an account? <Link to="/signup">Sign up</Link>
+            </p>
           </div>
         </div>
       </div>
-
-      <ThemeToggle />
-    </div>
+    </>
   )
 }

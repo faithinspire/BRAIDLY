@@ -1,247 +1,186 @@
 # Braidly - Professional Braiding Services Platform
 
-A comprehensive web application connecting customers with verified professional braiders. Built with Bootstrap 5, featuring secure escrow payments, real-time booking, and advanced photo editing capabilities.
+A modern React-based marketplace connecting customers with professional braiders. Built with Vite, React 18, Supabase, and Framer Motion.
 
-## 🌟 Features
+## Features
 
-### For Customers
-- **Smart Search & Discovery**: Find verified braiders by location, style, and availability
-- **Secure Booking System**: Book appointments with real-time calendar integration
-- **Escrow Payment Protection**: Funds held securely until service completion
-- **Rating & Reviews**: Read authentic reviews from verified customers
-- **Mobile & Salon Options**: Choose between mobile service or salon visit
-- **Real-time Notifications**: Stay updated on booking status
-- **Referral Program**: Earn $10 credit for each friend referred
+- **Customer Dashboard** - Browse braiders, book appointments, manage bookings
+- **Braider Dashboard** - Manage schedule, portfolio, earnings, reviews
+- **Admin Dashboard** - User management, verification, analytics, disputes
+- **Authentication** - Email/password signup with role-based access control
+- **File Uploads** - Avatar and portfolio image management with compression
+- **PWA Support** - Installable web app with offline capabilities
+- **Responsive Design** - Mobile-first approach with animations
+- **Form Validation** - Zod-based runtime validation
 
-### For Braiders
-- **Professional Dashboard**: Manage bookings, earnings, and schedule
-- **Portfolio Management**: Showcase your work with built-in photo editor
-- **Earnings Tracking**: Real-time earnings with transparent commission structure
-- **Verification System**: Multi-tier verification with safety badges
-- **Route Navigation**: Integrated GPS for mobile services
-- **Client Communication**: In-app messaging system
-- **Analytics**: Track performance and growth metrics
+## Tech Stack
 
-### For Admins
-- **User Management**: Comprehensive user oversight
-- **Verification Queue**: ID and background check processing
-- **Dispute Resolution**: Handle customer complaints and refunds
-- **Fraud Detection**: Automated flagging of suspicious activity
-- **Financial Overview**: Platform-wide earnings and transactions
-- **Badge Assignment**: Manage verification tiers
+- **Frontend**: React 18, React Router 6, Vite
+- **Backend**: Supabase (PostgreSQL + Auth)
+- **Animations**: Framer Motion, GSAP
+- **Validation**: Zod
+- **Styling**: CSS3 with responsive design
+- **Deployment**: Vercel
 
-## 🎨 Photo Editor Features
+## Quick Start
 
-Advanced photo editing capabilities for braiders to enhance portfolio images:
+### Prerequisites
+- Node.js 16+
+- npm or yarn
+- Supabase account
 
-- **Filters**: Original, Bright, Contrast, Vintage, B&W
-- **Adjustments**: Brightness, Contrast, Saturation controls
-- **Crop & Rotate**: Precise image manipulation
-- **Real-time Preview**: See changes instantly
-- **High-Quality Export**: Save edited images in PNG format
+### Installation
 
-## 🏗️ Project Structure
-
-```
-braidly/
-├── index.html                  # Landing page
-├── customer-dashboard.html     # Customer dashboard
-├── braider-dashboard.html      # Braider dashboard
-├── booking.html                # Booking flow
-├── css/
-│   ├── style.css              # Main styles
-│   ├── dashboard.css          # Dashboard styles
-│   ├── braider-dashboard.css  # Braider dashboard styles
-│   └── booking.css            # Booking flow styles
-├── js/
-│   ├── main.js                # Core functionality
-│   ├── dashboard.js           # Customer dashboard logic
-│   ├── braider-dashboard.js   # Braider dashboard logic
-│   ├── booking.js             # Booking flow logic
-│   └── photo-editor.js        # Photo editing functionality
-├── assets/
-│   └── images/                # Image assets
-└── README.md
-```
-
-## 🚀 Getting Started
-
-### Quick Start (3 Steps!)
-
-1. **Start a local server:**
 ```bash
-# Using Python
-python -m http.server 8000
+# Install dependencies
+npm install
 
-# Using Node.js
-npx http-server -p 8000
+# Create .env file
+cp .env.example .env
 
-# Using PHP
-php -S localhost:8000
+# Update .env with your Supabase credentials
+# VITE_SUPABASE_URL=your_url
+# VITE_SUPABASE_ANON_KEY=your_key
+
+# Start development server
+npm run dev
+
+# Build for production
+npm run build
+
+# Preview production build
+npm run preview
 ```
 
-2. **Open your browser:**
-```
-http://localhost:8000
-```
+## Project Structure
 
-3. **Login with demo credentials:**
-
-#### 👤 Customer Account
 ```
-Email: customer@braidly.com
-Password: Customer123!
-```
-
-#### ✂️ Braider Account
-```
-Email: braider@braidly.com
-Password: Braider123!
+src/
+├── app/              # Application entry, routing, protected routes
+├── auth/             # Authentication context and services
+├── pages/            # 34 page components (customer, braider, admin)
+├── components/       # 20 reusable UI components
+├── services/         # Supabase and file upload services
+├── schemas/          # Zod validation schemas
+├── hooks/            # Custom React hooks
+├── animations/       # GSAP and Framer Motion animations
+├── styles/           # Global CSS and responsive utilities
+└── main.jsx          # Entry point
 ```
 
-#### 🛡️ Admin Account
-```
-Email: admin@braidly.com
-Password: Admin123!
-```
+## Key Pages
 
-📖 **See `QUICK_START.md` for detailed walkthrough!**
+### Customer
+- `/customer/dashboard` - Main dashboard
+- `/customer/browse` - Browse available braiders
+- `/customer/braider/:id` - View braider profile
+- `/customer/book/:braiderId` - Create booking
+- `/customer/bookings` - Manage bookings
+- `/customer/profile` - Edit profile
 
-## 💳 Payment Flow
+### Braider
+- `/braider/dashboard` - Main dashboard
+- `/braider/profile` - Edit profile
+- `/braider/portfolio` - Manage portfolio images
+- `/braider/schedule` - Manage availability
+- `/braider/earnings` - View earnings
+- `/braider/reviews` - View customer reviews
+- `/braider/bookings` - Manage bookings
 
-### Escrow System
-1. Customer pays for service
-2. Funds move to Braidly escrow account
-3. Booking confirmed, both parties notified
-4. Service completed
-5. Customer marks as complete or auto-release after 48 hours
-6. Commission deducted (15-25%)
-7. Remaining funds sent to braider
+### Admin
+- `/admin/dashboard` - Analytics overview
+- `/admin/users` - User management
+- `/admin/verification` - Verify braiders
+- `/admin/disputes` - Handle disputes
+- `/admin/analytics` - Detailed analytics
+- `/admin/financial` - Financial reports
+- `/admin/settings` - System settings
 
-### Dispute Handling
-- Customer can report issues with photo evidence
-- Admin reviews booking details and history
-- Resolution options: Full refund, Partial refund, Release funds
-- Braider may receive warning or suspension
+## Authentication
 
-## 🔐 Verification System
+Users can sign up as:
+- **Customer** - Browse and book braiders
+- **Braider** - Offer services and manage bookings
+- **Admin** - Manage platform
 
-### Tier 1 - Basic Verification (Required)
-- Government ID upload
-- Live selfie capture
-- Face match verification
-- Address confirmation
+Role-based access control is enforced via `ProtectedRoute` component.
 
-### Tier 2 - Background Check (Optional)
-- SSN/ITIN/Passport submission
-- Criminal record screening
-- Safety badge upon approval
+## Database Schema
 
-### Tier 3 - Pro Badge
-- Complete 50+ bookings
-- Maintain 4.5+ rating
-- Zero safety violations
+Key tables:
+- `profiles` - User profiles
+- `braider_profiles` - Braider-specific data
+- `bookings` - Appointment bookings
+- `portfolio_images` - Braider portfolio
+- `gallery_images` - Public gallery
+- `reviews` - Customer reviews
+- `payments` - Payment records
 
-## 📱 Responsive Design
+## File Upload
 
-Fully responsive design optimized for:
-- Desktop (1920px+)
-- Laptop (1024px - 1919px)
-- Tablet (768px - 1023px)
-- Mobile (320px - 767px)
+Images are uploaded to Supabase Storage with:
+- Automatic compression (max 2000px, 80% quality)
+- File validation (JPG, PNG, WebP only)
+- Retry logic (3 attempts)
+- Progress tracking
 
-## 🎯 Development Phases
+## Deployment
 
-### Phase 1 - MVP (Current)
-- ✅ User registration and authentication
-- ✅ Profile setup for customers and braiders
-- ✅ Search and discovery
-- ✅ Booking system
-- ✅ Escrow payments
-- ✅ Basic ID verification
-- ✅ Reviews and ratings
-- ✅ Admin dashboard
+### Vercel
 
-### Phase 2 - Trust Expansion
-- Background checks integration
-- Badge tier system
-- Fraud detection automation
-- Dispute automation
-- Wallet optimization
+```bash
+# Push to GitHub
+git push origin main
 
-### Phase 3 - Growth & Monetization
-- Subscription tiers
-- Sponsored placements
-- Advanced analytics
-- Referral automation
-- Push notifications
+# Connect repository to Vercel
+# Set environment variables in Vercel dashboard:
+# - VITE_SUPABASE_URL
+# - VITE_SUPABASE_ANON_KEY
 
-## 🛠️ Technologies Used
-
-- **Frontend**: HTML5, CSS3, JavaScript (ES6+)
-- **Framework**: Bootstrap 5.3.2
-- **Icons**: Font Awesome 6.4.2
-- **Canvas API**: For photo editing
-- **Geolocation API**: For location services
-- **LocalStorage**: For data persistence
-
-## 🔧 Configuration
-
-### API Integration Points
-```javascript
-// Update these endpoints in production
-const API_BASE_URL = 'https://api.braidly.com';
-const PAYMENT_GATEWAY = 'stripe'; // or 'paypal'
-const MAPS_API_KEY = 'your-google-maps-api-key';
+# Deploy automatically on push
 ```
 
 ### Environment Variables
+
+Required for production:
 ```
-STRIPE_PUBLIC_KEY=pk_test_...
-GOOGLE_MAPS_API_KEY=AIza...
-TWILIO_ACCOUNT_SID=AC...
+VITE_SUPABASE_URL=https://your-project.supabase.co
+VITE_SUPABASE_ANON_KEY=your-anon-key
 ```
 
-## 📊 Status States
+## Development
 
-### Booking Statuses
-- Pending
-- Confirmed
-- Escrowed
-- In Progress
-- Completed
-- Disputed
-- Refunded
-- Cancelled
+### Available Scripts
 
-### Verification Status
-- Unverified
-- Tier 1 Verified
-- Tier 2 Verified
-- Safety Badge Pro
+```bash
+npm run dev      # Start dev server (http://localhost:5173)
+npm run build    # Build for production
+npm run preview  # Preview production build
+npm run lint     # Run ESLint
+```
 
-## 🤝 Contributing
+### Code Quality
 
-1. Fork the repository
-2. Create your feature branch (`git checkout -b feature/AmazingFeature`)
-3. Commit your changes (`git commit -m 'Add some AmazingFeature'`)
-4. Push to the branch (`git push origin feature/AmazingFeature`)
-5. Open a Pull Request
+- ESLint configured for React
+- Zod for runtime validation
+- Error boundaries in place
+- Comprehensive error handling
 
-## 📄 License
+## Known Issues & TODOs
 
-This project is licensed under the MIT License - see the LICENSE file for details.
+- [ ] Payment processing integration (Stripe/PayPal)
+- [ ] Email notifications system
+- [ ] Real-time messaging
+- [ ] Admin analytics data fetching
+- [ ] Braider availability calendar
+- [ ] Advanced search filters
+- [ ] Map integration for location services
+- [ ] Dispute resolution workflow
 
-## 👥 Support
+## Support
 
-For support, email support@braidly.com or join our Slack channel.
+For issues or questions, please check the documentation or contact support.
 
-## 🙏 Acknowledgments
+## License
 
-- Bootstrap team for the amazing framework
-- Font Awesome for the icon library
-- All contributors and testers
-
----
-
-Built with ❤️ by the Braidly Team
+Proprietary - All rights reserved

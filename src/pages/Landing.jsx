@@ -1,148 +1,110 @@
-import { Link, useNavigate } from 'react-router-dom'
+import { Link } from 'react-router-dom'
 import { useState, useEffect } from 'react'
-import { motion } from 'framer-motion'
-import { useAuth } from '../auth/AuthContext'
-import ChatbotFooter from '../components/ChatbotFooter'
 import ThemeToggle from '../components/ThemeToggle'
-import AnimatedBackground from '../components/AnimatedBackground'
-import { heroTitleVariants, heroSubtitleVariants, heroButtonVariants } from '../animations/framerMotionAnimations'
+import AIChatbot from '../components/AIChatbot'
+import WhatsAppChat from '../components/WhatsAppChat'
 import './Landing.css'
 
 export default function Landing() {
-  const { user } = useAuth()
-  const navigate = useNavigate()
+  const [currentImageIndex, setCurrentImageIndex] = useState(0)
+  
+  // Local images from assets
+  const backgroundImages = [
+    '/assets/images/b_Professional_photo_o.png',
+    '/assets/images/b_Professional_photo_o (1).png',
+    '/assets/images/b_Professional_photo_o (2).png',
+    '/assets/images/b_Professional_photo_o (3).png',
+    '/assets/images/gpt-image-1.5-high-fidelity_a_Braider_Working_Imag.png',
+    '/assets/images/gpt-image-1.5-high-fidelity_a_Professional_headsho.png',
+  ]
 
-  // Redirect logged-in users to their dashboard
   useEffect(() => {
-    if (user) {
-      const dashboardUrl = user.role === 'admin' 
-        ? '/admin/dashboard'
-        : user.role === 'braider'
-        ? '/braider/dashboard'
-        : '/customer/dashboard'
-      
-      navigate(dashboardUrl, { replace: true })
-    }
-  }, [user, navigate])
+    const interval = setInterval(() => {
+      setCurrentImageIndex((prev) => (prev + 1) % backgroundImages.length)
+    }, 6000)
+    return () => clearInterval(interval)
+  }, [backgroundImages.length])
 
   return (
-    <div className="landing-page">
+    <div className="landing">
       {/* Animated Background */}
-      <AnimatedBackground opacity={0.2} speed={5000} />
-
-      {/* Hero Section */}
-      <section className="landing-hero">
-        <div className="landing-hero-content">
-          <motion.h1 
-            variants={heroTitleVariants}
-            initial="initial"
-            animate="animate"
-            className="landing-hero-title"
-          >
-            Find Your Perfect Braider
-          </motion.h1>
-          
-          <motion.p 
-            variants={heroSubtitleVariants}
-            initial="initial"
-            animate="animate"
-            className="landing-hero-subtitle"
-          >
-            Connect with verified, professional braiders in your area. 
-            Book appointments, secure payments, and get the style you deserve.
-          </motion.p>
-          
-          <motion.div 
-            variants={heroButtonVariants}
-            initial="initial"
-            animate="animate"
-            className="landing-hero-buttons"
-          >
-            {user ? (
-              <Link to={`/${user.role}/dashboard`} className="landing-btn landing-btn-primary">
-                Go to Dashboard
-              </Link>
-            ) : (
-              <>
-                <Link to="/signup" className="landing-btn landing-btn-primary">
-                  Get Started
-                </Link>
-                <Link to="/login" className="landing-btn landing-btn-secondary">
-                  Login
-                </Link>
-              </>
-            )}
-          </motion.div>
-
-          <div className="landing-trust-badges">
-            <div className="landing-trust-badge">
-              <i className="fas fa-shield-alt"></i>
-              <span>Secure Payments</span>
-            </div>
-            <div className="landing-trust-badge">
-              <i className="fas fa-user-check"></i>
-              <span>Verified Professionals</span>
-            </div>
-            <div className="landing-trust-badge">
-              <i className="fas fa-star"></i>
-              <span>Top Rated</span>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      {/* Features Section */}
-      <section className="landing-features">
-        <div className="landing-features-grid">
-          <div className="landing-feature-card">
-            <div className="landing-feature-icon">
-              <i className="fas fa-search"></i>
-            </div>
-            <h3>Search & Discover</h3>
-            <p>Find verified braiders near you with ratings, portfolios, and real-time availability</p>
-          </div>
-
-          <div className="landing-feature-card">
-            <div className="landing-feature-icon">
-              <i className="fas fa-calendar-check"></i>
-            </div>
-            <h3>Book & Pay Securely</h3>
-            <p>Choose your style, select a time slot, and pay with escrow protection</p>
-          </div>
-
-          <div className="landing-feature-card">
-            <div className="landing-feature-icon">
-              <i className="fas fa-crown"></i>
-            </div>
-            <h3>Get Your Style</h3>
-            <p>Enjoy professional service with payment released only after completion</p>
-          </div>
-
-          <div className="landing-feature-card">
-            <div className="landing-feature-icon">
-              <i className="fas fa-lock"></i>
-            </div>
-            <h3>Escrow Protection</h3>
-            <p>Funds held securely until service completion for your peace of mind</p>
-          </div>
-        </div>
-      </section>
-
-      {/* WhatsApp Chat Button */}
-      <div className="whatsapp-chat">
-        <a 
-          href="https://wa.me/1234567890" 
-          target="_blank" 
-          rel="noopener noreferrer"
-          className="whatsapp-btn"
-        >
-          <i className="fab fa-whatsapp"></i>
-          <span>Chat with Admin</span>
-        </a>
+      <div className="animated-bg-container">
+        {backgroundImages.map((image, index) => (
+          <div
+            key={index}
+            className={`bg-slide ${index === currentImageIndex ? 'active' : ''}`}
+            style={{ backgroundImage: `url(${image})` }}
+          />
+        ))}
+        <div className="bg-overlay" />
       </div>
 
-      <ThemeToggle />
-      <ChatbotFooter />
+      {/* Theme Toggle */}
+      <div className="theme-toggle-wrapper">
+        <ThemeToggle />
+      </div>
+
+      {/* Hero Section */}
+      <div className="landing-hero">
+        <div className="hero-content">
+          <div className="logo-section">
+            <img src="/assets/images/braidly-logo.svg" alt="BRAIDLY" className="logo" />
+          </div>
+          
+          <h1 className="hero-title">Connect with Professional Braiders</h1>
+          <p className="hero-subtitle">
+            Book appointments, view portfolios, and get the perfect braids
+          </p>
+          
+          <div className="hero-buttons">
+            <Link to="/signup" className="btn btn-primary">
+              Get Started
+            </Link>
+            <Link to="/login" className="btn btn-secondary">
+              Sign In
+            </Link>
+          </div>
+        </div>
+      </div>
+
+      {/* Features Section */}
+      <div className="landing-features">
+        <div className="features-container">
+          <div className="feature-card">
+            <div className="feature-icon">🔍</div>
+            <h3>Find Braiders</h3>
+            <p>Browse professional braiders with ratings and portfolios</p>
+          </div>
+          <div className="feature-card">
+            <div className="feature-icon">📅</div>
+            <h3>Easy Booking</h3>
+            <p>Schedule appointments at your convenience</p>
+          </div>
+          <div className="feature-card">
+            <div className="feature-icon">💰</div>
+            <h3>Secure Payments</h3>
+            <p>Safe payment processing with escrow protection</p>
+          </div>
+          <div className="feature-card">
+            <div className="feature-icon">⭐</div>
+            <h3>Ratings & Reviews</h3>
+            <p>Read reviews from other customers</p>
+          </div>
+        </div>
+      </div>
+
+      {/* AI Chatbot */}
+      <AIChatbot />
+
+      {/* WhatsApp Chat */}
+      <WhatsAppChat />
+
+      {/* Footer */}
+      <footer className="landing-footer">
+        <div className="footer-content">
+          <p>&copy; 2026 BRAIDLY. All rights reserved.</p>
+        </div>
+      </footer>
     </div>
   )
 }

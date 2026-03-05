@@ -1,495 +1,216 @@
-import { useState, useEffect } from 'react'
-import { useAuth } from '../auth/AuthContext'
-import { useProfile } from '../auth/ProfileContext'
-import { useNavigate } from 'react-router-dom'
-import { supabase } from '../services/supabase'
-import { braiderProfileSchema } from '../schemas/validationSchemas'
-import { useFormValidation } from '../hooks/useFormValidation'
-import Navbar from '../components/Navbar'
-import BottomNav from '../components/BottomNav'
-import ChatbotFooter from '../components/ChatbotFooter'
-import ThemeToggle from '../components/ThemeToggle'
-import Button from '../components/Button'
-import FormField from '../components/FormField'
-import ProfileCompletionIndicator from '../components/ProfileCompletionIndicator'
-import '../../css/design-system.css'
-import '../../css/animated-background.css'
+import { useLocation, useNavigate } from 'react-router-dom'
+import PageLayout from '../components/PageLayout'
 
 export default function BraiderProfile() {
-  const { user } = useAuth()
-  const { braiderProfile, updateBraiderProfile, loadBraiderProfile } = useProfile()
+  const location = useLocation()
   const navigate = useNavigate()
-  const [loading, setLoading] = useState(true)
-  const [uploadProgress, setUploadProgress] = useState(0)
-  const [successMessage, setSuccessMessage] = useState('')
-  const [uploadError, setUploadError] = useState('')
+  const braider = location.state?.braider
 
-  const initialValues = {
-    business_name: '',
-    bio: '',
-    phone: '',
-    city: '',
-    state: '',
-    zip_code: '',
-    address: '',
-    base_price: 100,
-    travel_radius: 10,
-    mobile_service: true,
-    salon_service: false,
-    salon_name: '',
-    salon_address: '',
-    avatar_url: ''
-  }
-
-  const { 
-    values, 
-    touched, 
-    isSubmitting, 
-    submitError,
-    handleSubmit,
-    getFieldProps,
-    getFieldError,
-    setValues
-  } = useFormValidation(initialValues, braiderProfileSchema, handleSaveProfile)
-
-  useEffect(() => {
-    if (user?.id) {
-      loadBraiderProfile(user.id).then(() => {
-        setLoading(false)
-      }).catch((error) => {
-        console.error('Failed to load profile:', error)
-        setLoading(false)
-      })
-    }
-  }, [user?.id, loadBraiderProfile])
-
-  // Update form values when profile loads
-  useEffect(() => {
-    if (braiderProfile) {
-      setValues({
-        business_name: braiderProfile.business_name || '',
-        bio: braiderProfile.bio || '',
-        phone: braiderProfile.phone || '',
-        city: braiderProfile.city || '',
-        state: braiderProfile.state || '',
-        zip_code: braiderProfile.zip_code || '',
-        address: braiderProfile.address || '',
-        base_price: braiderProfile.base_price || 100,
-        travel_radius: braiderProfile.travel_radius || 10,
-        mobile_service: braiderProfile.mobile_service !== false,
-        salon_service: braiderProfile.salon_service === true,
-        salon_name: braiderProfile.salon_name || '',
-        salon_address: braiderProfile.salon_address || '',
-        avatar_url: braiderProfile.avatar_url || ''
-      })
-    }
-  }, [braiderProfile, setValues])
-
-  async function handleSaveProfile(validatedData) {
-    try {
-      await updateBraiderProfile(user.id, {
-        business_name: validatedData.business_name,
-        bio: validatedData.bio,
-        phone: validatedData.phone,
-        city: validatedData.city,
-        state: validatedData.state,
-        zip_code: validatedData.zip_code,
-        address: validatedData.address,
-        base_price: validatedData.base_price,
-        travel_radius: validatedData.travel_radius,
-        mobile_service: validatedData.mobile_service,
-        salon_service: validatedData.salon_service,
-        salon_name: validatedData.salon_name,
-        salon_address: validatedData.salon_address
-      })
-
-      setSuccessMessage('✅ Profile saved successfully!')
-      setTimeout(() => setSuccessMessage(''), 3000)
-    } catch (error) {
-      console.error('Save error:', error)
-      throw new Error(`Failed to save profile: ${error.message}`)
-    }
-  }
-
-  const handleAvatarUpload = async (e) => {
-    const file = e.target.files?.[0]
-    if (!file) return
-
-    // Validate file type
-    if (!file.type.startsWith('image/')) {
-      setUploadError('❌ Please select a valid image file')
-      return
-    }
-
-    // Validate file size (max 5MB)
-    if (file.size > 5 * 1024 * 1024) {
-      setUploadError('❌ File size must be less than 5MB')
-      return
-    }
-
-    try {
-      setUploadProgress(0)
-      setUploadError('')
-
-      const filePath = `${user.id}/avatar.png`
-
-      // Simulate progress
-      setUploadProgress(30)
-
-      const { error: uploadError } = await supabase.storage
-        .from('avatars')
-        .upload(filePath, file, { upsert: true })
-
-      if (uploadError) {
-        throw uploadError
-      }
-
-      setUploadProgress(60)
-
-      const { data } = supabase.storage
-        .from('avatars')
-        .getPublicUrl(filePath)
-
-      setUploadProgress(80)
-
-      // Update braider_profiles table
-      const { error: braiderUpdateError } = await supabase
-        .from('braider_profiles')
-        .update({ avatar_url: data.publicUrl })
-        .eq('user_id', user.id)
-
-      if (braiderUpdateError) {
-        console.warn('Warning updating braider_profiles table:', braiderUpdateError)
-      }
-
-      // Update form values
-      setValues(prev => ({ ...prev, avatar_url: data.publicUrl }))
-      
-      setUploadProgress(100)
-      setSuccessMessage('✅ Avatar uploaded successfully!')
-      setTimeout(() => setSuccessMessage(''), 3000)
-    } catch (error) {
-      console.error('Upload error:', error)
-      setUploadError(`❌ Failed to upload avatar: ${error.message}`)
-    } finally {
-      setUploadProgress(0)
-    }
-  }
-
-  if (loading) {
+  if (!braider) {
     return (
-      <div className="dashboard-page">
-        <Navbar />
-        <main className="dashboard-content">
-          <div className="container">
-            <div className="loading-spinner">
-              <i className="fas fa-spinner fa-spin"></i>
-              <p>Loading profile...</p>
-            </div>
-          </div>
-        </main>
-      </div>
+      <PageLayout>
+        <div style={{
+          display: 'flex',
+          flexDirection: 'column',
+          alignItems: 'center',
+          justifyContent: 'center',
+          minHeight: '400px',
+          padding: '2rem',
+          textAlign: 'center',
+        }}>
+          <h1 style={{ marginBottom: '2rem' }}>Braider Not Found</h1>
+          <button
+            onClick={() => navigate('/customer/browse')}
+            className="btn btn-primary"
+            style={{ width: 'auto', padding: '14px 40px' }}
+          >
+            Back to Browse
+          </button>
+        </div>
+      </PageLayout>
     )
   }
 
   return (
-    <div className="dashboard-page">
-      <Navbar />
-      
-      <main className="dashboard-content">
-        <div className="container">
-          <div className="dashboard-header">
-            <h1>My Braider Profile</h1>
-            <p>Complete your profile so customers can find you</p>
-          </div>
+    <PageLayout>
+      <div style={{ maxWidth: '900px', margin: '0 auto', padding: '2rem' }}>
+          {/* Back Button */}
+          <button
+            onClick={() => navigate('/customer/browse')}
+            style={{
+              background: 'none',
+              border: 'none',
+              color: 'white',
+              cursor: 'pointer',
+              fontSize: '1rem',
+              fontWeight: '600',
+              marginBottom: '1rem',
+            }}
+          >
+            ← Back to Browse
+          </button>
 
-          <div style={{ maxWidth: '800px', margin: '0 auto' }}>
-            {/* Success/Error Messages */}
-            {successMessage && (
-              <div className="alert alert-success" style={{ marginBottom: '1.5rem' }}>
-                {successMessage}
-              </div>
-            )}
-            {uploadError && (
-              <div className="alert alert-danger" style={{ marginBottom: '1.5rem' }}>
-                {uploadError}
-              </div>
-            )}
-            {submitError && (
-              <div className="alert alert-danger" style={{ marginBottom: '1.5rem' }}>
-                {submitError}
-              </div>
-            )}
-
-            {/* Profile Completion Indicator */}
-            <ProfileCompletionIndicator profile={values} />
-
-            {/* Avatar Section */}
-            <section className="dashboard-section" style={{ textAlign: 'center', marginBottom: '2rem' }}>
-              <div style={{ marginBottom: '1.5rem' }}>
-                <img 
-                  src={values.avatar_url || '/assets/images/braidly-logo.png'} 
-                  alt="Avatar"
-                  style={{
-                    width: '150px',
-                    height: '150px',
-                    borderRadius: '50%',
-                    objectFit: 'cover',
-                    border: '3px solid var(--color-primary-600)'
-                  }}
+          {/* Header */}
+          <div
+            style={{
+              background: 'rgba(255, 255, 255, 0.95)',
+              borderRadius: '12px',
+              overflow: 'hidden',
+              boxShadow: '0 4px 12px rgba(0, 0, 0, 0.1)',
+              marginBottom: '2rem',
+              backdropFilter: 'blur(10px)',
+            }}
+          >
+            {/* Avatar */}
+            <div
+              style={{
+                width: '100%',
+                height: '300px',
+                background: 'linear-gradient(135deg, #7e22ce 0%, #3b82f6 100%)',
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+                color: 'white',
+                fontSize: '5rem',
+                fontWeight: 'bold',
+              }}
+            >
+              {braider.avatar_url ? (
+                <img
+                  src={braider.avatar_url}
+                  alt={braider.full_name}
+                  style={{ width: '100%', height: '100%', objectFit: 'cover' }}
                 />
-              </div>
-              {uploadProgress > 0 && uploadProgress < 100 && (
-                <div style={{ marginBottom: '1rem', width: '100%' }}>
-                  <div style={{
-                    width: '100%',
-                    height: '8px',
-                    background: 'var(--color-neutral-200)',
-                    borderRadius: '4px',
-                    overflow: 'hidden'
-                  }}>
-                    <div style={{
-                      width: `${uploadProgress}%`,
-                      height: '100%',
-                      background: 'linear-gradient(90deg, var(--color-primary-600), var(--color-primary-700))',
-                      transition: 'width 0.3s ease'
-                    }} />
+              ) : (
+                braider.full_name?.charAt(0).toUpperCase()
+              )}
+            </div>
+
+            {/* Info */}
+            <div style={{ padding: '2rem' }}>
+              <h1 style={{ margin: '0 0 1rem 0', color: '#333', fontSize: '2rem' }}>
+                {braider.full_name}
+              </h1>
+
+              <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))', gap: '1.5rem', marginBottom: '2rem' }}>
+                <div>
+                  <p style={{ margin: '0 0 0.5rem 0', color: '#666', fontSize: '0.9rem' }}>Rating</p>
+                  <p style={{ margin: 0, fontSize: '1.5rem', fontWeight: '600', color: '#fbbf24' }}>
+                    ★ {braider.rating || 0} ({braider.total_bookings || 0} bookings)
+                  </p>
+                </div>
+
+                {braider.location && (
+                  <div>
+                    <p style={{ margin: '0 0 0.5rem 0', color: '#666', fontSize: '0.9rem' }}>Location</p>
+                    <p style={{ margin: 0, fontSize: '1.1rem', fontWeight: '600', color: '#333' }}>
+                      📍 {braider.location}
+                    </p>
                   </div>
-                  <p style={{ marginTop: '0.5rem', fontSize: '0.875rem', color: 'var(--color-neutral-600)' }}>
-                    Uploading: {uploadProgress}%
+                )}
+
+                {braider.hourly_rate && (
+                  <div>
+                    <p style={{ margin: '0 0 0.5rem 0', color: '#666', fontSize: '0.9rem' }}>Rate</p>
+                    <p style={{ margin: 0, fontSize: '1.5rem', fontWeight: '600', color: '#7e22ce' }}>
+                      ${braider.hourly_rate}/hr
+                    </p>
+                  </div>
+                )}
+              </div>
+
+              {braider.bio && (
+                <div style={{ marginBottom: '2rem' }}>
+                  <h3 style={{ margin: '0 0 0.5rem 0', color: '#333' }}>About</h3>
+                  <p style={{ margin: 0, color: '#666', lineHeight: '1.6' }}>
+                    {braider.bio}
                   </p>
                 </div>
               )}
-              <label className="btn btn-primary" style={{ cursor: 'pointer' }}>
-                <i className="fas fa-camera"></i> Upload Avatar
-                <input 
-                  type="file" 
-                  accept="image/*" 
-                  onChange={handleAvatarUpload}
-                  disabled={isSubmitting}
-                  style={{ display: 'none' }}
-                />
-              </label>
-            </section>
 
-            {/* Profile Form */}
-            <form onSubmit={handleSubmit}>
-              <section className="dashboard-section">
-                <h2>Business Information</h2>
-                
-                <FormField
-                  label="Business Name"
-                  name="business_name"
-                  type="text"
-                  placeholder="Your business name"
-                  required
-                  {...getFieldProps('business_name')}
-                  error={getFieldError('business_name')}
-                  touched={touched.business_name}
-                  icon={<i className="fas fa-store"></i>}
-                />
-
-                <FormField
-                  label="Bio"
-                  name="bio"
-                  type="textarea"
-                  placeholder="Tell customers about yourself and your services"
-                  required
-                  rows={4}
-                  maxLength={500}
-                  {...getFieldProps('bio')}
-                  error={getFieldError('bio')}
-                  touched={touched.bio}
-                  hint="Describe your experience, specialties, and what makes you unique"
-                />
-
-                <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1rem', marginBottom: '1.5rem' }}>
-                  <FormField
-                    label="Phone"
-                    name="phone"
-                    type="tel"
-                    placeholder="(555) 123-4567"
-                    required
-                    {...getFieldProps('phone')}
-                    error={getFieldError('phone')}
-                    touched={touched.phone}
-                    icon={<i className="fas fa-phone"></i>}
-                  />
-                  <FormField
-                    label="Base Price ($)"
-                    name="base_price"
-                    type="number"
-                    placeholder="100"
-                    required
-                    min="10"
-                    max="500"
-                    step="10"
-                    {...getFieldProps('base_price')}
-                    error={getFieldError('base_price')}
-                    touched={touched.base_price}
-                    icon={<i className="fas fa-dollar-sign"></i>}
-                  />
+              {braider.style && (
+                <div style={{ marginBottom: '2rem' }}>
+                  <h3 style={{ margin: '0 0 0.5rem 0', color: '#333' }}>Specialty</h3>
+                  <p style={{ margin: 0, color: '#666' }}>
+                    💇 {braider.style}
+                  </p>
                 </div>
+              )}
 
-                <h3 style={{ marginTop: '2rem', marginBottom: '1rem' }}>Location</h3>
+              {/* Action Buttons */}
+              <div style={{ display: 'flex', gap: '1rem', marginTop: '2rem' }}>
+                <button
+                  style={{
+                    flex: 1,
+                    padding: '0.75rem 1.5rem',
+                    background: 'linear-gradient(135deg, #7e22ce 0%, #3b82f6 100%)',
+                    color: 'white',
+                    border: 'none',
+                    borderRadius: '6px',
+                    cursor: 'pointer',
+                    fontWeight: '600',
+                    fontSize: '1rem',
+                  }}
+                >
+                  Book Appointment
+                </button>
+                <button
+                  style={{
+                    flex: 1,
+                    padding: '0.75rem 1.5rem',
+                    background: 'white',
+                    color: '#7e22ce',
+                    border: '2px solid #7e22ce',
+                    borderRadius: '6px',
+                    cursor: 'pointer',
+                    fontWeight: '600',
+                    fontSize: '1rem',
+                  }}
+                >
+                  Send Message
+                </button>
+              </div>
+            </div>
+          </div>
 
-                <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1rem', marginBottom: '1.5rem' }}>
-                  <FormField
-                    label="City"
-                    name="city"
-                    type="text"
-                    placeholder="New York"
-                    required
-                    {...getFieldProps('city')}
-                    error={getFieldError('city')}
-                    touched={touched.city}
-                    icon={<i className="fas fa-map-marker-alt"></i>}
-                  />
-                  <FormField
-                    label="State"
-                    name="state"
-                    type="text"
-                    placeholder="NY"
-                    required
-                    {...getFieldProps('state')}
-                    error={getFieldError('state')}
-                    touched={touched.state}
-                  />
+          {/* Portfolio */}
+          <div
+            style={{
+              background: 'rgba(255, 255, 255, 0.95)',
+              borderRadius: '12px',
+              padding: '2rem',
+              boxShadow: '0 4px 12px rgba(0, 0, 0, 0.1)',
+              backdropFilter: 'blur(10px)',
+            }}
+          >
+            <h2 style={{ margin: '0 0 1.5rem 0', color: '#333' }}>Portfolio</h2>
+            <div
+              style={{
+                display: 'grid',
+                gridTemplateColumns: 'repeat(auto-fill, minmax(200px, 1fr))',
+                gap: '1rem',
+              }}
+            >
+              {[1, 2, 3, 4, 5, 6].map(i => (
+                <div
+                  key={i}
+                  style={{
+                    background: 'linear-gradient(135deg, #7e22ce 0%, #3b82f6 100%)',
+                    borderRadius: '8px',
+                    height: '200px',
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                    color: 'white',
+                    fontSize: '3rem',
+                  }}
+                >
+                  📸
                 </div>
-
-                <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1rem', marginBottom: '1.5rem' }}>
-                  <FormField
-                    label="Zip Code"
-                    name="zip_code"
-                    type="text"
-                    placeholder="10001"
-                    required
-                    {...getFieldProps('zip_code')}
-                    error={getFieldError('zip_code')}
-                    touched={touched.zip_code}
-                  />
-                  <FormField
-                    label="Travel Radius (miles)"
-                    name="travel_radius"
-                    type="number"
-                    placeholder="10"
-                    required
-                    min="0"
-                    max="100"
-                    step="1"
-                    {...getFieldProps('travel_radius')}
-                    error={getFieldError('travel_radius')}
-                    touched={touched.travel_radius}
-                    icon={<i className="fas fa-road"></i>}
-                  />
-                </div>
-
-                <FormField
-                  label="Address"
-                  name="address"
-                  type="text"
-                  placeholder="123 Main Street"
-                  required
-                  {...getFieldProps('address')}
-                  error={getFieldError('address')}
-                  touched={touched.address}
-                  icon={<i className="fas fa-home"></i>}
-                />
-
-                <h3 style={{ marginTop: '2rem', marginBottom: '1rem' }}>Services</h3>
-
-                <div style={{ marginBottom: '1rem' }}>
-                  <FormField
-                    label="Mobile Service (I come to customers)"
-                    name="mobile_service"
-                    type="checkbox"
-                    {...getFieldProps('mobile_service')}
-                  />
-                </div>
-
-                <div style={{ marginBottom: '1.5rem' }}>
-                  <FormField
-                    label="Salon Service (Customers come to me)"
-                    name="salon_service"
-                    type="checkbox"
-                    {...getFieldProps('salon_service')}
-                  />
-                </div>
-
-                {values.salon_service && (
-                  <>
-                    <FormField
-                      label="Salon Name"
-                      name="salon_name"
-                      type="text"
-                      placeholder="Your salon name"
-                      {...getFieldProps('salon_name')}
-                      error={getFieldError('salon_name')}
-                      touched={touched.salon_name}
-                      icon={<i className="fas fa-spa"></i>}
-                    />
-
-                    <FormField
-                      label="Salon Address"
-                      name="salon_address"
-                      type="text"
-                      placeholder="Salon address"
-                      {...getFieldProps('salon_address')}
-                      error={getFieldError('salon_address')}
-                      touched={touched.salon_address}
-                      icon={<i className="fas fa-map-pin"></i>}
-                    />
-                  </>
-                )}
-
-                {/* Action Buttons */}
-                <div style={{ display: 'flex', gap: '1rem', marginTop: '2rem', flexWrap: 'wrap' }}>
-                  <button 
-                    type="submit"
-                    disabled={isSubmitting}
-                    style={{
-                      flex: '1 1 auto',
-                      minWidth: '150px',
-                      padding: '0.75rem 2rem',
-                      height: '48px',
-                      background: 'linear-gradient(135deg, #7e22ce 0%, #6b21a8 100%)',
-                      color: 'white',
-                      border: 'none',
-                      borderRadius: '8px',
-                      fontWeight: 'bold',
-                      fontSize: '1rem',
-                      cursor: isSubmitting ? 'not-allowed' : 'pointer',
-                      opacity: isSubmitting ? 0.6 : 1,
-                      transition: 'all 0.3s ease',
-                      display: 'flex',
-                      alignItems: 'center',
-                      justifyContent: 'center',
-                      gap: '0.5rem'
-                    }}
-                  >
-                    <i className="fas fa-save"></i>
-                    {isSubmitting ? 'Saving...' : 'Save Profile'}
-                  </button>
-                  <Button 
-                    variant="secondary"
-                    size="lg"
-                    fullWidth
-                    disabled={isSubmitting}
-                    onClick={() => navigate('/braider/dashboard')}
-                    icon="fas fa-arrow-left"
-                  >
-                    Back
-                  </Button>
-                </div>
-              </section>
-            </form>
+              ))}
+            </div>
           </div>
         </div>
-      </main>
-
-      <BottomNav />
-      <ThemeToggle />
-      <ChatbotFooter />
-    </div>
+    </PageLayout>
   )
 }

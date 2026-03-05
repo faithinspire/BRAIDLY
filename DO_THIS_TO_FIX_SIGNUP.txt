@@ -1,0 +1,84 @@
+================================================================================
+                    DO THIS TO FIX SIGNUP - 5 MINUTES
+================================================================================
+
+PROBLEM: Signup not creating accounts
+
+SOLUTION: Add 3 RLS policies to Supabase database
+
+TIME: 5 minutes
+
+================================================================================
+                         STEP 1: OPEN SUPABASE
+================================================================================
+
+Go to: https://app.supabase.com
+
+Select your BRAIDLY project
+
+================================================================================
+                         STEP 2: OPEN SQL EDITOR
+================================================================================
+
+Click: SQL Editor (left sidebar)
+
+Click: New Query (top right)
+
+================================================================================
+                         STEP 3: COPY THIS SQL
+================================================================================
+
+CREATE POLICY "Users can create own profile" ON profiles
+  FOR INSERT WITH CHECK (auth.uid() = id);
+
+CREATE POLICY "Braiders can create own record" ON braiders
+  FOR INSERT WITH CHECK (auth.uid() = id);
+
+CREATE POLICY "Customers can create own record" ON customers
+  FOR INSERT WITH CHECK (auth.uid() = id);
+
+================================================================================
+                         STEP 4: PASTE AND RUN
+================================================================================
+
+1. Paste the SQL into the editor
+2. Click "Run" button
+3. Wait for success message
+4. Done!
+
+================================================================================
+                         STEP 5: TEST SIGNUP
+================================================================================
+
+1. Clear browser cache (Ctrl+Shift+Delete)
+2. Go to http://localhost:5173/signup
+3. Fill in the form
+4. Click "Create Account"
+5. Should now work!
+
+================================================================================
+                         WHAT THIS DOES
+================================================================================
+
+Adds permission for users to create their own profile during signup
+
+Without this, RLS blocks profile creation and signup fails
+
+================================================================================
+                         VERIFY IT WORKED
+================================================================================
+
+After running SQL:
+
+1. Go to Authentication → Policies
+2. Look for "Users can create own profile"
+3. If you see it, the fix worked!
+
+================================================================================
+                         THAT'S IT!
+================================================================================
+
+5 minutes and signup will work.
+
+Go to Supabase now and run the SQL.
+

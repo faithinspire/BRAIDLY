@@ -1,0 +1,18 @@
+BRAIDLY LOGO SETUP
+==================
+
+The Braidly logo image you provided should be saved as:
+assets/images/braidly-logo.png
+
+STEPS TO ADD YOUR LOGO:
+1. Save your logo image (the purple/pink braid design) as: braidly-logo.png
+2. Place it in the assets/images/ folder
+3. Make sure the background is transparent (PNG format)
+
+The code has been updated to use this logo throughout the app.
+
+TEMPORARY SOLUTION:
+An SVG version has been created at: assets/images/braidly-logo.svg
+This will work until you add the PNG version.
+
+ALL PAGES HAVE BEEN UPDATED TO USE THE LOGO!

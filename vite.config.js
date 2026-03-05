@@ -4,14 +4,24 @@ import react from '@vitejs/plugin-react'
 export default defineConfig({
   plugins: [react()],
   server: {
-    port: 3000,
-    open: true
+    port: 5173,
+    strictPort: false,
+    open: false,
+    cors: true,
+    host: '0.0.0.0',
+    hmr: {
+      protocol: 'ws',
+      host: 'localhost',
+      port: 5173,
+    }
   },
   build: {
     outDir: 'dist',
-    sourcemap: true
+    sourcemap: false,
+    minify: 'terser'
   },
-  resolve: {
-    extensions: ['.js', '.jsx', '.json']
+  optimizeDeps: {
+    include: ['react', 'react-dom', 'react-router-dom']
   }
 })
+

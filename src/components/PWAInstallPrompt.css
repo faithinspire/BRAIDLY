@@ -1,0 +1,133 @@
+.pwa-install-prompt {
+  position: fixed;
+  bottom: 20px;
+  right: 20px;
+  background: linear-gradient(135deg, #7e22ce 0%, #3b82f6 100%);
+  border-radius: 12px;
+  padding: 16px 20px;
+  box-shadow: 0 8px 24px rgba(126, 34, 206, 0.3);
+  z-index: 1000;
+  max-width: 320px;
+  animation: slideUp 0.3s ease-out;
+  backdrop-filter: blur(10px);
+}
+
+@keyframes slideUp {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.pwa-content {
+  display: flex;
+  gap: 12px;
+  margin-bottom: 12px;
+  align-items: flex-start;
+}
+
+.pwa-icon {
+  font-size: 2rem;
+  flex-shrink: 0;
+}
+
+.pwa-text h3 {
+  margin: 0 0 4px 0;
+  color: white;
+  font-size: 1rem;
+  font-weight: 700;
+}
+
+.pwa-text p {
+  margin: 0;
+  color: rgba(255, 255, 255, 0.9);
+  font-size: 0.85rem;
+  line-height: 1.4;
+}
+
+.pwa-actions {
+  display: flex;
+  gap: 8px;
+}
+
+.pwa-btn-install,
+.pwa-btn-dismiss {
+  flex: 1;
+  padding: 8px 12px;
+  border: none;
+  border-radius: 6px;
+  font-size: 0.85rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.pwa-btn-install {
+  background: white;
+  color: #7e22ce;
+}
+
+.pwa-btn-install:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+}
+
+.pwa-btn-install:active {
+  transform: translateY(0);
+}
+
+.pwa-btn-dismiss {
+  background: rgba(255, 255, 255, 0.2);
+  color: white;
+  border: 1px solid rgba(255, 255, 255, 0.3);
+}
+
+.pwa-btn-dismiss:hover {
+  background: rgba(255, 255, 255, 0.3);
+}
+
+.pwa-btn-dismiss:active {
+  background: rgba(255, 255, 255, 0.25);
+}
+
+/* Mobile responsiveness */
+@media (max-width: 480px) {
+  .pwa-install-prompt {
+    bottom: 10px;
+    right: 10px;
+    left: 10px;
+    max-width: none;
+  }
+
+  .pwa-content {
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+  }
+
+  .pwa-icon {
+    font-size: 2.5rem;
+  }
+
+  .pwa-text h3 {
+    font-size: 1.1rem;
+  }
+
+  .pwa-text p {
+    font-size: 0.9rem;
+  }
+
+  .pwa-actions {
+    width: 100%;
+  }
+
+  .pwa-btn-install,
+  .pwa-btn-dismiss {
+    padding: 10px 16px;
+    font-size: 0.9rem;
+  }
+}

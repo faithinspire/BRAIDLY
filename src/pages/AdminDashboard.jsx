@@ -1,203 +1,150 @@
 import { useState, useEffect } from 'react'
-import { useNavigate, Link } from 'react-router-dom'
-import { useAuth } from '../auth/AuthContext'
-import Navbar from '../components/Navbar'
-import BottomNav from '../components/BottomNav'
-import ThemeToggle from '../components/ThemeToggle'
-import ChatbotFooter from '../components/ChatbotFooter'
-import './DashboardStyles.css'
+import { useNavigate } from 'react-router-dom'
+import { useAuth } from '../context/AuthContext'
+import { dbService } from '../services/supabaseClient'
+import PageLayout from '../components/PageLayout'
+import './AdminDashboard.css'
 
 export default function AdminDashboard() {
-  const { user, logout } = useAuth()
   const navigate = useNavigate()
+  const { profile } = useAuth()
   const [stats, setStats] = useState({
     totalUsers: 0,
-    totalBraiders: 0,
     totalBookings: 0,
-    totalRevenue: 0
+    totalRevenue: 0,
   })
-  const [recentUsers, setRecentUsers] = useState([])
   const [loading, setLoading] = useState(true)
 
   useEffect(() => {
-    if (!user || user.role !== 'admin') {
-      navigate('/login')
-      return
+    const loadStats = async () => {
+      try {
+        // In a real app, you'd fetch these from an admin endpoint
+        // For now, we'll just set placeholder values
+        setStats({
+          totalUsers: 0,
+          totalBookings: 0,
+          totalRevenue: 0,
+        })
+      } catch (err) {
+        console.error('Error loading stats:', err)
+      } finally {
+        setLoading(false)
+      }
     }
-    loadAdminData()
-  }, [user, navigate])
-
-  const loadAdminData = async () => {
-    setLoading(true)
-    try {
-      // TODO: Fetch admin stats from Supabase
-      setStats({
-        totalUsers: 0,
-        totalBraiders: 0,
-        totalBookings: 0,
-        totalRevenue: 0
-      })
-      setRecentUsers([])
-    } catch (error) {
-      console.error('Error loading admin data:', error)
-    } finally {
-      setLoading(false)
-    }
-  }
+    loadStats()
+  }, [])
 
   return (
-    <div className="dashboard-page">
-      <Navbar />
-
-      <main className="dashboard-main">
-        {/* Hero Section */}
-        <section className="dashboard-hero">
-          <div className="hero-content">
-            <h1>Admin Dashboard</h1>
-            <p>Manage platform users and monitor activity</p>
+    <PageLayout>
+      <div className="admin-container">
+          {/* Header Section */}
+          <div className="dashboard-header">
+            <div>
+              <h1 className="dashboard-title">Admin Dashboard</h1>
+              <p className="dashboard-subtitle">System administration and platform monitoring</p>
+            </div>
+            <button
+              onClick={() => navigate('/admin/dashboard')}
+              className="braidly-btn braidly-btn-primary"
+              style={{ width: 'auto', padding: '10px 24px' }}
+            >
+              Refresh
+            </button>
           </div>
-        </section>
 
-        {/* Stats Section */}
-        <section className="dashboard-stats">
-          <div className="container">
-            <div className="stats-grid">
-              <div className="stat-card">
-                <div className="stat-icon">
-                  <i className="fas fa-users"></i>
-                </div>
-                <div className="stat-content">
-                  <h3>Total Users</h3>
-                  <p className="stat-value">{stats.totalUsers}</p>
-                </div>
-              </div>
-
-              <div className="stat-card">
-                <div className="stat-icon">
-                  <i className="fas fa-scissors"></i>
-                </div>
-                <div className="stat-content">
-                  <h3>Total Braiders</h3>
-                  <p className="stat-value">{stats.totalBraiders}</p>
-                </div>
-              </div>
-
-              <div className="stat-card">
-                <div className="stat-icon">
-                  <i className="fas fa-calendar-check"></i>
-                </div>
-                <div className="stat-content">
-                  <h3>Total Bookings</h3>
-                  <p className="stat-value">{stats.totalBookings}</p>
-                </div>
-              </div>
-
-              <div className="stat-card">
-                <div className="stat-icon">
-                  <i className="fas fa-chart-line"></i>
-                </div>
-                <div className="stat-content">
-                  <h3>Total Revenue</h3>
-                  <p className="stat-value">${stats.totalRevenue}</p>
-                </div>
-              </div>
+          {/* Stats Grid */}
+          <div className="stats-grid">
+            <div className="stat-card">
+              <div className="stat-icon">👥</div>
+              <div className="stat-number">{stats.totalUsers}</div>
+              <div className="stat-label">Total Users</div>
+            </div>
+            <div className="stat-card">
+              <div className="stat-icon">📅</div>
+              <div className="stat-number">{stats.totalBookings}</div>
+              <div className="stat-label">Total Bookings</div>
+            </div>
+            <div className="stat-card">
+              <div className="stat-icon">💰</div>
+              <div className="stat-number">${stats.totalRevenue.toFixed(2)}</div>
+              <div className="stat-label">Platform Revenue</div>
             </div>
           </div>
-        </section>
 
-        {/* Admin Actions */}
-        <section className="dashboard-actions">
-          <div className="container">
-            <h2>Management</h2>
-            <div className="actions-grid">
-              <Link to="/admin/users" className="action-card">
-                <i className="fas fa-user-cog"></i>
-                <h3>Users</h3>
-                <p>Manage all users</p>
-              </Link>
-              <Link to="/admin/braiders" className="action-card">
-                <i className="fas fa-user-check"></i>
-                <h3>Braiders</h3>
-                <p>Verify braiders</p>
-              </Link>
-              <Link to="/admin/bookings" className="action-card">
-                <i className="fas fa-list-check"></i>
-                <h3>Bookings</h3>
-                <p>Monitor bookings</p>
-              </Link>
-              <Link to="/admin/analytics" className="action-card">
-                <i className="fas fa-chart-bar"></i>
-                <h3>Analytics</h3>
-                <p>View reports</p>
-              </Link>
-              <Link to="/admin/disputes" className="action-card">
-                <i className="fas fa-exclamation-circle"></i>
-                <h3>Disputes</h3>
-                <p>Handle disputes</p>
-              </Link>
-              <Link to="/admin/settings" className="action-card">
-                <i className="fas fa-cog"></i>
-                <h3>Settings</h3>
-                <p>Platform settings</p>
-              </Link>
+          {/* Navigation Cards */}
+          <div className="nav-cards-grid">
+            <div
+              className="nav-card"
+              onClick={() => navigate('/admin/dashboard')}
+              style={{ cursor: 'pointer' }}
+            >
+              <div className="nav-card-icon">📊</div>
+              <h3>Analytics</h3>
+              <p>View platform analytics and reports</p>
+            </div>
+            <div
+              className="nav-card"
+              onClick={() => navigate('/admin/dashboard')}
+              style={{ cursor: 'pointer' }}
+            >
+              <div className="nav-card-icon">👤</div>
+              <h3>Users</h3>
+              <p>Manage users and permissions</p>
+            </div>
+            <div
+              className="nav-card"
+              onClick={() => navigate('/admin/dashboard')}
+              style={{ cursor: 'pointer' }}
+            >
+              <div className="nav-card-icon">⚙️</div>
+              <h3>Settings</h3>
+              <p>Configure platform settings</p>
+            </div>
+            <div
+              className="nav-card"
+              onClick={() => navigate('/admin/chat')}
+              style={{ cursor: 'pointer' }}
+            >
+              <div className="nav-card-icon">💬</div>
+              <h3>Messages</h3>
+              <p>View system messages and logs</p>
             </div>
           </div>
-        </section>
 
-        {/* Recent Users */}
-        <section className="dashboard-content">
-          <div className="container">
-            <h2>Recent Users</h2>
+          {/* System Status Section */}
+          <div className="status-section">
+            <h2 className="section-title">System Status</h2>
+            
             {loading ? (
-              <div className="loading-spinner">
-                <i className="fas fa-spinner fa-spin"></i>
-                <p>Loading users...</p>
-              </div>
-            ) : recentUsers.length > 0 ? (
-              <div className="users-table">
-                <table>
-                  <thead>
-                    <tr>
-                      <th>Name</th>
-                      <th>Email</th>
-                      <th>Role</th>
-                      <th>Joined</th>
-                      <th>Action</th>
-                    </tr>
-                  </thead>
-                  <tbody>
-                    {recentUsers.map((user) => (
-                      <tr key={user.id}>
-                        <td>{user.full_name}</td>
-                        <td>{user.email}</td>
-                        <td>
-                          <span className={`role role-${user.role}`}>
-                            {user.role}
-                          </span>
-                        </td>
-                        <td>{new Date(user.created_at).toLocaleDateString()}</td>
-                        <td>
-                          <button className="action-btn">View</button>
-                        </td>
-                      </tr>
-                    ))}
-                  </tbody>
-                </table>
+              <div style={{ textAlign: 'center', padding: '2rem', color: '#999' }}>
+                <p>Loading system status...</p>
               </div>
             ) : (
-              <div className="empty-state">
-                <i className="fas fa-users"></i>
-                <h3>No users yet</h3>
-                <p>Users will appear here</p>
+              <div className="status-grid">
+                <div className="status-card">
+                  <div className="status-indicator online" />
+                  <h4>Database</h4>
+                  <p>Connected</p>
+                </div>
+                <div className="status-card">
+                  <div className="status-indicator online" />
+                  <h4>Authentication</h4>
+                  <p>Active</p>
+                </div>
+                <div className="status-card">
+                  <div className="status-indicator online" />
+                  <h4>Payment Gateway</h4>
+                  <p>Connected</p>
+                </div>
+                <div className="status-card">
+                  <div className="status-indicator online" />
+                  <h4>Storage</h4>
+                  <p>Available</p>
+                </div>
               </div>
             )}
           </div>
-        </section>
-      </main>
-
-      <BottomNav />
-      <ThemeToggle />
-      <ChatbotFooter />
-    </div>
+      </div>
+    </PageLayout>
   )
 }

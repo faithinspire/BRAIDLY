@@ -1,45 +1,36 @@
-/**
- * CARD COMPONENT
- * Reusable card container with header, body, and footer
- */
-
-import './Card.css'
-
-export default function Card({
-  children,
-  header,
-  footer,
-  title,
-  subtitle,
-  icon,
-  className = '',
-  hoverable = true,
-  ...props
-}) {
+export default function Card({ children, className = '', hover = true, ...props }) {
   return (
-    <div className={`card ${hoverable ? 'card-hoverable' : ''} ${className}`} {...props}>
-      {(header || title) && (
-        <div className="card-header">
-          <div className="card-header-content">
-            {icon && <i className={`card-icon ${icon}`} />}
-            <div>
-              {title && <h3 className="card-title">{title}</h3>}
-              {subtitle && <p className="card-subtitle">{subtitle}</p>}
-            </div>
-          </div>
-          {header && <div className="card-header-action">{header}</div>}
-        </div>
-      )}
+    <div
+      className={`bg-white rounded-lg shadow-md border border-neutral-200 transition-all duration-200 ${
+        hover ? 'hover:shadow-lg hover:-translate-y-1' : ''
+      } ${className}`}
+      {...props}
+    >
+      {children}
+    </div>
+  )
+}
 
-      <div className="card-body">
-        {children}
-      </div>
+export function CardHeader({ children, className = '' }) {
+  return (
+    <div className={`px-6 py-4 border-b border-neutral-200 ${className}`}>
+      {children}
+    </div>
+  )
+}
 
-      {footer && (
-        <div className="card-footer">
-          {footer}
-        </div>
-      )}
+export function CardBody({ children, className = '' }) {
+  return (
+    <div className={`px-6 py-4 ${className}`}>
+      {children}
+    </div>
+  )
+}
+
+export function CardFooter({ children, className = '' }) {
+  return (
+    <div className={`px-6 py-4 border-t border-neutral-200 flex gap-4 ${className}`}>
+      {children}
     </div>
   )
 }

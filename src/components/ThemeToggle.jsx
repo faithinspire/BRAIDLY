@@ -1,36 +1,41 @@
-import { useState, useEffect } from 'react'
+import React, { useState, useEffect } from 'react'
 import './ThemeToggle.css'
 
-function ThemeToggle() {
-  const [isDark, setIsDark] = useState(() => {
-    const saved = localStorage.getItem('braidly_theme')
-    return saved === 'dark'
-  })
+export default function ThemeToggle() {
+  const [isDark, setIsDark] = useState(false)
 
   useEffect(() => {
-    if (isDark) {
-      document.documentElement.classList.add('dark-theme')
-      localStorage.setItem('braidly_theme', 'dark')
-    } else {
-      document.documentElement.classList.remove('dark-theme')
-      localStorage.setItem('braidly_theme', 'light')
-    }
-  }, [isDark])
+    // Check for saved theme preference or system preference
+    const saved = localStorage.getItem('braidly-theme')
+    const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches
+    
+    const shouldBeDark = saved ? saved === 'dark' : prefersDark
+    setIsDark(shouldBeDark)
+    applyTheme(shouldBeDark)
+  }, [])
+
+  const applyTheme = (dark) => {
+    const theme = dark ? 'dark' : 'light'
+    document.documentElement.setAttribute('data-theme', theme)
+    localStorage.setItem('braidly-theme', theme)
+  }
 
   const toggleTheme = () => {
-    setIsDark(!isDark)
+    const newDark = !isDark
+    setIsDark(newDark)
+    applyTheme(newDark)
   }
 
   return (
-    <button 
-      className="theme-toggle-btn" 
+    <button
       onClick={toggleTheme}
-      aria-label="Toggle theme"
-      title={isDark ? 'Switch to light mode' : 'Switch to dark mode'}
+      className="theme-toggle"
+      title={isDark ? 'Switch to Light Mode' : 'Switch to Dark Mode'}
+      aria-label={isDark ? 'Switch to Light Mode' : 'Switch to Dark Mode'}
     >
-      <i className={`fas ${isDark ? 'fa-sun' : 'fa-moon'}`}></i>
+      <span className="theme-icon">
+        {isDark ? '☀️' : '🌙'}
+      </span>
     </button>
   )
 }
-
-export default ThemeToggle

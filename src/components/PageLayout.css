@@ -1,0 +1,44 @@
+.page-layout {
+  min-height: 100vh;
+  background: linear-gradient(135deg, rgba(126, 34, 206, 0.05) 0%, rgba(59, 130, 246, 0.05) 100%), 
+              url('/assets/images/b_Professional_photo_o.png') center/cover no-repeat fixed;
+}
+
+.page-wrapper {
+  display: flex;
+  margin-top: 70px;
+  min-height: calc(100vh - 70px);
+}
+
+.sidebar {
+  width: 250px;
+  background: white;
+  border-right: 1px solid #e5e7eb;
+  padding: 2rem 0;
+  overflow-y: auto;
+}
+
+.page-content {
+  flex: 1;
+  padding: 2rem;
+  max-width: 1400px;
+  margin: 0 auto;
+  width: 100%;
+}
+
+@media (max-width: 768px) {
+  .page-wrapper {
+    flex-direction: column;
+  }
+
+  .sidebar {
+    width: 100%;
+    border-right: none;
+    border-bottom: 1px solid #e5e7eb;
+    padding: 1rem;
+  }
+
+  .page-content {
+    padding: 1rem;
+  }
+}

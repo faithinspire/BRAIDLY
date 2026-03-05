@@ -1,0 +1,118 @@
+================================================================================
+                    RUN THIS SQL TO FIX SIGNUP/LOGIN
+================================================================================
+
+PROBLEM: Signup and login not working
+
+ROOT CAUSE: Supabase RLS policies missing INSERT permissions
+
+SOLUTION: Run this SQL in Supabase
+
+TIME: 5 minutes
+
+================================================================================
+                         STEP 1: GO TO SUPABASE
+================================================================================
+
+1. Open: https://app.supabase.com
+2. Select your BRAIDLY project
+3. Click: SQL Editor (left sidebar)
+4. Click: New Query (top right)
+
+================================================================================
+                         STEP 2: COPY THIS SQL
+================================================================================
+
+-- Drop existing policies
+DROP POLICY IF EXISTS "Users can create own profile" ON profiles;
+DROP POLICY IF EXISTS "Users can view own profile" ON profiles;
+DROP POLICY IF EXISTS "Users can update own profile" ON profiles;
+DROP POLICY IF EXISTS "Admins can view all profiles" ON profiles;
+DROP POLICY IF EXISTS "Braiders can create own record" ON braiders;
+DROP POLICY IF EXISTS "Anyone can view braider profiles" ON braiders;
+DROP POLICY IF EXISTS "Braiders can update own profile" ON braiders;
+DROP POLICY IF EXISTS "Customers can create own record" ON customers;
+DROP POLICY IF EXISTS "Customers can view own profile" ON customers;
+DROP POLICY IF EXISTS "Customers can update own profile" ON customers;
+
+-- Create PROFILES policies
+CREATE POLICY "Users can create own profile" ON profiles
+  FOR INSERT WITH CHECK (auth.uid() = id);
+CREATE POLICY "Users can view own profile" ON profiles
+  FOR SELECT USING (auth.uid() = id);
+CREATE POLICY "Users can update own profile" ON profiles
+  FOR UPDATE USING (auth.uid() = id);
+CREATE POLICY "Admins can view all profiles" ON profiles
+  FOR SELECT USING (EXISTS (SELECT 1 FROM profiles WHERE id = auth.uid() AND role = 'admin'));
+
+-- Create BRAIDERS policies
+CREATE POLICY "Braiders can create own record" ON braiders
+  FOR INSERT WITH CHECK (auth.uid() = id);
+CREATE POLICY "Anyone can view braider profiles" ON braiders
+  FOR SELECT USING (TRUE);
+CREATE POLICY "Braiders can update own profile" ON braiders
+  FOR UPDATE USING (auth.uid() = id);
+
+-- Create CUSTOMERS policies
+CREATE POLICY "Customers can create own record" ON customers
+  FOR INSERT WITH CHECK (auth.uid() = id);
+CREATE POLICY "Customers can view own profile" ON customers
+  FOR SELECT USING (auth.uid() = id);
+CREATE POLICY "Customers can update own profile" ON customers
+  FOR UPDATE USING (auth.uid() = id);
+
+================================================================================
+                         STEP 3: PASTE INTO EDITOR
+================================================================================
+
+1. Click in the SQL editor (white area)
+2. Paste the SQL (Ctrl+V)
+3. You should see the SQL code
+
+================================================================================
+                         STEP 4: RUN THE SQL
+================================================================================
+
+1. Click: Run (top right button)
+2. Wait for completion
+3. You should see: "Query executed successfully"
+
+================================================================================
+                         STEP 5: VERIFY
+================================================================================
+
+1. Go to: Authentication → Policies
+2. Look for these policies:
+   - "Users can create own profile"
+   - "Braiders can create own record"
+   - "Customers can create own record"
+
+If you see all 3, the fix worked! ✅
+
+================================================================================
+                         STEP 6: TEST SIGNUP
+================================================================================
+
+1. Clear browser cache (Ctrl+Shift+Delete)
+2. Go to: http://localhost:5173/signup
+3. Fill form:
+   - Full Name: Test User
+   - Email: test@example.com
+   - Password: password123
+   - Role: Customer
+4. Click: "Create Account"
+5. You should see:
+   - Green success message
+   - Auto-login happens
+   - Redirected to dashboard
+
+If this happens, signup is fixed! ✅
+
+================================================================================
+                         THAT'S IT!
+================================================================================
+
+5 minutes and signup/login will work.
+
+Go to Supabase now and run the SQL.
+

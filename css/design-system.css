@@ -116,6 +116,20 @@
   --z-modal: 1050;
   --z-popover: 1060;
   --z-tooltip: 1070;
+
+  /* ===== LEGACY ALIASES (for backward compatibility) ===== */
+  --primary: var(--color-primary-600);
+  --primary-color: var(--color-primary-600);
+  --bg-primary: var(--color-neutral-900);
+  --bg-secondary: var(--color-neutral-800);
+  --bg-tertiary: var(--color-neutral-700);
+  --bg-card: var(--color-neutral-800);
+  --card-bg: var(--color-neutral-800);
+  --border-color: var(--color-neutral-700);
+  --text-primary: var(--color-neutral-100);
+  --text-secondary: var(--color-neutral-400);
+  --text-tertiary: var(--color-neutral-500);
+  --text-light: var(--color-neutral-500);
 }
 
 /* ===== GLOBAL STYLES ===== */

@@ -1,0 +1,100 @@
+{
+  "specName": "BRAIDLY Production Rebuild",
+  "version": "1.0.0",
+  "description": "Complete production rebuild of BRAIDLY — International Braider Booking & Marketplace Web App (PWA)",
+  "phases": [
+    {
+      "name": "Phase 1: Foundation & Architecture",
+      "tasks": ["1.1", "1.2", "1.3", "1.4", "1.5"],
+      "status": "pending",
+      "priority": "critical"
+    },
+    {
+      "name": "Phase 2: Authentication & Profiles",
+      "tasks": ["2.1", "2.2", "2.3", "2.4", "2.5"],
+      "status": "pending",
+      "priority": "critical"
+    },
+    {
+      "name": "Phase 3: Customer Features",
+      "tasks": ["3.1", "3.2", "3.3", "3.4", "3.5"],
+      "status": "pending",
+      "priority": "high"
+    },
+    {
+      "name": "Phase 4: Braider Features",
+      "tasks": ["4.1", "4.2", "4.3", "4.4"],
+      "status": "pending",
+      "priority": "high"
+    },
+    {
+      "name": "Phase 5: Messaging & Payments",
+      "tasks": ["5.1", "5.2", "5.3"],
+      "status": "pending",
+      "priority": "high"
+    },
+    {
+      "name": "Phase 6: Admin Features",
+      "tasks": ["6.1", "6.2", "6.3"],
+      "status": "pending",
+      "priority": "medium"
+    },
+    {
+      "name": "Phase 7: UI/UX & Animations",
+      "tasks": ["7.1", "7.2", "7.3", "7.4"],
+      "status": "pending",
+      "priority": "medium"
+    },
+    {
+      "name": "Phase 8: PWA & Deployment",
+      "tasks": ["8.1", "8.2", "8.3", "8.4"],
+      "status": "pending",
+      "priority": "high"
+    }
+  ],
+  "techStack": {
+    "frontend": "React (Vite)",
+    "routing": "React Router v6",
+    "backend": "Supabase (Auth, Database, Storage)",
+    "payments": "Stripe Connect (Escrow)",
+    "animations": "GSAP + Framer Motion",
+    "styling": "TailwindCSS",
+    "pwa": "Service Worker + Manifest"
+  },
+  "successCriteria": [
+    "App loads without errors",
+    "All pages render (no blank screens)",
+    "Auth flow works (signup → profile → login)",
+    "Braider profile saves and reflects instantly",
+    "Portfolio uploads work",
+    "Payments process via Stripe",
+    "Chat works real-time",
+    "PWA installs on mobile",
+    "Mobile UX is smooth (no lag, no jank)",
+    "Admin dashboard shows real data"
+  ],
+  "deliverables": [
+    "Final folder structure (clean, organized)",
+    "Clean App.jsx with Router",
+    "Page components (all default exports)",
+    "Supabase SQL schema",
+    "Supabase storage setup",
+    "RLS policies",
+    "AuthService.js (final)",
+    "Portfolio upload React code",
+    "Stripe escrow logic",
+    "GSAP + Framer Motion animations",
+    "Mobile-first UI",
+    "PWA configuration"
+  ],
+  "qualityRules": [
+    "No console errors",
+    "No blank pages",
+    "No broken images",
+    "No fake data",
+    "No demo labels",
+    "No unused imports",
+    "No conflicting schemas",
+    "All errors logged visibly with explanations"
+  ]
+}

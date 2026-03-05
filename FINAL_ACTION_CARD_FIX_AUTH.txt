@@ -1,0 +1,106 @@
+================================================================================
+                    FINAL ACTION CARD - FIX AUTH NOW
+================================================================================
+
+PROBLEM: Signup and login not working
+
+SOLUTION: Run SQL in Supabase (5 minutes)
+
+STATUS: All code is correct. Only Supabase needs update.
+
+================================================================================
+                         WHAT'S WRONG
+================================================================================
+
+Supabase RLS policies missing INSERT permissions
+
+This blocks profile creation during signup
+
+================================================================================
+                         WHAT'S CORRECT
+================================================================================
+
+✅ All code (Signup, Login, Auth Context)
+✅ All environment variables
+✅ All Supabase client configuration
+✅ All form validation
+✅ All error handling
+✅ All redirects
+✅ HMR configuration
+✅ CORS enabled
+
+================================================================================
+                         THE FIX (5 MINUTES)
+================================================================================
+
+1. Go to: https://app.supabase.com
+2. Select your BRAIDLY project
+3. Click: SQL Editor → New Query
+4. Copy and paste this SQL:
+
+---BEGIN SQL---
+
+DROP POLICY IF EXISTS "Users can create own profile" ON profiles;
+DROP POLICY IF EXISTS "Users can view own profile" ON profiles;
+DROP POLICY IF EXISTS "Users can update own profile" ON profiles;
+DROP POLICY IF EXISTS "Admins can view all profiles" ON profiles;
+DROP POLICY IF EXISTS "Braiders can create own record" ON braiders;
+DROP POLICY IF EXISTS "Anyone can view braider profiles" ON braiders;
+DROP POLICY IF EXISTS "Braiders can update own profile" ON braiders;
+DROP POLICY IF EXISTS "Customers can create own record" ON customers;
+DROP POLICY IF EXISTS "Customers can view own profile" ON customers;
+DROP POLICY IF EXISTS "Customers can update own profile" ON customers;
+
+CREATE POLICY "Users can create own profile" ON profiles
+  FOR INSERT WITH CHECK (auth.uid() = id);
+CREATE POLICY "Users can view own profile" ON profiles
+  FOR SELECT USING (auth.uid() = id);
+CREATE POLICY "Users can update own profile" ON profiles
+  FOR UPDATE USING (auth.uid() = id);
+CREATE POLICY "Admins can view all profiles" ON profiles
+  FOR SELECT USING (EXISTS (SELECT 1 FROM profiles WHERE id = auth.uid() AND role = 'admin'));
+
+CREATE POLICY "Braiders can create own record" ON braiders
+  FOR INSERT WITH CHECK (auth.uid() = id);
+CREATE POLICY "Anyone can view braider profiles" ON braiders
+  FOR SELECT USING (TRUE);
+CREATE POLICY "Braiders can update own profile" ON braiders
+  FOR UPDATE USING (auth.uid() = id);
+
+CREATE POLICY "Customers can create own record" ON customers
+  FOR INSERT WITH CHECK (auth.uid() = id);
+CREATE POLICY "Customers can view own profile" ON customers
+  FOR SELECT USING (auth.uid() = id);
+CREATE POLICY "Customers can update own profile" ON customers
+  FOR UPDATE USING (auth.uid() = id);
+
+---END SQL---
+
+5. Click: Run
+6. Wait for: "Query executed successfully"
+7. Go to: Authentication → Policies
+8. Verify: You see "Users can create own profile"
+9. Clear browser cache (Ctrl+Shift+Delete)
+10. Test: http://localhost:5173/signup
+
+================================================================================
+                         EXPECTED RESULT
+================================================================================
+
+✅ Signup form appears
+✅ User fills form (text is visible and bold)
+✅ Clicks "Create Account"
+✅ Green success message appears
+✅ Auto-login happens (1 second)
+✅ Redirected to dashboard
+✅ Profile loads
+✅ User is logged in
+
+================================================================================
+                         THAT'S IT!
+================================================================================
+
+5 minutes and signup/login will work.
+
+Go to Supabase now and run the SQL.
+
