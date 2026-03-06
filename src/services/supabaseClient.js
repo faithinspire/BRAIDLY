@@ -82,7 +82,7 @@ export const dbService = {
 
   async login(email, password) {
     try {
-      // Mock login - just create a user object
+      // Mock login - create a user object
       const userId = 'user_' + Math.random().toString(36).substr(2, 9)
       const mockUser = {
         id: userId,
@@ -95,21 +95,6 @@ export const dbService = {
       // Store in localStorage
       localStorage.setItem('auth_user', JSON.stringify(mockUser))
       localStorage.setItem('auth_token', 'mock_token_' + userId)
-
-      // Try to fetch profile from database
-      const { data: profile } = await supabase
-        .from('profiles')
-        .select('*')
-        .eq('email', email)
-        .single()
-        .catch(() => ({ data: null }))
-
-      if (profile) {
-        mockUser.user_metadata = {
-          full_name: profile.full_name,
-          role: profile.role,
-        }
-      }
 
       return { user: mockUser, error: null }
     } catch (error) {

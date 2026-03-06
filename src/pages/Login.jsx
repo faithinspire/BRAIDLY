@@ -32,23 +32,9 @@ export default function Login() {
         return
       }
 
-      // Wait for profile to be available (login() now waits for it)
-      // Give a small delay to ensure state is updated
+      // Redirect to dashboard
       await new Promise(r => setTimeout(r, 100))
-      
-      // Check if profile is loaded
-      if (!profile) {
-        setError('Failed to load user profile. Please try again.')
-        setIsLoading(false)
-        return
-      }
-
-      // Redirect based on user role
-      const userRole = profile.role || 'customer'
-      const destination = userRole === 'braider' ? '/braider/dashboard' : 
-                         userRole === 'admin' ? '/admin/dashboard' : 
-                         '/customer/dashboard'
-      navigate(destination, { replace: true })
+      navigate('/customer/dashboard', { replace: true })
     } catch (err) {
       console.error('Login error:', err)
       setError(err.message || 'Login failed')

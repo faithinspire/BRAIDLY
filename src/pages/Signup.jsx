@@ -1,7 +1,6 @@
 import { useState } from 'react'
 import { useNavigate, Link } from 'react-router-dom'
 import { useAuth } from '../context/AuthContext'
-import { signupDiagnostics } from '../services/signupDiagnostics'
 import PublicNavbar from '../components/PublicNavbar'
 import './Auth.css'
 
@@ -15,13 +14,12 @@ export default function Signup() {
   const [error, setError] = useState('')
   const [success, setSuccess] = useState('')
   const [isLoading, setIsLoading] = useState(false)
-  const [showDiagnostics, setShowDiagnostics] = useState(false)
 
   const handleSubmit = async (e) => {
     e.preventDefault()
     setError('')
+    setSuccess('')
     setIsLoading(true)
-    setShowDiagnostics(false)
 
     if (!fullName || !email || !password) {
       setError('Please fill in all fields')
@@ -35,7 +33,6 @@ export default function Signup() {
       return
     }
 
-    // Validate email format
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
     if (!emailRegex.test(email)) {
       setError('Please enter a valid email address')
@@ -44,24 +41,16 @@ export default function Signup() {
     }
 
     try {
-      // Run diagnostics
-      console.log('Running signup diagnostics...')
-      const diagnostics = await signupDiagnostics.testSignup(email, password, fullName, role)
-      signupDiagnostics.logToConsole(diagnostics.logs)
+      const { success: signupSuccess, error: signupError } = await signup(email, password, fullName, role)
       
-      if (!diagnostics.success) {
-        const diagnosticText = signupDiagnostics.exportLogs(diagnostics.logs)
-        console.error('Diagnostics failed:', diagnosticText)
-        setError('Signup failed. Check console for details.')
-        setShowDiagnostics(true)
+      if (!signupSuccess) {
+        setError(signupError || 'Signup failed. Please try again.')
         setIsLoading(false)
         return
       }
 
-      // SUCCESS: Auto-login after signup
-      setSuccess('Account created! Logging in automatically...')
+      setSuccess('Account created! Logging in...')
       
-      // Wait a moment then auto-login
       setTimeout(async () => {
         try {
           const { success: loginSuccess, error: loginError } = await login(email, password)
@@ -73,11 +62,7 @@ export default function Signup() {
             return
           }
 
-          // login() now waits for profile to load, so we can redirect immediately
-          // Give a small delay to ensure state is updated
           await new Promise(r => setTimeout(r, 100))
-          
-          // Redirect to correct dashboard
           const destination = role === 'braider' ? '/braider/dashboard' : '/customer/dashboard'
           navigate(destination, { replace: true })
         } catch (err) {
@@ -105,11 +90,6 @@ export default function Signup() {
 
             {error && <div className="error-message">{error}</div>}
             {success && <div className="success-message">{success}</div>}
-            {showDiagnostics && (
-              <div className="info-message">
-                Check browser console (F12) for detailed diagnostics
-              </div>
-            )}
 
             <form onSubmit={handleSubmit}>
               <div className="form-group">
