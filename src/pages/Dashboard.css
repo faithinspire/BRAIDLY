@@ -83,10 +83,6 @@
 }
 
 .action-grid {
-  position: fixed;
-  bottom: 0;
-  left: 0;
-  right: 0;
   display: grid;
   grid-template-columns: repeat(4, 1fr);
   gap: 0;
@@ -94,12 +90,9 @@
   background: white;
   border-top: 2px solid #e5e7eb;
   box-shadow: 0 -4px 20px rgba(0, 0, 0, 0.1);
-  z-index: 1000;
   padding: 0;
-  width: 100vw;
+  width: 100%;
   height: auto;
-  left: 50%;
-  transform: translateX(-50%);
 }
 
 .action-card {
