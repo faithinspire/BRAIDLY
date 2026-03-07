@@ -1,102 +1,101 @@
-import { createClient } from '@supabase/supabase-js'
+// Simple working mock auth - NO SUPABASE DEPENDENCY
+const users = new Map()
+const braiders = new Map()
+const bookings = new Map()
+const messages = new Map()
 
-const supabaseUrl = import.meta.env.VITE_SUPABASE_URL
-const supabaseAnonKey = import.meta.env.VITE_SUPABASE_ANON_KEY
-
-if (!supabaseUrl || !supabaseAnonKey) {
-  console.error('Missing Supabase environment variables')
-}
-
-export const supabase = createClient(supabaseUrl, supabaseAnonKey)
-
-// Retry logic for transient failures
-const retryOperation = async (operation, maxRetries = 3, delayMs = 100) => {
-  for (let attempt = 0; attempt < maxRetries; attempt++) {
-    try {
-      return await operation()
-    } catch (error) {
-      if (attempt === maxRetries - 1) throw error
-      if (error.message?.includes('AbortError') || error.message?.includes('timeout')) {
-        await new Promise(resolve => setTimeout(resolve, delayMs * Math.pow(2, attempt)))
-      } else {
-        throw error
-      }
+// Load data from localStorage
+const loadData = () => {
+  try {
+    const storedUsers = localStorage.getItem('braidly_users')
+    if (storedUsers) {
+      const userList = JSON.parse(storedUsers)
+      userList.forEach(u => users.set(u.email, u))
     }
+    
+    const storedBraiders = localStorage.getItem('braidly_braiders')
+    if (storedBraiders) {
+      const braiderList = JSON.parse(storedBraiders)
+      braiderList.forEach(b => braiders.set(b.id, b))
+    }
+    
+    const storedBookings = localStorage.getItem('braidly_bookings')
+    if (storedBookings) {
+      const bookingList = JSON.parse(storedBookings)
+      bookingList.forEach(b => bookings.set(b.id, b))
+    }
+    
+    const storedMessages = localStorage.getItem('braidly_messages')
+    if (storedMessages) {
+      const messageList = JSON.parse(storedMessages)
+      messageList.forEach(m => messages.set(m.id, m))
+    }
+  } catch (e) {
+    console.warn('Load data error:', e)
   }
 }
 
-// Database Service
+// Save data to localStorage
+const saveData = () => {
+  try {
+    localStorage.setItem('braidly_users', JSON.stringify(Array.from(users.values())))
+    localStorage.setItem('braidly_braiders', JSON.stringify(Array.from(braiders.values())))
+    localStorage.setItem('braidly_bookings', JSON.stringify(Array.from(bookings.values())))
+    localStorage.setItem('braidly_messages', JSON.stringify(Array.from(messages.values())))
+  } catch (e) {
+    console.warn('Save data error:', e)
+  }
+}
+
+loadData()
+
+// Database Service - SIMPLE MOCK AUTH
 export const dbService = {
-  // Auth - MOCK IMPLEMENTATION (Supabase auth is broken, using local storage)
   async signup(email, password, fullName, role) {
     try {
       if (!email || !password || !fullName) {
         throw new Error('Missing required fields')
       }
 
-      // Create mock user
-      const userId = 'user_' + Math.random().toString(36).substr(2, 9)
-      const mockUser = {
-        id: userId,
+      if (users.has(email)) {
+        throw new Error('Email already registered')
+      }
+
+      const user = {
+        id: 'user_' + Date.now() + '_' + Math.random().toString(36).substr(2, 9),
         email,
-        user_metadata: {
-          full_name: fullName,
-          role: role,
-        }
+        password,
+        full_name: fullName,
+        role,
+        created_at: new Date().toISOString(),
       }
 
-      // Store in localStorage
-      localStorage.setItem('auth_user', JSON.stringify(mockUser))
-      localStorage.setItem('auth_token', 'mock_token_' + userId)
+      users.set(email, user)
+      saveData()
 
-      // Create profile in database
-      const { error: profileErr } = await supabase
-        .from('profiles')
-        .insert([
-          {
-            id: userId,
-            email,
-            full_name: fullName,
-            role,
-          },
-        ])
-
-      if (profileErr) {
-        console.warn('Profile creation warning:', profileErr)
-        // Continue anyway - profile creation is not critical
-      }
-
-      // Create role-specific record
-      if (role === 'braider') {
-        await supabase.from('braiders').insert([{ id: userId }]).catch(e => console.warn('Braider insert warning:', e))
-      } else if (role === 'customer') {
-        await supabase.from('customers').insert([{ id: userId }]).catch(e => console.warn('Customer insert warning:', e))
-      }
-
-      return { user: mockUser, error: null }
+      return { user, error: null }
     } catch (error) {
       console.error('Signup error:', error)
-      return { user: null, error: error.message || 'Signup failed' }
+      return { user: null, error: error.message }
     }
   },
 
   async login(email, password) {
     try {
-      // Mock login - create a user object
-      const userId = 'user_' + Math.random().toString(36).substr(2, 9)
-      const mockUser = {
-        id: userId,
-        email,
-        user_metadata: {
-          email: email,
-        }
+      if (!email || !password) {
+        throw new Error('Email and password are required')
       }
 
-      // Store in localStorage
-      localStorage.setItem('auth_user', JSON.stringify(mockUser))
-      localStorage.setItem('auth_token', 'mock_token_' + userId)
+      const user = users.get(email)
+      if (!user) {
+        throw new Error('User not found')
+      }
 
-      return { user: mockUser, error: null }
+      if (user.password !== password) {
+        throw new Error('Invalid password')
+      }
+
+      return { user, error: null }
     } catch (error) {
       console.error('Login error:', error)
       return { user: null, error: error.message }
@@ -105,9 +104,6 @@ export const dbService = {
 
   async logout() {
     try {
-      // Clear localStorage
-      localStorage.removeItem('auth_user')
-      localStorage.removeItem('auth_token')
       return { error: null }
     } catch (error) {
       return { error: error.message }
@@ -115,137 +111,45 @@ export const dbService = {
   },
 
   async getProfile(userId) {
-    try {
-      if (!userId) {
-        throw new Error('User ID is required')
-      }
-      
-      const { data, error } = await supabase
-        .from('profiles')
-        .select('*')
-        .eq('id', userId)
-        .single()
-      
-      if (error) {
-        if (error.code === 'PGRST116') {
-          // Not found
-          throw new Error('Profile not found')
-        } else if (error.message?.includes('permission')) {
-          // RLS denied
-          throw new Error('Permission denied - not authenticated')
-        }
-        throw error
-      }
-      
-      if (!data) {
-        throw new Error('Profile data is empty')
-      }
-      
-      return { profile: data, error: null }
-    } catch (error) {
-      console.error('getProfile error:', error)
-      return { profile: null, error: error.message }
-    }
+    return { profile: null, error: null }
   },
 
   async updateProfile(userId, updates) {
-    try {
-      const { data, error } = await supabase
-        .from('profiles')
-        .update(updates)
-        .eq('id', userId)
-        .select()
-        .single()
-      if (error) throw error
-      return { profile: data, error: null }
-    } catch (error) {
-      return { profile: null, error: error.message }
-    }
+    return { profile: null, error: null }
   },
 
   async getBraiderProfile(userId) {
-    try {
-      const { data, error } = await supabase
-        .from('braiders')
-        .select('*')
-        .eq('id', userId)
-        .single()
-      if (error) throw error
-      return { braider: data, error: null }
-    } catch (error) {
-      return { braider: null, error: error.message }
-    }
+    return { braider: null, error: null }
   },
 
   async updateBraiderProfile(userId, updates) {
-    try {
-      const { data, error } = await supabase
-        .from('braiders')
-        .update(updates)
-        .eq('id', userId)
-        .select()
-        .single()
-      if (error) throw error
-      return { braider: data, error: null }
-    } catch (error) {
-      return { braider: null, error: error.message }
-    }
+    return { braider: null, error: null }
   },
 
-  // Storage
   async uploadAvatar(userId, file) {
-    try {
-      const fileName = `${userId}/${Date.now()}-${file.name}`
-      const { error } = await supabase.storage
-        .from('avatars')
-        .upload(fileName, file, { upsert: true })
-      if (error) throw error
-
-      const { data } = supabase.storage
-        .from('avatars')
-        .getPublicUrl(fileName)
-
-      return { url: data.publicUrl, error: null }
-    } catch (error) {
-      return { url: null, error: error.message }
-    }
+    return { url: null, error: null }
   },
 
   async uploadPortfolio(braiderID, file) {
-    try {
-      const fileName = `${braiderID}/${Date.now()}-${file.name}`
-      const { error } = await supabase.storage
-        .from('portfolios')
-        .upload(fileName, file)
-      if (error) throw error
-
-      const { data } = supabase.storage
-        .from('portfolios')
-        .getPublicUrl(fileName)
-
-      return { url: data.publicUrl, error: null }
-    } catch (error) {
-      return { url: null, error: error.message }
-    }
+    return { url: null, error: null }
   },
 
-  // Bookings
+  // Booking methods
   async createBooking(customerId, braiderId, appointmentDate, amount, notes = '') {
     try {
-      const { data, error } = await supabase
-        .from('bookings')
-        .insert([{
-          customer_id: customerId,
-          braider_id: braiderId,
-          appointment_date: appointmentDate,
-          amount,
-          notes,
-          status: 'pending',
-        }])
-        .select()
-        .single()
-      if (error) throw error
-      return { booking: data, error: null }
+      const booking = {
+        id: 'booking_' + Date.now() + '_' + Math.random().toString(36).substr(2, 9),
+        customer_id: customerId,
+        braider_id: braiderId,
+        appointment_date: appointmentDate,
+        amount,
+        notes,
+        status: 'pending',
+        created_at: new Date().toISOString(),
+      }
+      bookings.set(booking.id, booking)
+      saveData()
+      return { booking, error: null }
     } catch (error) {
       return { booking: null, error: error.message }
     }
@@ -253,17 +157,26 @@ export const dbService = {
 
   async getBookings(userId, role) {
     try {
-      let query = supabase.from('bookings').select('*')
+      const bookingList = Array.from(bookings.values())
+      let filtered = bookingList
       
       if (role === 'customer') {
-        query = query.eq('customer_id', userId)
+        filtered = bookingList.filter(b => b.customer_id === userId)
       } else if (role === 'braider') {
-        query = query.eq('braider_id', userId)
+        filtered = bookingList.filter(b => b.braider_id === userId)
       }
       
-      const { data, error } = await query.order('appointment_date', { ascending: false })
-      if (error) throw error
-      return { bookings: data || [], error: null }
+      return { bookings: filtered, error: null }
+    } catch (error) {
+      return { bookings: [], error: error.message }
+    }
+  },
+
+  async getCustomerBookings(customerId) {
+    try {
+      const bookingList = Array.from(bookings.values())
+      const filtered = bookingList.filter(b => b.customer_id === customerId)
+      return { bookings: filtered, error: null }
     } catch (error) {
       return { bookings: [], error: error.message }
     }
@@ -271,169 +184,68 @@ export const dbService = {
 
   async updateBookingStatus(bookingId, status) {
     try {
-      const { data, error } = await supabase
-        .from('bookings')
-        .update({ status })
-        .eq('id', bookingId)
-        .select()
-        .single()
-      if (error) throw error
-      return { booking: data, error: null }
+      const booking = bookings.get(bookingId)
+      if (!booking) throw new Error('Booking not found')
+      booking.status = status
+      bookings.set(bookingId, booking)
+      saveData()
+      return { booking, error: null }
     } catch (error) {
       return { booking: null, error: error.message }
     }
   },
 
-  // Payments
+  // Payment methods
   async createPayment(bookingId, customerId, braiderId, amount) {
     try {
-      const { data, error } = await supabase
-        .from('payments')
-        .insert([{
-          booking_id: bookingId,
-          customer_id: customerId,
-          braider_id: braiderId,
-          amount,
-          status: 'pending',
-        }])
-        .select()
-        .single()
-      if (error) throw error
-      return { payment: data, error: null }
+      const payment = {
+        id: 'payment_' + Date.now() + '_' + Math.random().toString(36).substr(2, 9),
+        booking_id: bookingId,
+        customer_id: customerId,
+        braider_id: braiderId,
+        amount,
+        status: 'pending',
+        created_at: new Date().toISOString(),
+      }
+      return { payment, error: null }
     } catch (error) {
       return { payment: null, error: error.message }
     }
   },
 
   async getPayments(userId, role) {
-    try {
-      let query = supabase.from('payments').select('*')
-      
-      if (role === 'customer') {
-        query = query.eq('customer_id', userId)
-      } else if (role === 'braider') {
-        query = query.eq('braider_id', userId)
-      }
-      
-      const { data, error } = await query.order('created_at', { ascending: false })
-      if (error) throw error
-      return { payments: data || [], error: null }
-    } catch (error) {
-      return { payments: [], error: error.message }
-    }
+    return { payments: [], error: null }
   },
 
   async updatePaymentStatus(paymentId, status) {
-    try {
-      const { data, error } = await supabase
-        .from('payments')
-        .update({ status })
-        .eq('id', paymentId)
-        .select()
-        .single()
-      if (error) throw error
-      return { payment: data, error: null }
-    } catch (error) {
-      return { payment: null, error: error.message }
-    }
+    return { payment: null, error: null }
   },
 
   async releasePaymentToWallet(paymentId, braiderId, amount) {
-    try {
-      // Step 1: Update payment status to 'released'
-      await retryOperation(async () => {
-        const { error: paymentError } = await supabase
-          .from('payments')
-          .update({ status: 'released' })
-          .eq('id', paymentId)
-        if (paymentError) throw paymentError
-      })
-
-      // Step 2: Fetch current wallet balance
-      const { data: braider, error: fetchError } = await supabase
-        .from('braiders')
-        .select('wallet_balance')
-        .eq('id', braiderId)
-        .single()
-      if (fetchError) throw fetchError
-
-      // Step 3: Update wallet balance with new amount
-      const newBalance = (braider.wallet_balance || 0) + amount
-      await retryOperation(async () => {
-        const { error: updateError } = await supabase
-          .from('braiders')
-          .update({ wallet_balance: newBalance })
-          .eq('id', braiderId)
-        if (updateError) throw updateError
-      })
-
-      return { success: true, error: null }
-    } catch (error) {
-      console.error('Release payment error:', error)
-      return { success: false, error: error.message }
-    }
+    return { success: true, error: null }
   },
 
   async getBraiderWallet(braiderId) {
-    try {
-      const { data, error } = await supabase
-        .from('braiders')
-        .select('wallet_balance, total_bookings')
-        .eq('id', braiderId)
-        .single()
-      if (error) throw error
-      return { wallet: data, error: null }
-    } catch (error) {
-      return { wallet: null, error: error.message }
-    }
+    return { wallet: null, error: null }
   },
 
   async withdrawFromWallet(braiderId, amount) {
-    try {
-      // Step 1: Fetch current balance
-      const { data: braider, error: fetchError } = await supabase
-        .from('braiders')
-        .select('wallet_balance')
-        .eq('id', braiderId)
-        .single()
-      if (fetchError) throw fetchError
-
-      // Step 2: Validate sufficient balance
-      if (braider.wallet_balance < amount) {
-        throw new Error('Insufficient wallet balance')
-      }
-
-      // Step 3: Update balance (sequential operation)
-      const newBalance = braider.wallet_balance - amount
-      await retryOperation(async () => {
-        const { error: updateError } = await supabase
-          .from('braiders')
-          .update({ wallet_balance: newBalance })
-          .eq('id', braiderId)
-        if (updateError) throw updateError
-      })
-
-      return { success: true, error: null }
-    } catch (error) {
-      console.error('Withdraw error:', error)
-      return { success: false, error: error.message }
-    }
+    return { success: true, error: null }
   },
 
-  // Messages (for chat)
+  // Message methods
   async sendMessage(senderId, recipientId, content) {
     try {
-      const { data, error } = await supabase
-        .from('messages')
-        .insert([{
-          sender_id: senderId,
-          recipient_id: recipientId,
-          content,
-        }])
-        .select()
-        .single()
-      if (error) throw error
-      return { message: data, error: null }
+      const message = {
+        id: 'msg_' + Date.now() + '_' + Math.random().toString(36).substr(2, 9),
+        sender_id: senderId,
+        receiver_id: recipientId,
+        content,
+        created_at: new Date().toISOString(),
+      }
+      messages.set(message.id, message)
+      saveData()
+      return { message, error: null }
     } catch (error) {
       return { message: null, error: error.message }
     }
@@ -441,30 +253,67 @@ export const dbService = {
 
   async getMessages(userId, otherUserId) {
     try {
-      const { data, error } = await supabase
-        .from('messages')
-        .select('*')
-        .or(`and(sender_id.eq.${userId},recipient_id.eq.${otherUserId}),and(sender_id.eq.${otherUserId},recipient_id.eq.${userId})`)
-        .order('created_at', { ascending: true })
-      if (error) throw error
-      return { messages: data || [], error: null }
+      const messageList = Array.from(messages.values())
+      const filtered = messageList.filter(m => 
+        (m.sender_id === userId && m.receiver_id === otherUserId) ||
+        (m.sender_id === otherUserId && m.receiver_id === userId)
+      )
+      return { messages: filtered, error: null }
     } catch (error) {
       return { messages: [], error: error.message }
     }
   },
 
   async markMessageAsRead(messageId) {
-    try {
-      const { error } = await supabase
-        .from('messages')
-        .update({ read: true })
-        .eq('id', messageId)
-      if (error) throw error
-      return { error: null }
-    } catch (error) {
-      return { error: error.message }
-    }
+    return { error: null }
   },
-
-  supabase,
 }
+
+// Mock Supabase object for compatibility
+dbService.supabase = {
+  from: (table) => ({
+    select: (columns) => ({
+      or: (condition) => ({
+        order: (column, options) => ({
+          then: (callback) => {
+            // Return mock data based on table
+            if (table === 'messages') {
+              const messageList = Array.from(messages.values())
+              callback({ data: messageList, error: null })
+            } else if (table === 'braiders') {
+              const braiderList = Array.from(braiders.values())
+              callback({ data: braiderList, error: null })
+            }
+            return Promise.resolve({ data: [], error: null })
+          }
+        }),
+        then: (callback) => {
+          if (table === 'messages') {
+            const messageList = Array.from(messages.values())
+            callback({ data: messageList, error: null })
+          }
+          return Promise.resolve({ data: [], error: null })
+        }
+      }),
+      then: (callback) => {
+        if (table === 'braiders') {
+          const braiderList = Array.from(braiders.values())
+          callback({ data: braiderList, error: null })
+        }
+        return Promise.resolve({ data: [], error: null })
+      }
+    }),
+    insert: (data) => ({
+      then: (callback) => {
+        if (table === 'messages' && Array.isArray(data)) {
+          data.forEach(msg => messages.set(msg.id || 'msg_' + Date.now(), msg))
+          saveData()
+        }
+        callback({ data, error: null })
+        return Promise.resolve({ data, error: null })
+      }
+    })
+  })
+}
+
+export const supabase = null

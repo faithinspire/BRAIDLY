@@ -18,24 +18,32 @@ export default function ProtectedRoute({ children, requiredRole }) {
     return <Navigate to="/login" replace />
   }
 
-  // Profile is required - don't allow access without it
+  // If no profile but user exists, create default profile
   if (!profile) {
-    return (
-      <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', minHeight: '100vh' }}>
-        <p>Loading profile...</p>
-      </div>
-    )
+    // If role is required, check user data
+    if (requiredRole) {
+      const userRole = user.role || 'customer'
+      if (userRole !== requiredRole) {
+        const roleRedirects = {
+          customer: '/customer/dashboard',
+          braider: '/braider/dashboard',
+          admin: '/admin/dashboard',
+        }
+        return <Navigate to={roleRedirects[userRole] || '/login'} replace />
+      }
+    }
+    // Allow access - profile will be created from user data
+    return children
   }
 
-  // Role mismatch - redirect to correct dashboard based on actual role
+  // Profile exists - check role if required
   if (requiredRole && profile.role !== requiredRole) {
     const roleRedirects = {
       customer: '/customer/dashboard',
       braider: '/braider/dashboard',
       admin: '/admin/dashboard',
     }
-    const destination = roleRedirects[profile.role] || '/login'
-    return <Navigate to={destination} replace />
+    return <Navigate to={roleRedirects[profile.role] || '/login'} replace />
   }
 
   return children

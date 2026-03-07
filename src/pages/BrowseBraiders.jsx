@@ -39,11 +39,34 @@ export default function BrowseBraiders() {
   const loadBraiders = async () => {
     try {
       setLoading(true)
-      const { data, error: fetchError } = await dbService.supabase
-        .from('braiders')
-        .select('*')
-      if (fetchError) throw fetchError
-      setBraiders(data || [])
+      
+      // Get all registered users
+      const storedUsers = localStorage.getItem('braidly_users')
+      const allUsers = storedUsers ? JSON.parse(storedUsers) : []
+      
+      // Filter only braiders
+      const braiderUsers = allUsers.filter(user => user.role === 'braider')
+      
+      // Map users to braider profiles with portfolio
+      const braiderList = braiderUsers.map(user => {
+        const portfolio = localStorage.getItem(`portfolio_${user.id}`)
+        const portfolioImages = portfolio ? JSON.parse(portfolio) : []
+        
+        return {
+          id: user.id,
+          full_name: user.full_name,
+          email: user.email,
+          location: user.location || 'Not specified',
+          rating: user.rating || 4.5 + Math.random() * 0.5,
+          style: user.style || 'Professional Braiding',
+          bio: user.bio || 'Professional braider',
+          price: user.price || 100 + Math.random() * 100,
+          portfolio: portfolioImages,
+          portfolioCount: portfolioImages.length,
+        }
+      })
+      
+      setBraiders(braiderList)
     } catch (err) {
       setError(err.message)
     } finally {

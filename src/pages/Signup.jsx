@@ -10,6 +10,7 @@ export default function Signup() {
   const [fullName, setFullName] = useState('')
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
+  const [confirmPassword, setConfirmPassword] = useState('')
   const [role, setRole] = useState('customer')
   const [error, setError] = useState('')
   const [success, setSuccess] = useState('')
@@ -21,7 +22,7 @@ export default function Signup() {
     setSuccess('')
     setIsLoading(true)
 
-    if (!fullName || !email || !password) {
+    if (!fullName || !email || !password || !confirmPassword) {
       setError('Please fill in all fields')
       setIsLoading(false)
       return
@@ -29,6 +30,12 @@ export default function Signup() {
 
     if (password.length < 6) {
       setError('Password must be at least 6 characters')
+      setIsLoading(false)
+      return
+    }
+
+    if (password !== confirmPassword) {
+      setError('Passwords do not match')
       setIsLoading(false)
       return
     }
@@ -51,27 +58,28 @@ export default function Signup() {
 
       setSuccess('Account created! Logging in...')
       
-      setTimeout(async () => {
-        try {
-          const { success: loginSuccess, error: loginError } = await login(email, password)
-          
-          if (!loginSuccess) {
-            setError(loginError || 'Auto-login failed. Please sign in manually.')
-            setSuccess('')
-            setIsLoading(false)
-            return
-          }
-
-          await new Promise(r => setTimeout(r, 100))
-          const destination = role === 'braider' ? '/braider/dashboard' : '/customer/dashboard'
-          navigate(destination, { replace: true })
-        } catch (err) {
-          console.error('Auto-login error:', err)
-          setError('Auto-login failed. Please sign in manually.')
+      // Wait a moment then auto-login
+      await new Promise(r => setTimeout(r, 500))
+      
+      try {
+        const { success: loginSuccess, error: loginError } = await login(email, password)
+        
+        if (!loginSuccess) {
+          setError(loginError || 'Auto-login failed. Please sign in manually.')
           setSuccess('')
           setIsLoading(false)
+          return
         }
-      }, 1000)
+
+        await new Promise(r => setTimeout(r, 800))
+        const destination = role === 'braider' ? '/braider/dashboard' : role === 'admin' ? '/admin/dashboard' : '/customer/dashboard'
+        navigate(destination, { replace: true })
+      } catch (err) {
+        console.error('Auto-login error:', err)
+        setError('Auto-login failed. Please sign in manually.')
+        setSuccess('')
+        setIsLoading(false)
+      }
     } catch (err) {
       console.error('Signup error:', err)
       setError(err.message || 'Signup failed. Please try again.')
@@ -100,17 +108,19 @@ export default function Signup() {
                   value={fullName}
                   onChange={(e) => setFullName(e.target.value)}
                   disabled={isLoading}
+                  autoComplete="name"
                 />
               </div>
 
               <div className="form-group">
-                <label>Email</label>
+                <label>Email Address</label>
                 <input
                   type="email"
                   placeholder="your@email.com"
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
                   disabled={isLoading}
+                  autoComplete="email"
                 />
               </div>
 
@@ -118,10 +128,23 @@ export default function Signup() {
                 <label>Password</label>
                 <input
                   type="password"
-                  placeholder="••••••••"
+                  placeholder="At least 6 characters"
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
                   disabled={isLoading}
+                  autoComplete="new-password"
+                />
+              </div>
+
+              <div className="form-group">
+                <label>Confirm Password</label>
+                <input
+                  type="password"
+                  placeholder="Confirm your password"
+                  value={confirmPassword}
+                  onChange={(e) => setConfirmPassword(e.target.value)}
+                  disabled={isLoading}
+                  autoComplete="new-password"
                 />
               </div>
 
@@ -130,6 +153,7 @@ export default function Signup() {
                 <select value={role} onChange={(e) => setRole(e.target.value)} disabled={isLoading}>
                   <option value="customer">Customer</option>
                   <option value="braider">Braider</option>
+                  <option value="admin">Admin</option>
                 </select>
               </div>
 

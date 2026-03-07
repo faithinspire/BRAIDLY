@@ -20,7 +20,7 @@ export default function BraiderCard({ braider, onClick }) {
         e.currentTarget.style.boxShadow = '0 4px 12px rgba(0, 0, 0, 0.1)'
       }}
     >
-      {/* Avatar */}
+      {/* Portfolio Preview or Avatar */}
       <div
         style={{
           width: '100%',
@@ -32,14 +32,33 @@ export default function BraiderCard({ braider, onClick }) {
           color: 'white',
           fontSize: '3rem',
           fontWeight: 'bold',
+          position: 'relative',
+          overflow: 'hidden',
         }}
       >
-        {braider.avatar_url ? (
-          <img
-            src={braider.avatar_url}
-            alt={braider.full_name}
-            style={{ width: '100%', height: '100%', objectFit: 'cover' }}
-          />
+        {braider.portfolio && braider.portfolio.length > 0 ? (
+          <>
+            <img
+              src={braider.portfolio[0].data}
+              alt={braider.full_name}
+              style={{ width: '100%', height: '100%', objectFit: 'cover' }}
+            />
+            {braider.portfolioCount > 1 && (
+              <div style={{
+                position: 'absolute',
+                top: '8px',
+                right: '8px',
+                background: 'rgba(0, 0, 0, 0.7)',
+                color: 'white',
+                padding: '4px 12px',
+                borderRadius: '20px',
+                fontSize: '0.85rem',
+                fontWeight: '600',
+              }}>
+                +{braider.portfolioCount - 1} more
+              </div>
+            )}
+          </>
         ) : (
           braider.full_name?.charAt(0).toUpperCase()
         )}
@@ -54,7 +73,7 @@ export default function BraiderCard({ braider, onClick }) {
         <div style={{ display: 'flex', alignItems: 'center', marginBottom: '0.75rem' }}>
           <span style={{ color: '#fbbf24', marginRight: '0.5rem' }}>★</span>
           <span style={{ color: '#666', fontSize: '0.9rem' }}>
-            {braider.rating || 0} ({braider.total_bookings || 0} bookings)
+            {(braider.rating || 0).toFixed(1)} rating
           </span>
         </div>
 
@@ -70,9 +89,15 @@ export default function BraiderCard({ braider, onClick }) {
           </p>
         )}
 
-        {braider.hourly_rate && (
+        {braider.portfolioCount > 0 && (
+          <p style={{ margin: '0.5rem 0', color: '#7e22ce', fontSize: '0.9rem', fontWeight: '600' }}>
+            📸 {braider.portfolioCount} portfolio images
+          </p>
+        )}
+
+        {braider.price && (
           <p style={{ margin: '0.75rem 0 0 0', color: '#7e22ce', fontWeight: '600', fontSize: '1rem' }}>
-            ${braider.hourly_rate}/hr
+            ${Math.round(braider.price)}/session
           </p>
         )}
       </div>

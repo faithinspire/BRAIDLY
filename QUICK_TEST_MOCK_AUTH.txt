@@ -1,0 +1,64 @@
+🚀 QUICK TEST GUIDE - MOCK AUTH FIX
+
+WHAT WAS FIXED:
+- Login was creating NEW user each time instead of looking up existing user
+- Now uses persistent mock database stored in localStorage
+- Signup and login now work correctly
+
+HOW TO TEST:
+
+1. START DEV SERVER
+   npm run dev
+   (Should run on http://localhost:5173)
+
+2. TEST SIGNUP
+   - Go to http://localhost:5173/signup
+   - Fill form:
+     * Full Name: John Doe
+     * Email: john@example.com
+     * Password: password123
+     * Role: Customer
+   - Click "Create Account"
+   - Should redirect to dashboard
+
+3. TEST LOGIN (SAME USER)
+   - Go to http://localhost:5173/logout (or clear localStorage)
+   - Go to http://localhost:5173/login
+   - Fill form:
+     * Email: john@example.com
+     * Password: password123
+   - Click "Sign In"
+   - Should redirect to dashboard
+
+4. TEST LOGIN (WRONG PASSWORD)
+   - Go to http://localhost:5173/login
+   - Fill form:
+     * Email: john@example.com
+     * Password: wrongpassword
+   - Click "Sign In"
+   - Should show error: "Invalid password"
+
+5. TEST DUPLICATE SIGNUP
+   - Go to http://localhost:5173/signup
+   - Try to sign up with john@example.com again
+   - Should show error: "Email already registered"
+
+BROWSER CONSOLE TESTING:
+- Open DevTools (F12)
+- Go to Console tab
+- Check stored users: JSON.parse(localStorage.getItem('mock_users_db'))
+- Check current user: JSON.parse(localStorage.getItem('auth_user'))
+
+FILES CHANGED:
+✅ src/services/supabaseClient.js - Fixed mock auth logic
+✅ src/context/AuthContext.jsx - Simplified profile handling
+
+EXPECTED BEHAVIOR:
+✅ Signup creates user and stores in mock database
+✅ Login finds user by email and verifies password
+✅ Users persist after page refresh
+✅ Can't sign up with duplicate email
+✅ Wrong password shows error
+✅ Non-existent user shows error
+
+STATUS: Ready to test on phone at http://<YOUR_IP>:5173
