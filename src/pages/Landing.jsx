@@ -7,8 +7,9 @@ import './Landing.css'
 
 export default function Landing() {
   const [currentImageIndex, setCurrentImageIndex] = useState(0)
+  const [imagesLoaded, setImagesLoaded] = useState({})
   
-  // Local images from assets
+  // Local images from assets - with fallback gradient
   const backgroundImages = [
     '/assets/images/b_Professional_photo_o.png',
     '/assets/images/b_Professional_photo_o (1).png',
@@ -18,6 +19,21 @@ export default function Landing() {
     '/assets/images/gpt-image-1.5-high-fidelity_a_Professional_headsho.png',
   ]
 
+  // Preload images
+  useEffect(() => {
+    backgroundImages.forEach((image, index) => {
+      const img = new Image()
+      img.onload = () => {
+        setImagesLoaded(prev => ({ ...prev, [index]: true }))
+      }
+      img.onerror = () => {
+        setImagesLoaded(prev => ({ ...prev, [index]: false }))
+      }
+      img.src = image
+    })
+  }, [])
+
+  // Carousel rotation
   useEffect(() => {
     const interval = setInterval(() => {
       setCurrentImageIndex((prev) => (prev + 1) % backgroundImages.length)
@@ -33,7 +49,10 @@ export default function Landing() {
           <div
             key={index}
             className={`bg-slide ${index === currentImageIndex ? 'active' : ''}`}
-            style={{ backgroundImage: `url(${image})` }}
+            style={{
+              backgroundImage: imagesLoaded[index] ? `url(${image})` : 'none',
+              backgroundColor: 'linear-gradient(135deg, #7e22ce 0%, #3b82f6 100%)'
+            }}
           />
         ))}
         <div className="bg-overlay" />

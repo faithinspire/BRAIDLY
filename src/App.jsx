@@ -4,6 +4,7 @@ import { AuthProvider, useAuth } from './context/AuthContext'
 import ErrorBoundary from './components/ErrorBoundary'
 import ProtectedRoute from './components/ProtectedRoute'
 import PWAInstallPrompt from './components/PWAInstallPrompt'
+import GlobalFooter from './components/GlobalFooter'
 import Landing from './pages/Landing'
 import Login from './pages/Login'
 import Signup from './pages/Signup'
@@ -381,6 +382,7 @@ export default function App() {
             {/* Catch-all 404 */}
             <Route path="*" element={<NotFound />} />
           </Routes>
+          <GlobalFooter />
         </AuthProvider>
       </BrowserRouter>
     </ErrorBoundary>
